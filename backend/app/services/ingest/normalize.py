@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.services.ingest.detect import Format, detect
-from app.services.ingest.parsers import cyclonedx, spdxJson, spdxTagValue
+from app.services.ingest.parsers import assetRegister, cyclonedx, spdxJson, spdxTagValue
 from app.services.ingest.result import ParseResult
 from app.utils.logger import get_logger
 
@@ -27,6 +27,21 @@ def ingest_document(
     unreadable document, because an empty component list renders as a clean
     assessment of a supplier who submitted nothing wrong.
     """
+    # An asset register is not a BOM format and has no self-identifying field —
+    # it is a spreadsheet. The caller declares it, which is why detection is
+    # explicit and caller-overridable in the first place.
+    if lane == "hbom" or (declared_format or "").lower().startswith("assetregister"):
+        result = assetRegister.parse(payload, lane=lane)
+        logger.info(
+            "document_ingested",
+            format=result.format,
+            spec_version=result.spec_version,
+            lane=lane,
+            parsed=result.parsed_count,
+            rejected=result.rejected_count,
+        )
+        return result
+
     detection = detect(payload, declared=declared_format)
 
     if detection.format is Format.CYCLONEDX_JSON:

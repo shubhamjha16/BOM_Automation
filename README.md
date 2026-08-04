@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S15 complete · four lanes scoring · exports working
+## Current state — S1–S17 complete · all five lanes scoring
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -274,9 +274,38 @@ Name above 4.2(21) CERT-In Identifier and invert the priority.
 | JSON | carries the provenance chain, not just the prose |
 | PDF | **unverified** — the stack fixes `python-docx → LibreOffice` and LibreOffice is not installed here; the endpoint returns 501 naming the formats that work |
 
-**Not yet built** (and not claimed): HBOM (S16) still reports `lane_absent`,
-because its data is procurement data — asset registers and purchase records, not
-scanner output.
+**S16 completes the five lanes and adds the estate view.** HBOM scores Table 11
+from CSV/XLSX asset registers — ServiceNow, SAP or a spreadsheet — because its
+data is procurement data and there is no scanner to run. Every HBOM result
+carries a note saying so, since a reader must be able to tell a missing purchase
+record from a missing scan. `firmwareInHbom`, declared-but-pending since S9, is
+now live.
+
+The estate rolls up worst-first, and **drift is per field**: three releases
+produce a trend where every movement traces to a clause, and a release that drops
+a previously-present field raises a drift finding — which is the only thing that
+makes s.2.3 re-assessment worth doing.
+
+**S17 derives SBOMs from repositories.** cdxgen is orchestrated rather than
+reimplemented; the CERT-In work happens on top. **Design and Runtime cannot be
+set from a repo** — neither is derivable from static source, and claiming
+otherwise misrepresents coverage.
+
+The real output is the diff: a repo-derived SBOM against the supplier's for the
+same release, listed component by component. Run against this repository, a
+supplier declaring a third of what it contains produced **54 undeclared
+components by name** — the finding a procurement team cannot obtain any other
+way.
+
+**The sandbox refuses rather than degrades.** Dependency resolution executes code
+from the repository under assessment. Real isolation needs a container runtime,
+Docker is not installed here, and the sandbox therefore **refuses untrusted
+generation** rather than running it unprotected. The isolation actually enforced
+is reported in every generation, because "generated in a sandbox" means different
+things on different machines.
+
+**Not yet built:** CI gate and per-lane SSE (S18), SSDLC maturity (S19), the
+artifact pack and security review (S20), observability and load (S21).
 
 **Exit proofs that need a human, and have not happened:** a cryptography
 practitioner signing the CBOM/QBOM checklist (S14), and a practitioner signing a

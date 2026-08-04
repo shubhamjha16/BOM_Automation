@@ -266,12 +266,27 @@ def test_symmetric_cryptography_is_not_quantum_exposed_under_s851():
 
 
 def test_unimplemented_rules_are_reported_as_pending_not_omitted():
-    """Their absence is visible rather than silently missing."""
-    report = correlate({"sbom": _sbom("express"), "hbom": [{"product_name": "router"}]})
+    """Their absence is visible rather than silently missing.
 
-    assert "firmwareInHbom" in report.skipped
-    assert "not yet implemented" in report.skipped["firmwareInHbom"]
+    firmwareInHbom activated with the HBOM lane at S16; vexCoverage still waits
+    for the enrichment feeds (S10) and the VEX store (S12) to populate the KEV
+    and statement data it reads.
+    """
+    report = correlate({"sbom": _sbom("express")})
+
     assert "vexCoverage" in report.skipped
+    assert "not yet implemented" in report.skipped["vexCoverage"]
+
+
+def test_firmware_in_hbom_is_now_live():
+    report = correlate(
+        {
+            "sbom": _sbom("express"),
+            "hbom": [{"product_name": "router", "firmware_version": "1.0"}],
+        }
+    )
+    assert "firmwareInHbom" in report.evaluated
+    assert [item.rule_key for item in report.findings] == ["firmwareInHbom"]
 
 
 def test_the_rule_catalogue_is_inspectable():
@@ -283,7 +298,8 @@ def test_the_rule_catalogue_is_inspectable():
     assert by_key["cryptoInSbom"]["clause"] == "8.4.1.2"
     assert by_key["modelDepsInSbom"]["clause"] == "9.3(6)"
     assert by_key["algorithmQuantumExposure"]["clause"] == "8.5.1"
-    assert by_key["firmwareInHbom"]["implemented"] is False
+    assert by_key["firmwareInHbom"]["implemented"] is True
+    assert by_key["vexCoverage"]["implemented"] is False
     assert all(rule["rationale"] for rule in catalogue)
 
 

@@ -28,8 +28,9 @@ LANE_SPECS: dict[Lane, LaneSpec] = {
     "aibom": LaneSpec("aibom", "AI BOM", "9.3", implemented=True),
     "cbom": LaneSpec("cbom", "Cryptography BOM", "8.4", implemented=True),
     "qbom": LaneSpec("qbom", "Quantum BOM", "8.5", implemented=True),
-    # S16 implements HBOM; its data is procurement data, not scanner output.
-    "hbom": LaneSpec("hbom", "Hardware BOM", "10.2", implemented=False),
+    # Procurement data, not scanner output — which is why it lands with the
+    # estate work rather than beside the artifact lanes.
+    "hbom": LaneSpec("hbom", "Hardware BOM", "10.2", implemented=True),
 }
 
 

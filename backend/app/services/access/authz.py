@@ -67,3 +67,23 @@ def engagement_visible(role: Role, *, user_engagement_ids: set[str], engagement_
     if role is Role.CLIENT:
         return engagement_id in user_engagement_ids
     return True
+
+
+def engagement_scope_for(
+    role: Role, *, assigned_engagement_ids: set[str]
+) -> frozenset[str] | None:
+    """The engagement scope a repository should be constructed with.
+
+    `None` means "every engagement in the org" — what an assessor, manager or
+    partner sees. A `client` gets a frozenset of exactly their own, and the
+    restriction is then enforced in `repositories/base.scoped()` rather than in a
+    router, for the same reason tenancy is.
+    """
+    if role is Role.CLIENT:
+        return frozenset(assigned_engagement_ids)
+    return None
+
+
+def is_read_only(role: Role) -> bool:
+    """`readonly` and `client` may not create work."""
+    return role in (Role.READONLY, Role.CLIENT)

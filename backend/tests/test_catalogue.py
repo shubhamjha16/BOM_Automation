@@ -78,18 +78,15 @@ def test_the_four_known_consumer_determinations():
     }
 
 
-def test_the_unimplemented_lane_is_empty_rather_than_approximated():
-    """A guessed catalogue would produce a score against invented clauses.
-
-    CBOM and QBOM were encoded in S14; HBOM waits for S16, because its data is
-    procurement data — asset registers and purchase records, not scanner output.
-    """
-    assert get_catalogue("hbom").elements == ()
-
-
-def test_the_crypto_lanes_are_now_encoded():
+def test_every_lane_is_now_encoded():
+    """All five tables carry elements: SBOM and AIBOM at S1, CBOM and QBOM at
+    S14, HBOM at S16. None was ever approximated — each stayed empty, and
+    therefore reported `lane_absent`, until its table was actually encoded."""
+    assert len(get_catalogue("sbom").elements) == 21
+    assert len(get_catalogue("aibom").elements) >= 15
     assert len(get_catalogue("cbom").elements) >= 15
     assert len(get_catalogue("qbom").elements) >= 8
+    assert len(get_catalogue("hbom").elements) >= 12
 
 
 def test_checksums_are_stable_and_distinct_per_lane():

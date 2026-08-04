@@ -75,7 +75,6 @@ RULES: tuple[Rule, ...] = (
         requires=("hbom", "sbom"),
         body=firmwareInHbom.check,
         rationale="§10.2.4 makes the HBOM-with-SBOM pairing explicit.",
-        implemented=False,  # needs the HBOM lane (S16)
     ),
     Rule(
         key="vexCoverage",

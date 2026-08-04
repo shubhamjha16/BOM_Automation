@@ -504,7 +504,7 @@ async def test_correlations_are_reported_with_their_clause_and_the_rule_catalogu
 
     # The rules are readable, as the minimum elements are.
     rules = {rule["key"]: rule for rule in body["rules"]}
-    assert rules["firmwareInHbom"]["implemented"] is False
+    assert rules["vexCoverage"]["implemented"] is False
     assert all(rule["rationale"] for rule in body["rules"])
 
 
