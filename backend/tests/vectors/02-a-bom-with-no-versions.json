@@ -1,0 +1,883 @@
+{
+  "name": "a BOM with no versions",
+  "rationale": "\u00a711: a critical field at zero coverage fails the submission regardless of score. A BOM with no versions scores respectably on descriptive fields while being useless for CVE matching, licence obligations and EOL.",
+  "lane": "sbom",
+  "document": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "version": 1,
+    "metadata": {
+      "timestamp": "2026-01-15T09:00:00Z",
+      "authors": [
+        {
+          "name": "Supplier Ltd"
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "library",
+        "bom-ref": "lib-0@None",
+        "name": "lib-0",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-1@None",
+        "name": "lib-1",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-2@None",
+        "name": "lib-2",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-3@None",
+        "name": "lib-3",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-4@None",
+        "name": "lib-4",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-5@None",
+        "name": "lib-5",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-6@None",
+        "name": "lib-6",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-7@None",
+        "name": "lib-7",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-8@None",
+        "name": "lib-8",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-9@None",
+        "name": "lib-9",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-10@None",
+        "name": "lib-10",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-11@None",
+        "name": "lib-11",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-12@None",
+        "name": "lib-12",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-13@None",
+        "name": "lib-13",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-14@None",
+        "name": "lib-14",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-15@None",
+        "name": "lib-15",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-16@None",
+        "name": "lib-16",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-17@None",
+        "name": "lib-17",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-18@None",
+        "name": "lib-18",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-19@None",
+        "name": "lib-19",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-20@None",
+        "name": "lib-20",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-21@None",
+        "name": "lib-21",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-22@None",
+        "name": "lib-22",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-23@None",
+        "name": "lib-23",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-24@None",
+        "name": "lib-24",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-25@None",
+        "name": "lib-25",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-26@None",
+        "name": "lib-26",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-27@None",
+        "name": "lib-27",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-28@None",
+        "name": "lib-28",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-29@None",
+        "name": "lib-29",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-30@None",
+        "name": "lib-30",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-31@None",
+        "name": "lib-31",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-32@None",
+        "name": "lib-32",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-33@None",
+        "name": "lib-33",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-34@None",
+        "name": "lib-34",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-35@None",
+        "name": "lib-35",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-36@None",
+        "name": "lib-36",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-37@None",
+        "name": "lib-37",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-38@None",
+        "name": "lib-38",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-39@None",
+        "name": "lib-39",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-40@None",
+        "name": "lib-40",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-41@None",
+        "name": "lib-41",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-42@None",
+        "name": "lib-42",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-43@None",
+        "name": "lib-43",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-44@None",
+        "name": "lib-44",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-45@None",
+        "name": "lib-45",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-46@None",
+        "name": "lib-46",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-47@None",
+        "name": "lib-47",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-48@None",
+        "name": "lib-48",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-49@None",
+        "name": "lib-49",
+        "version": null,
+        "description": "a library",
+        "supplier": {
+          "name": "Acme"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "verdict": "fail",
+    "fields": {
+      "version": "absent",
+      "license": "present"
+    },
+    "coverage": {
+      "version": [
+        0,
+        50
+      ]
+    }
+  }
+}

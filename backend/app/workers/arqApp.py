@@ -13,6 +13,7 @@ from arq.connections import RedisSettings
 
 from app.configs.dbConfig import get_sessionmaker
 from app.configs.envConfig import settings
+from app.services.catalogue.seeder import CatalogueDrift, seed
 from app.utils.logger import configure_logging, get_logger
 from app.workers.tasks import reconcile_stale_jobs, run_assessment_task
 
@@ -24,6 +25,20 @@ async def startup(ctx: dict[str, Any]) -> None:
     # One session factory per worker process, put on the context so tasks do not
     # each build an engine and exhaust the connection pool.
     ctx["session_factory"] = get_sessionmaker()
+
+    # Seed here as well as at deploy: worker startup is single-threaded per
+    # process, so it is a safe place to make the version row exist, and a worker
+    # started against a fresh database would otherwise write unpinned results.
+    async with ctx["session_factory"]() as session:
+        try:
+            version = await seed(session)
+            await session.commit()
+            logger.info("catalogue_ready", version=version.version)
+        except CatalogueDrift as error:
+            # Refuse to start rather than score against an ambiguous catalogue.
+            logger.error("catalogue_drift", error=str(error))
+            raise
+
     logger.info("worker_started", redis=settings.REDIS_URL.split("@")[-1])
 
 

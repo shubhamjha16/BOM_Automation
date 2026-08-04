@@ -9,7 +9,8 @@ COMPOSE := $(shell command -v docker >/dev/null 2>&1 && echo "docker compose" ||
 .DEFAULT_GOAL := help
 .PHONY: help install install-backend install-frontend infra infra-down dev dev-api dev-web \
         test test-backend test-frontend lint fmt typecheck migrate revision self-bom clean \
-        docker-build docker-up docker-down docker-logs docker-config api-types api-types-check
+        docker-build docker-up docker-down docker-logs docker-config api-types api-types-check \
+        seed-catalogue
 
 help: ## Show available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -70,6 +71,9 @@ typecheck: ## mypy + tsc
 
 migrate: ## alembic upgrade head (S2)
 	cd $(BACKEND) && uv run alembic upgrade head
+
+seed-catalogue: ## Seed the minimum-element catalogue (deployment step, after migrate)
+	cd $(BACKEND) && uv run python -m app.scripts.seedCatalogue
 
 revision: ## alembic revision --autogenerate -m "$(M)" (hand-review it; see §5)
 	cd $(BACKEND) && uv run alembic revision --autogenerate -m "$(M)"

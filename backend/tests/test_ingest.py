@@ -30,10 +30,10 @@ def test_every_rejection_carries_an_actionable_reason():
     payload = cyclonedx_document([{"type": "library", "version": "1.0"}, "junk"])
     result = cyclonedx.parse(payload, lane="sbom")
 
-    reasons = [entry["reason"] for entry in result.rejected]
-    assert "component has no name" in reasons
+    reasons = [entry.reason for entry in result.rejected]
+    assert any("component has no name" in reason for reason in reasons)
     assert "entry is not an object" in reasons
-    assert all(entry["reason"] for entry in result.rejected)
+    assert all(entry.reason for entry in result.rejected)
 
 
 def test_conservation_violation_is_loud():
@@ -62,10 +62,12 @@ def test_supported_spec_versions_parse(spec_version):
     assert len(result.entities) == 1
 
 
-def test_spdx_is_not_yet_implemented_and_says_so():
+def test_an_unsupported_spdx_version_raises():
     """Never a silent empty result for a format we cannot read."""
-    with pytest.raises(NotImplementedError, match="S6"):
-        spdxJson.parse({"spdxVersion": "SPDX-2.3"}, lane="sbom")
+    from app.services.ingest.parsers.spdxJson import UnsupportedSpdxVersion
+
+    with pytest.raises(UnsupportedSpdxVersion, match="SPDX-1.2"):
+        spdxJson.parse({"spdxVersion": "SPDX-1.2", "packages": []}, lane="sbom")
 
 
 def test_licence_expressions_are_flattened():
@@ -104,5 +106,5 @@ def test_a_lane_rejects_the_other_lanes_entities_with_a_reason():
     sbom_result = cyclonedx.parse(payload, lane="sbom")
 
     assert len(sbom_result.entities) == 1
-    assert "not scored by the sbom lane" in sbom_result.rejected[0]["reason"]
+    assert "not scored by the sbom lane" in sbom_result.rejected[0].reason
     sbom_result.assert_conserved(2)

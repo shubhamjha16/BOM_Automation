@@ -30,8 +30,11 @@ from app.models.enums import (
     Sector,
     SubmissionStatus,
 )
+from app.models.guideline import GuidelineVersion, MinimumElement
 from app.models.job import Job, NodeRun
+from app.models.laneResult import FieldVerdictRow, LaneResult
 from app.models.org import Org
+from app.models.rawEntry import RawEntry
 from app.models.submission import Submission
 from app.models.user import User
 
@@ -43,6 +46,10 @@ __all__ = [
     "Client",
     "DocumentStatus",
     "Engagement",
+    "FieldVerdictRow",
+    "GuidelineVersion",
+    "LaneResult",
+    "MinimumElement",
     "EngagementKind",
     "EngagementStatus",
     "Job",
@@ -50,6 +57,7 @@ __all__ = [
     "JobType",
     "NodeRun",
     "Org",
+    "RawEntry",
     "Role",
     "Sector",
     "Submission",

@@ -1,0 +1,116 @@
+{
+  "name": "NOASSERTION licences do not count as declared",
+  "rationale": "SPDX mandates NOASSERTION where a producer has no data, so it is an absence with a name. Counting it would let a BOM with no usable licence data score as having met 4.2(5).",
+  "lane": "sbom",
+  "document": {
+    "spdxVersion": "SPDX-2.3",
+    "dataLicense": "CC0-1.0",
+    "SPDXID": "SPDXRef-DOCUMENT",
+    "name": "noassertion-vector",
+    "creationInfo": {
+      "created": "2026-01-15T09:00:00Z",
+      "creators": [
+        "Tool: syft"
+      ]
+    },
+    "packages": [
+      {
+        "SPDXID": "SPDXRef-0",
+        "name": "pkg-0",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-1",
+        "name": "pkg-1",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-2",
+        "name": "pkg-2",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-3",
+        "name": "pkg-3",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-4",
+        "name": "pkg-4",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-5",
+        "name": "pkg-5",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-6",
+        "name": "pkg-6",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-7",
+        "name": "pkg-7",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-8",
+        "name": "pkg-8",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      },
+      {
+        "SPDXID": "SPDXRef-9",
+        "name": "pkg-9",
+        "versionInfo": "1.0",
+        "licenseConcluded": "NOASSERTION",
+        "licenseDeclared": "NOASSERTION",
+        "supplier": "NOASSERTION"
+      }
+    ]
+  },
+  "expected": {
+    "fields": {
+      "license": "absent",
+      "supplier_name": "absent",
+      "version": "present"
+    },
+    "coverage": {
+      "license": [
+        0,
+        10
+      ],
+      "version": [
+        10,
+        10
+      ]
+    }
+  }
+}

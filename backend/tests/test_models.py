@@ -31,6 +31,11 @@ EXPECTED_TABLES = {
     "submissions",
     "bom_documents",
     "audit_events",
+    "raw_entries",
+    "guideline_versions",
+    "minimum_elements",
+    "lane_results",
+    "field_verdicts",
 }
 
 

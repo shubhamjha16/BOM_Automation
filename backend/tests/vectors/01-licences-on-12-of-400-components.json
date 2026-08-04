@@ -1,0 +1,3721 @@
+{
+  "name": "licences on 12 of 400 components",
+  "rationale": "\u00a711: partial coverage is not a pass. 12/400 = 3%, not a met clause. Scored proportionally against 4.2(5), and the lane still fails because other critical elements are absent across every component.",
+  "lane": "sbom",
+  "document": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "version": 1,
+    "metadata": {
+      "timestamp": "2026-01-15T09:00:00Z",
+      "authors": [
+        {
+          "name": "Supplier Ltd"
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "library",
+        "bom-ref": "lib-0@1.0.0",
+        "name": "lib-0",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-1@1.0.0",
+        "name": "lib-1",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-2@1.0.0",
+        "name": "lib-2",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-3@1.0.0",
+        "name": "lib-3",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-4@1.0.0",
+        "name": "lib-4",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-5@1.0.0",
+        "name": "lib-5",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-6@1.0.0",
+        "name": "lib-6",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-7@1.0.0",
+        "name": "lib-7",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-8@1.0.0",
+        "name": "lib-8",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-9@1.0.0",
+        "name": "lib-9",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-10@1.0.0",
+        "name": "lib-10",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-11@1.0.0",
+        "name": "lib-11",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "MIT"
+            }
+          }
+        ]
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-12@1.0.0",
+        "name": "lib-12",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-13@1.0.0",
+        "name": "lib-13",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-14@1.0.0",
+        "name": "lib-14",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-15@1.0.0",
+        "name": "lib-15",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-16@1.0.0",
+        "name": "lib-16",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-17@1.0.0",
+        "name": "lib-17",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-18@1.0.0",
+        "name": "lib-18",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-19@1.0.0",
+        "name": "lib-19",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-20@1.0.0",
+        "name": "lib-20",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-21@1.0.0",
+        "name": "lib-21",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-22@1.0.0",
+        "name": "lib-22",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-23@1.0.0",
+        "name": "lib-23",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-24@1.0.0",
+        "name": "lib-24",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-25@1.0.0",
+        "name": "lib-25",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-26@1.0.0",
+        "name": "lib-26",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-27@1.0.0",
+        "name": "lib-27",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-28@1.0.0",
+        "name": "lib-28",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-29@1.0.0",
+        "name": "lib-29",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-30@1.0.0",
+        "name": "lib-30",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-31@1.0.0",
+        "name": "lib-31",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-32@1.0.0",
+        "name": "lib-32",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-33@1.0.0",
+        "name": "lib-33",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-34@1.0.0",
+        "name": "lib-34",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-35@1.0.0",
+        "name": "lib-35",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-36@1.0.0",
+        "name": "lib-36",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-37@1.0.0",
+        "name": "lib-37",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-38@1.0.0",
+        "name": "lib-38",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-39@1.0.0",
+        "name": "lib-39",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-40@1.0.0",
+        "name": "lib-40",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-41@1.0.0",
+        "name": "lib-41",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-42@1.0.0",
+        "name": "lib-42",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-43@1.0.0",
+        "name": "lib-43",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-44@1.0.0",
+        "name": "lib-44",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-45@1.0.0",
+        "name": "lib-45",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-46@1.0.0",
+        "name": "lib-46",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-47@1.0.0",
+        "name": "lib-47",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-48@1.0.0",
+        "name": "lib-48",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-49@1.0.0",
+        "name": "lib-49",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-50@1.0.0",
+        "name": "lib-50",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-51@1.0.0",
+        "name": "lib-51",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-52@1.0.0",
+        "name": "lib-52",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-53@1.0.0",
+        "name": "lib-53",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-54@1.0.0",
+        "name": "lib-54",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-55@1.0.0",
+        "name": "lib-55",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-56@1.0.0",
+        "name": "lib-56",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-57@1.0.0",
+        "name": "lib-57",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-58@1.0.0",
+        "name": "lib-58",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-59@1.0.0",
+        "name": "lib-59",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-60@1.0.0",
+        "name": "lib-60",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-61@1.0.0",
+        "name": "lib-61",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-62@1.0.0",
+        "name": "lib-62",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-63@1.0.0",
+        "name": "lib-63",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-64@1.0.0",
+        "name": "lib-64",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-65@1.0.0",
+        "name": "lib-65",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-66@1.0.0",
+        "name": "lib-66",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-67@1.0.0",
+        "name": "lib-67",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-68@1.0.0",
+        "name": "lib-68",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-69@1.0.0",
+        "name": "lib-69",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-70@1.0.0",
+        "name": "lib-70",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-71@1.0.0",
+        "name": "lib-71",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-72@1.0.0",
+        "name": "lib-72",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-73@1.0.0",
+        "name": "lib-73",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-74@1.0.0",
+        "name": "lib-74",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-75@1.0.0",
+        "name": "lib-75",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-76@1.0.0",
+        "name": "lib-76",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-77@1.0.0",
+        "name": "lib-77",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-78@1.0.0",
+        "name": "lib-78",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-79@1.0.0",
+        "name": "lib-79",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-80@1.0.0",
+        "name": "lib-80",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-81@1.0.0",
+        "name": "lib-81",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-82@1.0.0",
+        "name": "lib-82",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-83@1.0.0",
+        "name": "lib-83",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-84@1.0.0",
+        "name": "lib-84",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-85@1.0.0",
+        "name": "lib-85",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-86@1.0.0",
+        "name": "lib-86",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-87@1.0.0",
+        "name": "lib-87",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-88@1.0.0",
+        "name": "lib-88",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-89@1.0.0",
+        "name": "lib-89",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-90@1.0.0",
+        "name": "lib-90",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-91@1.0.0",
+        "name": "lib-91",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-92@1.0.0",
+        "name": "lib-92",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-93@1.0.0",
+        "name": "lib-93",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-94@1.0.0",
+        "name": "lib-94",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-95@1.0.0",
+        "name": "lib-95",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-96@1.0.0",
+        "name": "lib-96",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-97@1.0.0",
+        "name": "lib-97",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-98@1.0.0",
+        "name": "lib-98",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-99@1.0.0",
+        "name": "lib-99",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-100@1.0.0",
+        "name": "lib-100",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-101@1.0.0",
+        "name": "lib-101",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-102@1.0.0",
+        "name": "lib-102",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-103@1.0.0",
+        "name": "lib-103",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-104@1.0.0",
+        "name": "lib-104",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-105@1.0.0",
+        "name": "lib-105",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-106@1.0.0",
+        "name": "lib-106",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-107@1.0.0",
+        "name": "lib-107",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-108@1.0.0",
+        "name": "lib-108",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-109@1.0.0",
+        "name": "lib-109",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-110@1.0.0",
+        "name": "lib-110",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-111@1.0.0",
+        "name": "lib-111",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-112@1.0.0",
+        "name": "lib-112",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-113@1.0.0",
+        "name": "lib-113",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-114@1.0.0",
+        "name": "lib-114",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-115@1.0.0",
+        "name": "lib-115",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-116@1.0.0",
+        "name": "lib-116",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-117@1.0.0",
+        "name": "lib-117",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-118@1.0.0",
+        "name": "lib-118",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-119@1.0.0",
+        "name": "lib-119",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-120@1.0.0",
+        "name": "lib-120",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-121@1.0.0",
+        "name": "lib-121",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-122@1.0.0",
+        "name": "lib-122",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-123@1.0.0",
+        "name": "lib-123",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-124@1.0.0",
+        "name": "lib-124",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-125@1.0.0",
+        "name": "lib-125",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-126@1.0.0",
+        "name": "lib-126",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-127@1.0.0",
+        "name": "lib-127",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-128@1.0.0",
+        "name": "lib-128",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-129@1.0.0",
+        "name": "lib-129",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-130@1.0.0",
+        "name": "lib-130",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-131@1.0.0",
+        "name": "lib-131",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-132@1.0.0",
+        "name": "lib-132",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-133@1.0.0",
+        "name": "lib-133",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-134@1.0.0",
+        "name": "lib-134",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-135@1.0.0",
+        "name": "lib-135",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-136@1.0.0",
+        "name": "lib-136",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-137@1.0.0",
+        "name": "lib-137",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-138@1.0.0",
+        "name": "lib-138",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-139@1.0.0",
+        "name": "lib-139",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-140@1.0.0",
+        "name": "lib-140",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-141@1.0.0",
+        "name": "lib-141",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-142@1.0.0",
+        "name": "lib-142",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-143@1.0.0",
+        "name": "lib-143",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-144@1.0.0",
+        "name": "lib-144",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-145@1.0.0",
+        "name": "lib-145",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-146@1.0.0",
+        "name": "lib-146",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-147@1.0.0",
+        "name": "lib-147",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-148@1.0.0",
+        "name": "lib-148",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-149@1.0.0",
+        "name": "lib-149",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-150@1.0.0",
+        "name": "lib-150",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-151@1.0.0",
+        "name": "lib-151",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-152@1.0.0",
+        "name": "lib-152",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-153@1.0.0",
+        "name": "lib-153",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-154@1.0.0",
+        "name": "lib-154",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-155@1.0.0",
+        "name": "lib-155",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-156@1.0.0",
+        "name": "lib-156",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-157@1.0.0",
+        "name": "lib-157",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-158@1.0.0",
+        "name": "lib-158",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-159@1.0.0",
+        "name": "lib-159",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-160@1.0.0",
+        "name": "lib-160",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-161@1.0.0",
+        "name": "lib-161",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-162@1.0.0",
+        "name": "lib-162",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-163@1.0.0",
+        "name": "lib-163",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-164@1.0.0",
+        "name": "lib-164",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-165@1.0.0",
+        "name": "lib-165",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-166@1.0.0",
+        "name": "lib-166",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-167@1.0.0",
+        "name": "lib-167",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-168@1.0.0",
+        "name": "lib-168",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-169@1.0.0",
+        "name": "lib-169",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-170@1.0.0",
+        "name": "lib-170",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-171@1.0.0",
+        "name": "lib-171",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-172@1.0.0",
+        "name": "lib-172",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-173@1.0.0",
+        "name": "lib-173",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-174@1.0.0",
+        "name": "lib-174",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-175@1.0.0",
+        "name": "lib-175",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-176@1.0.0",
+        "name": "lib-176",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-177@1.0.0",
+        "name": "lib-177",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-178@1.0.0",
+        "name": "lib-178",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-179@1.0.0",
+        "name": "lib-179",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-180@1.0.0",
+        "name": "lib-180",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-181@1.0.0",
+        "name": "lib-181",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-182@1.0.0",
+        "name": "lib-182",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-183@1.0.0",
+        "name": "lib-183",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-184@1.0.0",
+        "name": "lib-184",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-185@1.0.0",
+        "name": "lib-185",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-186@1.0.0",
+        "name": "lib-186",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-187@1.0.0",
+        "name": "lib-187",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-188@1.0.0",
+        "name": "lib-188",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-189@1.0.0",
+        "name": "lib-189",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-190@1.0.0",
+        "name": "lib-190",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-191@1.0.0",
+        "name": "lib-191",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-192@1.0.0",
+        "name": "lib-192",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-193@1.0.0",
+        "name": "lib-193",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-194@1.0.0",
+        "name": "lib-194",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-195@1.0.0",
+        "name": "lib-195",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-196@1.0.0",
+        "name": "lib-196",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-197@1.0.0",
+        "name": "lib-197",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-198@1.0.0",
+        "name": "lib-198",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-199@1.0.0",
+        "name": "lib-199",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-200@1.0.0",
+        "name": "lib-200",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-201@1.0.0",
+        "name": "lib-201",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-202@1.0.0",
+        "name": "lib-202",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-203@1.0.0",
+        "name": "lib-203",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-204@1.0.0",
+        "name": "lib-204",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-205@1.0.0",
+        "name": "lib-205",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-206@1.0.0",
+        "name": "lib-206",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-207@1.0.0",
+        "name": "lib-207",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-208@1.0.0",
+        "name": "lib-208",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-209@1.0.0",
+        "name": "lib-209",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-210@1.0.0",
+        "name": "lib-210",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-211@1.0.0",
+        "name": "lib-211",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-212@1.0.0",
+        "name": "lib-212",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-213@1.0.0",
+        "name": "lib-213",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-214@1.0.0",
+        "name": "lib-214",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-215@1.0.0",
+        "name": "lib-215",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-216@1.0.0",
+        "name": "lib-216",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-217@1.0.0",
+        "name": "lib-217",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-218@1.0.0",
+        "name": "lib-218",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-219@1.0.0",
+        "name": "lib-219",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-220@1.0.0",
+        "name": "lib-220",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-221@1.0.0",
+        "name": "lib-221",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-222@1.0.0",
+        "name": "lib-222",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-223@1.0.0",
+        "name": "lib-223",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-224@1.0.0",
+        "name": "lib-224",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-225@1.0.0",
+        "name": "lib-225",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-226@1.0.0",
+        "name": "lib-226",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-227@1.0.0",
+        "name": "lib-227",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-228@1.0.0",
+        "name": "lib-228",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-229@1.0.0",
+        "name": "lib-229",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-230@1.0.0",
+        "name": "lib-230",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-231@1.0.0",
+        "name": "lib-231",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-232@1.0.0",
+        "name": "lib-232",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-233@1.0.0",
+        "name": "lib-233",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-234@1.0.0",
+        "name": "lib-234",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-235@1.0.0",
+        "name": "lib-235",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-236@1.0.0",
+        "name": "lib-236",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-237@1.0.0",
+        "name": "lib-237",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-238@1.0.0",
+        "name": "lib-238",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-239@1.0.0",
+        "name": "lib-239",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-240@1.0.0",
+        "name": "lib-240",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-241@1.0.0",
+        "name": "lib-241",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-242@1.0.0",
+        "name": "lib-242",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-243@1.0.0",
+        "name": "lib-243",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-244@1.0.0",
+        "name": "lib-244",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-245@1.0.0",
+        "name": "lib-245",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-246@1.0.0",
+        "name": "lib-246",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-247@1.0.0",
+        "name": "lib-247",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-248@1.0.0",
+        "name": "lib-248",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-249@1.0.0",
+        "name": "lib-249",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-250@1.0.0",
+        "name": "lib-250",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-251@1.0.0",
+        "name": "lib-251",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-252@1.0.0",
+        "name": "lib-252",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-253@1.0.0",
+        "name": "lib-253",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-254@1.0.0",
+        "name": "lib-254",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-255@1.0.0",
+        "name": "lib-255",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-256@1.0.0",
+        "name": "lib-256",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-257@1.0.0",
+        "name": "lib-257",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-258@1.0.0",
+        "name": "lib-258",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-259@1.0.0",
+        "name": "lib-259",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-260@1.0.0",
+        "name": "lib-260",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-261@1.0.0",
+        "name": "lib-261",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-262@1.0.0",
+        "name": "lib-262",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-263@1.0.0",
+        "name": "lib-263",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-264@1.0.0",
+        "name": "lib-264",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-265@1.0.0",
+        "name": "lib-265",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-266@1.0.0",
+        "name": "lib-266",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-267@1.0.0",
+        "name": "lib-267",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-268@1.0.0",
+        "name": "lib-268",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-269@1.0.0",
+        "name": "lib-269",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-270@1.0.0",
+        "name": "lib-270",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-271@1.0.0",
+        "name": "lib-271",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-272@1.0.0",
+        "name": "lib-272",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-273@1.0.0",
+        "name": "lib-273",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-274@1.0.0",
+        "name": "lib-274",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-275@1.0.0",
+        "name": "lib-275",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-276@1.0.0",
+        "name": "lib-276",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-277@1.0.0",
+        "name": "lib-277",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-278@1.0.0",
+        "name": "lib-278",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-279@1.0.0",
+        "name": "lib-279",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-280@1.0.0",
+        "name": "lib-280",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-281@1.0.0",
+        "name": "lib-281",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-282@1.0.0",
+        "name": "lib-282",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-283@1.0.0",
+        "name": "lib-283",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-284@1.0.0",
+        "name": "lib-284",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-285@1.0.0",
+        "name": "lib-285",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-286@1.0.0",
+        "name": "lib-286",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-287@1.0.0",
+        "name": "lib-287",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-288@1.0.0",
+        "name": "lib-288",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-289@1.0.0",
+        "name": "lib-289",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-290@1.0.0",
+        "name": "lib-290",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-291@1.0.0",
+        "name": "lib-291",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-292@1.0.0",
+        "name": "lib-292",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-293@1.0.0",
+        "name": "lib-293",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-294@1.0.0",
+        "name": "lib-294",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-295@1.0.0",
+        "name": "lib-295",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-296@1.0.0",
+        "name": "lib-296",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-297@1.0.0",
+        "name": "lib-297",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-298@1.0.0",
+        "name": "lib-298",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-299@1.0.0",
+        "name": "lib-299",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-300@1.0.0",
+        "name": "lib-300",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-301@1.0.0",
+        "name": "lib-301",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-302@1.0.0",
+        "name": "lib-302",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-303@1.0.0",
+        "name": "lib-303",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-304@1.0.0",
+        "name": "lib-304",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-305@1.0.0",
+        "name": "lib-305",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-306@1.0.0",
+        "name": "lib-306",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-307@1.0.0",
+        "name": "lib-307",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-308@1.0.0",
+        "name": "lib-308",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-309@1.0.0",
+        "name": "lib-309",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-310@1.0.0",
+        "name": "lib-310",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-311@1.0.0",
+        "name": "lib-311",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-312@1.0.0",
+        "name": "lib-312",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-313@1.0.0",
+        "name": "lib-313",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-314@1.0.0",
+        "name": "lib-314",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-315@1.0.0",
+        "name": "lib-315",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-316@1.0.0",
+        "name": "lib-316",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-317@1.0.0",
+        "name": "lib-317",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-318@1.0.0",
+        "name": "lib-318",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-319@1.0.0",
+        "name": "lib-319",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-320@1.0.0",
+        "name": "lib-320",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-321@1.0.0",
+        "name": "lib-321",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-322@1.0.0",
+        "name": "lib-322",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-323@1.0.0",
+        "name": "lib-323",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-324@1.0.0",
+        "name": "lib-324",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-325@1.0.0",
+        "name": "lib-325",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-326@1.0.0",
+        "name": "lib-326",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-327@1.0.0",
+        "name": "lib-327",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-328@1.0.0",
+        "name": "lib-328",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-329@1.0.0",
+        "name": "lib-329",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-330@1.0.0",
+        "name": "lib-330",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-331@1.0.0",
+        "name": "lib-331",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-332@1.0.0",
+        "name": "lib-332",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-333@1.0.0",
+        "name": "lib-333",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-334@1.0.0",
+        "name": "lib-334",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-335@1.0.0",
+        "name": "lib-335",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-336@1.0.0",
+        "name": "lib-336",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-337@1.0.0",
+        "name": "lib-337",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-338@1.0.0",
+        "name": "lib-338",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-339@1.0.0",
+        "name": "lib-339",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-340@1.0.0",
+        "name": "lib-340",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-341@1.0.0",
+        "name": "lib-341",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-342@1.0.0",
+        "name": "lib-342",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-343@1.0.0",
+        "name": "lib-343",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-344@1.0.0",
+        "name": "lib-344",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-345@1.0.0",
+        "name": "lib-345",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-346@1.0.0",
+        "name": "lib-346",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-347@1.0.0",
+        "name": "lib-347",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-348@1.0.0",
+        "name": "lib-348",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-349@1.0.0",
+        "name": "lib-349",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-350@1.0.0",
+        "name": "lib-350",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-351@1.0.0",
+        "name": "lib-351",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-352@1.0.0",
+        "name": "lib-352",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-353@1.0.0",
+        "name": "lib-353",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-354@1.0.0",
+        "name": "lib-354",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-355@1.0.0",
+        "name": "lib-355",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-356@1.0.0",
+        "name": "lib-356",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-357@1.0.0",
+        "name": "lib-357",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-358@1.0.0",
+        "name": "lib-358",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-359@1.0.0",
+        "name": "lib-359",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-360@1.0.0",
+        "name": "lib-360",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-361@1.0.0",
+        "name": "lib-361",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-362@1.0.0",
+        "name": "lib-362",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-363@1.0.0",
+        "name": "lib-363",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-364@1.0.0",
+        "name": "lib-364",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-365@1.0.0",
+        "name": "lib-365",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-366@1.0.0",
+        "name": "lib-366",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-367@1.0.0",
+        "name": "lib-367",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-368@1.0.0",
+        "name": "lib-368",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-369@1.0.0",
+        "name": "lib-369",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-370@1.0.0",
+        "name": "lib-370",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-371@1.0.0",
+        "name": "lib-371",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-372@1.0.0",
+        "name": "lib-372",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-373@1.0.0",
+        "name": "lib-373",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-374@1.0.0",
+        "name": "lib-374",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-375@1.0.0",
+        "name": "lib-375",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-376@1.0.0",
+        "name": "lib-376",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-377@1.0.0",
+        "name": "lib-377",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-378@1.0.0",
+        "name": "lib-378",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-379@1.0.0",
+        "name": "lib-379",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-380@1.0.0",
+        "name": "lib-380",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-381@1.0.0",
+        "name": "lib-381",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-382@1.0.0",
+        "name": "lib-382",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-383@1.0.0",
+        "name": "lib-383",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-384@1.0.0",
+        "name": "lib-384",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-385@1.0.0",
+        "name": "lib-385",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-386@1.0.0",
+        "name": "lib-386",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-387@1.0.0",
+        "name": "lib-387",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-388@1.0.0",
+        "name": "lib-388",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-389@1.0.0",
+        "name": "lib-389",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-390@1.0.0",
+        "name": "lib-390",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-391@1.0.0",
+        "name": "lib-391",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-392@1.0.0",
+        "name": "lib-392",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-393@1.0.0",
+        "name": "lib-393",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-394@1.0.0",
+        "name": "lib-394",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-395@1.0.0",
+        "name": "lib-395",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-396@1.0.0",
+        "name": "lib-396",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-397@1.0.0",
+        "name": "lib-397",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-398@1.0.0",
+        "name": "lib-398",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-399@1.0.0",
+        "name": "lib-399",
+        "version": "1.0.0",
+        "supplier": {
+          "name": "Acme Corp"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "verdict": "fail",
+    "fields": {
+      "license": "absent",
+      "component_name": "present"
+    },
+    "coverage": {
+      "license": [
+        12,
+        400
+      ],
+      "component_name": [
+        400,
+        400
+      ]
+    }
+  }
+}

@@ -12,6 +12,7 @@ import uuid
 
 from app.configs.jobTypes import JobStatus
 from app.repositories.jobRepository import JobRepository
+from app.repositories.laneRepository import LaneRepository
 from app.services.assessmentService import AssessmentSummary
 from app.utils.logger import get_logger
 
@@ -32,6 +33,36 @@ def _node_run_rows(summary: AssessmentSummary) -> list[dict]:
         }
         for run in summary.node_runs
     ]
+
+
+async def persist_lane_results(
+    lanes: LaneRepository,
+    submission_id: uuid.UUID,
+    summary: AssessmentSummary,
+    *,
+    guideline_version_id: uuid.UUID | None,
+    element_ids: dict[str, uuid.UUID] | None = None,
+) -> int:
+    """Write each lane result and its field verdicts.
+
+    `guideline_version_id` pins the result: a v3.0 catalogue published next year
+    must not retroactively change what this submission was measured against.
+    """
+    for result in summary.lane_results:
+        await lanes.record(
+            submission_id=submission_id,
+            lane=result.lane,
+            verdict=str(result.verdict),
+            score=result.score,
+            entity_count=result.entity_count,
+            detail=result.detail,
+            engine_version=result.engine_version,
+            inputs_hash=result.inputs_hash,
+            guideline_version_id=guideline_version_id,
+            field_results=result.field_results,
+            element_ids=element_ids,
+        )
+    return len(summary.lane_results)
 
 
 async def persist_summary(

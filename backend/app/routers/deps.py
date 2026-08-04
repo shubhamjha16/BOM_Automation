@@ -24,6 +24,7 @@ from app.configs.envConfig import settings
 from app.models.enums import Role
 from app.models.user import User
 from app.repositories.jobRepository import JobRepository
+from app.repositories.laneRepository import LaneRepository
 from app.repositories.submissionRepository import SubmissionRepository
 from app.repositories.userRepository import UserRepository
 from app.utils.security import InvalidToken, decode_token
@@ -98,5 +99,10 @@ async def job_repository(session: SessionDep, org_id: OrgDep) -> JobRepository:
     return JobRepository(session, org_id)
 
 
+async def lane_repository(session: SessionDep, org_id: OrgDep) -> LaneRepository:
+    return LaneRepository(session, org_id)
+
+
 SubmissionRepoDep = Annotated[SubmissionRepository, Depends(submission_repository)]
 JobRepoDep = Annotated[JobRepository, Depends(job_repository)]
+LaneRepoDep = Annotated[LaneRepository, Depends(lane_repository)]

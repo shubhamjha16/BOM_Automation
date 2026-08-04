@@ -1,0 +1,36 @@
+{
+  "name": "the CERT-In unique identifier is absent without the supplier registry",
+  "rationale": "Table 3 mandates pkg:supplier/OrganizationName/Component@Version. `supplier` is not a registered PURL type, so no generator emits it. Reporting 4.2(21) as anything but absent before S11 resolves it would be a plausible-looking wrong identifier.",
+  "lane": "sbom",
+  "document": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "version": 1,
+    "metadata": {
+      "timestamp": "2026-01-15T09:00:00Z",
+      "authors": [
+        {
+          "name": "Supplier Ltd"
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "library",
+        "bom-ref": "tomcat-catalina@9.0.71",
+        "name": "tomcat-catalina",
+        "version": "9.0.71",
+        "purl": "pkg:maven/org.apache.tomcat/tomcat-catalina@9.0.71",
+        "supplier": {
+          "name": "Apache Software Foundation"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "fields": {
+      "certin_identifier": "absent",
+      "component_identifier": "present"
+    }
+  }
+}

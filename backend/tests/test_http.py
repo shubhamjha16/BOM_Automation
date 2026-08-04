@@ -371,3 +371,100 @@ def test_controllers_do_not_build_queries():
             continue
         offending = _called_names(path) & SQL_CALLS
         assert not offending, f"{path.name} calls {sorted(offending)}"
+
+
+# --- S6: every dropped entry is visible, with a reason -----------------------
+
+
+async def test_the_rejected_endpoint_lists_every_dropped_entry_with_a_reason(wired):
+    """The §S6 exit proof, and the answer to "why 380 and not 400?"."""
+    http, org_a, _, engagement = wired
+
+    payload = cyclonedx_document(
+        [
+            component("good-one"),
+            {"type": "library", "version": "1.0"},          # no name
+            "not-an-object",                                  # not an object
+            component("good-two"),
+        ]
+    )
+    created = await http.post(
+        "/api/v1/submissions",
+        json={
+            "engagement_id": str(engagement.id),
+            "documents": [{**_document("sbom"), "payload": payload}],
+        },
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+    await http.post(f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a))
+
+    response = await http.get(
+        f"/api/v1/submissions/{submission_id}/rejected", headers=_headers(org_a)
+    )
+    assert response.status_code == 200
+    body = response.json()
+
+    # The counts reconcile, and the reader can check the arithmetic themselves.
+    assert body["totals"]["received"] == 4
+    assert body["totals"]["parsed"] == 2
+    assert body["totals"]["rejected"] == 2
+    assert body["totals"]["parsed"] + body["totals"]["rejected"] == body["totals"]["received"]
+    assert all(document["counts_reconcile"] for document in body["documents"])
+
+    reasons = " ".join(entry["reason"] for entry in body["rejected"])
+    assert "component has no name" in reasons
+    assert "entry is not an object" in reasons
+    # Each rejection says which document and where in it.
+    assert all(entry["lane"] == "sbom" for entry in body["rejected"])
+    assert {entry["ord"] for entry in body["rejected"]} == {1, 2}
+
+
+async def test_lane_results_and_field_verdicts_are_readable_after_assessment(wired):
+    """S7: the score, and every field behind it, traced to a clause."""
+    http, org_a, _, engagement = wired
+    created = await http.post(
+        "/api/v1/submissions",
+        json={"engagement_id": str(engagement.id), "documents": [_document("sbom")]},
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+    await http.post(f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a))
+
+    lanes = await http.get(
+        f"/api/v1/submissions/{submission_id}/lanes", headers=_headers(org_a)
+    )
+    assert lanes.status_code == 200
+    rollup = {lane["lane"]: lane for lane in lanes.json()["lanes"]}
+    assert set(rollup) == {"sbom", "cbom", "qbom", "aibom", "hbom"}
+    assert rollup["sbom"]["score"] is not None
+    assert rollup["cbom"]["is_finding"] is True
+
+    fields = await http.get(
+        f"/api/v1/submissions/{submission_id}/lanes/sbom/fields", headers=_headers(org_a)
+    )
+    assert fields.status_code == 200
+    body = fields.json()
+
+    # 19 supplier-scored elements plus 2 consumer determinations = the 21 of s.4.2.
+    assert len(body["fields"]) + len(body["consumer_determinations"]) == 21
+    assert all(field["clause"].startswith("4.2(") for field in body["fields"])
+
+    # not_determinable renders in its own section, never as compliant.
+    determinations = {item["clause"] for item in body["consumer_determinations"]}
+    assert determinations == {"4.2(12)", "4.2(13)"}
+    assert all(item["consumer_action"] for item in body["consumer_determinations"])
+
+
+async def test_a_lane_with_no_result_is_a_404_not_an_empty_report(wired):
+    http, org_a, _, engagement = wired
+    created = await http.post(
+        "/api/v1/submissions",
+        json={"engagement_id": str(engagement.id), "documents": [_document("sbom")]},
+        headers=_headers(org_a),
+    )
+    response = await http.get(
+        f"/api/v1/submissions/{created.json()['id']}/lanes/sbom/fields",
+        headers=_headers(org_a),
+    )
+    assert response.status_code == 404

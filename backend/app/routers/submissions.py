@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.configs.envConfig import settings
 from app.controllers import submissionController as controller
-from app.routers.deps import JobRepoDep, SubmissionRepoDep
+from app.routers.deps import JobRepoDep, LaneRepoDep, SubmissionRepoDep
 from app.schemas.request.submission import SubmissionCreate
 from app.schemas.response.submission import SubmissionDetailOut, SubmissionOut
 
@@ -48,3 +48,41 @@ async def commit(
         "created": result.created,
         "queued": result.queued,
     }
+
+
+@router.get("/{submission_id}/rejected")
+async def rejected(
+    submission_id: UUID, submissions: SubmissionRepoDep, lanes: LaneRepoDep
+) -> dict:
+    """Every entry the parsers refused, with an actionable reason.
+
+    Nothing is dropped silently: this is the answer to "why does your report say
+    380 components when I sent 400?".
+    """
+    if await submissions.get(submission_id) is None:
+        raise HTTPException(404, "submission not found")
+    return await controller.rejected_report(submissions, lanes, submission_id)
+
+
+@router.get("/{submission_id}/lanes")
+async def lanes_for(
+    submission_id: UUID, submissions: SubmissionRepoDep, lanes: LaneRepoDep
+) -> dict:
+    """Five lane results side by side."""
+    if await submissions.get(submission_id) is None:
+        raise HTTPException(404, "submission not found")
+    return await controller.lane_report(lanes, submission_id)
+
+
+@router.get("/{submission_id}/lanes/{lane}/fields")
+async def fields_for(
+    submission_id: UUID, lane: str, submissions: SubmissionRepoDep, lanes: LaneRepoDep
+) -> dict:
+    """Field verdicts with their clause references, and the consumer
+    determinations in their own section."""
+    if await submissions.get(submission_id) is None:
+        raise HTTPException(404, "submission not found")
+    report = await controller.field_report(lanes, submission_id, lane)
+    if report is None:
+        raise HTTPException(404, f"no {lane} result for this submission")
+    return report

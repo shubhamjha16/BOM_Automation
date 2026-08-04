@@ -149,3 +149,99 @@ def rollup_response(summary: Any) -> list[dict[str, Any]]:
     return [
         {"lane": lane, **detail} for lane, detail in sorted(lane_rollup(summary).items())
     ]
+
+
+# --- read models -------------------------------------------------------------
+
+
+async def rejected_report(
+    submissions: SubmissionRepository, lanes: Any, submission_id: uuid.UUID
+) -> dict[str, Any]:
+    """Every dropped entry, plus the counts that must reconcile.
+
+    The counts are returned alongside the list so a reader can check the
+    arithmetic themselves rather than taking parsed + rejected == received on
+    trust.
+    """
+    documents = await submissions.documents_for(submission_id)
+    entries = await lanes.rejected_for_submission(submission_id)
+    return {
+        "submission_id": str(submission_id),
+        "totals": {
+            "received": sum(document.entry_count for document in documents),
+            "parsed": sum(document.parsed_count for document in documents),
+            "rejected": sum(document.rejected_count for document in documents),
+        },
+        "documents": [
+            {
+                "id": str(document.id),
+                "lane": document.lane,
+                "filename": document.filename,
+                "entry_count": document.entry_count,
+                "parsed_count": document.parsed_count,
+                "rejected_count": document.rejected_count,
+                "counts_reconcile": document.counts_reconcile,
+            }
+            for document in documents
+        ],
+        "rejected": entries,
+    }
+
+
+async def lane_report(lanes: Any, submission_id: uuid.UUID) -> dict[str, Any]:
+    results = await lanes.for_submission(submission_id)
+    return {
+        "submission_id": str(submission_id),
+        "lanes": [
+            {
+                "lane": result.lane,
+                "verdict": str(result.verdict),
+                "score": float(result.score) if result.score is not None else None,
+                "entity_count": result.entity_count,
+                "detail": result.detail,
+                "engine_version": result.engine_version,
+                # lane_not_applicable is excluded from the overall score;
+                # lane_absent is a finding. Never rendered the same way.
+                "counts_toward_overall": str(result.verdict)
+                not in ("lane_not_applicable", "lane_timeout"),
+                "is_finding": str(result.verdict) == "lane_absent",
+            }
+            for result in results
+        ],
+    }
+
+
+async def field_report(
+    lanes: Any, submission_id: uuid.UUID, lane: str
+) -> dict[str, Any] | None:
+    results = await lanes.for_submission(submission_id)
+    match = next((item for item in results if item.lane == lane), None)
+    if match is None:
+        return None
+
+    verdicts = await lanes.verdicts_for(match.id)
+    scored = [row for row in verdicts if str(row.verdict) != "not_determinable"]
+    determined = [row for row in verdicts if str(row.verdict) == "not_determinable"]
+
+    def shape(row: Any) -> dict[str, Any]:
+        return {
+            "element_key": row.element_key,
+            "clause": row.clause,
+            "verdict": str(row.verdict),
+            "populated": row.populated,
+            "total": row.total,
+            "coverage": float(row.coverage) if row.coverage is not None else None,
+            "detail": row.detail,
+            "consumer_action": row.consumer_action,
+        }
+
+    return {
+        "submission_id": str(submission_id),
+        "lane": lane,
+        "score": float(match.score) if match.score is not None else None,
+        "verdict": str(match.verdict),
+        "fields": [shape(row) for row in scored],
+        # not_determinable renders in its own section, never as compliant and
+        # never as a supplier defect.
+        "consumer_determinations": [shape(row) for row in determined],
+    }

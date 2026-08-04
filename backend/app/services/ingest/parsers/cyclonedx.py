@@ -11,8 +11,9 @@ Two rules this parser exists to enforce, both from §11:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any
+
+from app.services.ingest.result import ParseResult
 
 SUPPORTED_SPEC_VERSIONS: frozenset[str] = frozenset({"1.4", "1.5", "1.6"})
 
@@ -24,31 +25,6 @@ class UnrecognisedDocument(ValueError):
     """The payload is not a CycloneDX document, or not a supported version."""
 
 
-@dataclass(slots=True)
-class ParseResult:
-    """Parsed entities plus every entry that did not become one."""
-
-    entities: list[dict[str, Any]] = field(default_factory=list)
-    rejected: list[dict[str, Any]] = field(default_factory=list)
-    spec_version: str = ""
-    doc_author: str | None = None
-    doc_timestamp: str | None = None
-
-    @property
-    def entry_count(self) -> int:
-        return len(self.entities) + len(self.rejected)
-
-    def assert_conserved(self, input_count: int) -> None:
-        """parsed + rejected must equal the input entry count. The S6 contract."""
-        if self.entry_count != input_count:
-            raise AssertionError(
-                f"entry conservation violated: {len(self.entities)} parsed + "
-                f"{len(self.rejected)} rejected = {self.entry_count}, expected {input_count}"
-            )
-
-
-def _reject(ordinal: int, payload: Any, reason: str) -> dict[str, Any]:
-    return {"ord": ordinal, "payload": payload, "parse_status": "rejected", "reason": reason}
 
 
 def _licence_expression(component: dict[str, Any]) -> str | None:
@@ -173,36 +149,45 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         if isinstance(components[0], dict):
             author = components[0].get("name")
 
+    components = payload.get("components", []) or []
     result = ParseResult(
         spec_version=spec_version,
+        format="CycloneDX",
         doc_author=author,
         doc_timestamp=metadata.get("timestamp"),
+        doc_name=(metadata.get("component") or {}).get("name"),
+        declared_entries=len(components) if isinstance(components, list) else 0,
     )
     dependencies = _dependency_index(payload)
     wants_models = lane == "aibom"
 
-    for ordinal, component in enumerate(payload.get("components", []) or []):
+    for ordinal, component in enumerate(components):
         if not isinstance(component, dict):
-            result.rejected.append(_reject(ordinal, component, "entry is not an object"))
+            result.reject(ordinal, "entry is not an object", payload=component)
             continue
         is_model = component.get("type") in MODEL_TYPES
         if is_model != wants_models:
-            result.rejected.append(
-                _reject(
-                    ordinal,
-                    {"name": component.get("name"), "type": component.get("type")},
-                    f"component type {component.get('type')!r} is not scored by the "
-                    f"{lane} lane",
-                )
+            result.reject(
+                ordinal,
+                f"component type {component.get('type')!r} is not scored by the "
+                f"{lane} lane",
+                payload={"name": component.get("name"), "type": component.get("type")},
+                ref=str(component.get("bom-ref") or component.get("purl") or ""),
             )
             continue
         if not component.get("name"):
-            result.rejected.append(_reject(ordinal, component, "component has no name"))
+            result.reject(
+                ordinal,
+                "component has no name; CycloneDX requires name on every component",
+                payload=component,
+                ref=str(component.get("bom-ref") or component.get("purl") or ""),
+            )
             continue
         result.entities.append(
-            _normalise_model(component) if is_model else _normalise_component(
-                component, dependencies
-            )
+            _normalise_model(component)
+            if is_model
+            else _normalise_component(component, dependencies)
         )
 
+    result.assert_conserved()
     return result

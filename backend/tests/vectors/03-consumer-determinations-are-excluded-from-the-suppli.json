@@ -1,0 +1,42 @@
+{
+  "name": "consumer determinations are excluded from the supplier score",
+  "rationale": "4.2(12) Criticality is relative to the consuming deployment and 4.2(13) Usage Restrictions is a legal determination. A supplier could not have supplied either, so both are not_determinable and leave the score.",
+  "lane": "sbom",
+  "document": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "version": 1,
+    "metadata": {
+      "timestamp": "2026-01-15T09:00:00Z",
+      "authors": [
+        {
+          "name": "Supplier Ltd"
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "library",
+        "bom-ref": "openssl@3.0.0",
+        "name": "openssl",
+        "version": "3.0.0",
+        "supplier": {
+          "name": "OpenSSL"
+        },
+        "licenses": [
+          {
+            "license": {
+              "id": "Apache-2.0"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "fields": {
+      "criticality": "not_determinable",
+      "usage_restrictions": "not_determinable"
+    }
+  }
+}

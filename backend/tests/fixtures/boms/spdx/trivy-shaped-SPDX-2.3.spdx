@@ -1,0 +1,45 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: bom-factory-sample
+DocumentNamespace: https://example.com/spdx/SPDX-2.3
+Creator: Tool: trivy-0.58.0
+Created: 2026-01-15T09:00:00Z
+
+PackageName: tomcat-catalina
+SPDXID: SPDXRef-Package-tomcat-catalina
+PackageVersion: 9.0.71
+PackageDownloadLocation: https://repo1.maven.org/tomcat-catalina
+FilesAnalyzed: false
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: Apache-2.0
+PackageSupplier: Organization: Apache Software Foundation
+PackageChecksum: SHA256: abababababababababababababababababababababababababababababababab
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache/tomcat-catalina@9.0.71
+PackageDescription: <text>tomcat-catalina library, used by the sample</text>
+
+PackageName: commons-io
+SPDXID: SPDXRef-Package-commons-io
+PackageVersion: 2.11.0
+PackageDownloadLocation: https://repo1.maven.org/commons-io
+FilesAnalyzed: false
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: Apache-2.0
+PackageSupplier: Organization: Apache Software Foundation
+PackageChecksum: SHA256: abababababababababababababababababababababababababababababababab
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache/commons-io@2.11.0
+PackageDescription: <text>commons-io library, used by the sample</text>
+
+PackageName: internal-shim
+SPDXID: SPDXRef-Package-internal-shim
+PackageVersion: 1.0.0
+PackageDownloadLocation: https://repo1.maven.org/internal-shim
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageSupplier: Organization: Apache Software Foundation
+PackageChecksum: SHA256: abababababababababababababababababababababababababababababababab
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache/internal-shim@1.0.0
+PackageDescription: <text>internal-shim library, used by the sample</text>
+
+Relationship: SPDXRef-Package-tomcat-catalina DEPENDS_ON SPDXRef-Package-commons-io

@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S5 complete
+## Current state — S1–S7 complete (Phase 1: the engine)
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -126,8 +126,39 @@ passwords, TOTP MFA on by default, and five roles.
 - Route guards in the console hide what a user cannot use. They are **not** access
   control, and say so: the server enforces the same rules whether or not they ran.
 
-**Not yet built** (and not claimed): no SPDX parsing (S6); no enrichment,
-identifier mapping or VEX (S10–S12). BOM payloads are held in a
+**S6 closes ingestion.** SPDX 2.2/2.3 in both JSON and tag-value, alongside
+CycloneDX 1.4–1.6, all behind one dispatcher.
+
+- **Format detection is explicit and caller-overridable, never guessed.** The
+  caller declares the format and the document must agree; a contradiction raises.
+  A mis-detected document yields zero components, and zero components scores as a
+  clean assessment of a supplier who submitted nothing wrong.
+- **parsed + rejected == received, asserted per document across every fixture.**
+  A silent drop shrinks the denominator and therefore *raises* every coverage
+  percentage — silent drops don't just lose information, they inflate the score.
+- **A truncated tag-value document fails naming the byte offset.** Tag-value has
+  no closing delimiter, so a file cut mid-transfer stays syntactically valid and
+  simply contains fewer packages than were sent.
+- `GET /submissions/{id}/rejected` lists every dropped entry with a reason, plus
+  the counts so a reader can check the arithmetic themselves.
+- `NOASSERTION`/`NONE` are treated as absences, because SPDX mandates them where
+  a producer has no data.
+
+**S7 makes the catalogue versioned data.** `guideline_versions` and
+`minimum_elements` are seeded from the encoded catalogue and checksummed; every
+lane result is pinned to the version it was scored under.
+
+- **Editing a version's elements in place is refused.** A catalogue change means
+  a new version row, because otherwise every assessment already issued under v2.0
+  silently starts reporting against different rules.
+- **Seeding is a deployment step** (`make seed-catalogue`), beside
+  `alembic upgrade head` — never on the assessment path.
+- `tests/vectors/` holds hand-scored BOMs matched **field by field**, not on the
+  total: two compensating errors give the right percentage from the wrong
+  verdicts.
+
+**Not yet built** (and not claimed): no enrichment, identifier mapping or VEX
+(S10–S12); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`. BOM payloads are held in a
 `bom_documents.payload` column until object storage lands in S13; that column is
 the wrong blast radius for an architecture disclosure and is marked interim in
 the model. Google OAuth has a controller path but no live token exchange.

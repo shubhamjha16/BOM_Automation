@@ -76,6 +76,12 @@ class LaneResult:
     engine_version: str = ""
     inputs_hash: str | None = None
     computed_at: datetime = field(default_factory=_now)
+    #: Per-element verdicts, carried so they can be persisted and rendered.
+    #: A lane result without them is a score with nothing behind it, and the
+    #: whole product is the traceability from score to clause to BOM entry.
+    field_results: list[dict[str, Any]] = field(default_factory=list)
+    #: Entries the parser refused, so the count is reportable per lane.
+    rejected_count: int = 0
 
     @property
     def counts_toward_overall(self) -> bool:

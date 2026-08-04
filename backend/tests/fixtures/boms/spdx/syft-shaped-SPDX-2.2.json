@@ -1,0 +1,133 @@
+{
+  "spdxVersion": "SPDX-2.2",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "bom-factory-sample",
+  "documentNamespace": "https://example.com/spdx/SPDX-2.2",
+  "creationInfo": {
+    "created": "2026-01-15T09:00:00Z",
+    "creators": [
+      "Tool: syft-1.18.1",
+      "Organization: Example Supplier Ltd"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-tomcat-catalina",
+      "name": "tomcat-catalina",
+      "versionInfo": "9.0.71",
+      "downloadLocation": "https://repo1.maven.org/tomcat-catalina/9.0.71",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "supplier": "Organization: Apache Software Foundation",
+      "originator": "Organization: Apache Software Foundation",
+      "description": "tomcat-catalina library",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0000000000000000000000000000000000000000000000000000000000000001"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache/tomcat-catalina@9.0.71"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-commons-io",
+      "name": "commons-io",
+      "versionInfo": "2.11.0",
+      "downloadLocation": "https://repo1.maven.org/commons-io/2.11.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "supplier": "Organization: Apache Software Foundation",
+      "originator": "Organization: Apache Software Foundation",
+      "description": "commons-io library",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0000000000000000000000000000000000000000000000000000000000000002"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache/commons-io@2.11.0"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-log4j-core",
+      "name": "log4j-core",
+      "versionInfo": "2.17.1",
+      "downloadLocation": "https://repo1.maven.org/log4j-core/2.17.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "supplier": "Organization: Apache Software Foundation",
+      "originator": "Organization: Apache Software Foundation",
+      "description": "log4j-core library",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0000000000000000000000000000000000000000000000000000000000000003"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache/log4j-core@2.17.1"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-internal-shim",
+      "name": "internal-shim",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://repo1.maven.org/internal-shim/1.0.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "supplier": "NOASSERTION",
+      "originator": "Organization: Apache Software Foundation",
+      "description": "internal-shim library",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0000000000000000000000000000000000000000000000000000000000000004"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/org.apache/internal-shim@1.0.0"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-tomcat-catalina"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-tomcat-catalina",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-commons-io"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-log4j-core",
+      "relationshipType": "DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-Package-tomcat-catalina"
+    }
+  ]
+}

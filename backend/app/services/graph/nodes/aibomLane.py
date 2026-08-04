@@ -11,10 +11,29 @@ from app.configs.scoringConfig import ENGINE_VERSION
 from app.services.catalogue.loader import catalogue_checksum, get_catalogue
 from app.services.graph.laneRunner import run_lane
 from app.services.graph.state import GraphState, LaneResult, SubmissionDocument
-from app.services.ingest.parsers import cyclonedx
+from app.services.ingest.normalize import ingest_document
 from app.services.score.documentChecks import check_all, document_metadata
+from app.services.score.fieldCheck import FieldResult
 from app.services.score.verdict import lane_verdict
 from app.services.score.weighting import lane_score
+
+
+def _as_row(result: FieldResult) -> dict:
+    """Flatten a FieldResult for persistence and for the API."""
+    return {
+        "element_key": result.element_key,
+        "label": result.label,
+        "clause": result.clause,
+        "tier": str(result.tier),
+        "determinability": str(result.determinability),
+        "verdict": str(result.verdict),
+        "populated": result.coverage.populated,
+        "total": result.coverage.total,
+        "coverage": round(result.coverage.ratio, 4),
+        "weight": result.weight,
+        "detail": result.detail,
+        "consumer_action": result.consumer_action or None,
+    }
 
 
 def score_aibom(documents: list[SubmissionDocument]) -> LaneResult:
@@ -24,8 +43,11 @@ def score_aibom(documents: list[SubmissionDocument]) -> LaneResult:
     rejected = 0
 
     for document in documents:
-        parsed = cyclonedx.parse(document.payload, lane="aibom")
-        parsed.assert_conserved(len(document.payload.get("components", []) or []))
+        # The dispatcher detects, validates and conserves; a lane never picks
+        # a parser, so a new format is one dispatcher branch and no lane edits.
+        parsed = ingest_document(
+            document.payload, lane="aibom", declared_format=document.format
+        )
         entities.extend(parsed.entities)
         document_meta.append(
             document_metadata(
@@ -52,6 +74,8 @@ def score_aibom(documents: list[SubmissionDocument]) -> LaneResult:
         detail=detail,
         engine_version=ENGINE_VERSION,
         inputs_hash=catalogue_checksum("aibom"),
+        field_results=[_as_row(item) for item in results],
+        rejected_count=rejected,
     )
 
 

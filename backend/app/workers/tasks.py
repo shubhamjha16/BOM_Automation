@@ -22,10 +22,13 @@ from app.configs.dbConfig import get_sessionmaker
 from app.configs.jobTypes import JobStatus
 from app.models.enums import SubmissionStatus
 from app.repositories.jobRepository import JobRepository, TerminalJobWriteRejected
+from app.repositories.laneRepository import LaneRepository
 from app.repositories.submissionRepository import SubmissionRepository
 from app.services.assessmentService import run_assessment
+from app.services.catalogue.seeder import get_active_version
 from app.services.graph.state import SubmissionDocument
-from app.services.jobService import persist_summary
+from app.services.ingest.normalize import ingest_document
+from app.services.jobService import persist_lane_results, persist_summary
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -118,6 +121,45 @@ async def run_assessment_task(
             documents=documents,
             job_id=job_id,
         )
+        # Pin this assessment to the catalogue version it was scored under.
+        # Read only: seeding is a deployment step (`make seed-catalogue`), and a
+        # task that wrote the schema row would put twenty concurrent assessments
+        # into a race over it. A missing pin is reported, not manufactured.
+        version = await get_active_version(session)
+        if version is None:
+            logger.warning(
+                "guideline_version_unseeded",
+                submission_id=submission_id,
+                detail="lane results will not be pinned; run `make seed-catalogue`",
+            )
+        lanes = LaneRepository(session, scoped_org)
+        await persist_lane_results(
+            lanes,
+            submission.id,
+            summary,
+            guideline_version_id=version.id if version else None,
+        )
+
+        # Every entry the parsers refused, kept with its reason so
+        # GET /submissions/{id}/rejected can answer "why 380 and not 400?".
+        for document in submission.documents:
+            if document.payload is None:
+                continue
+            try:
+                parsed = ingest_document(
+                    document.payload,
+                    lane=document.lane,
+                    declared_format=document.format.value,
+                )
+            except Exception:  # noqa: BLE001 - the lane already reported this
+                continue
+            document.parsed_count = parsed.parsed_count
+            document.rejected_count = parsed.rejected_count
+            document.entry_count = parsed.entry_count
+            await lanes.record_rejections(
+                bom_document_id=document.id, rejections=parsed.rejected
+            )
+
         await persist_summary(jobs, job.id, summary)
         await submissions.set_status(
             submission.id, SubmissionStatus.SCORED, overall_score=summary.overall_score

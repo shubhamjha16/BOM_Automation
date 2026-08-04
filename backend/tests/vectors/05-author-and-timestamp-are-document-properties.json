@@ -1,0 +1,216 @@
+{
+  "name": "author and timestamp are document properties",
+  "rationale": "4.2(19) and 4.2(20) belong to the document, not to each component. Probing per component reports them absent across every entity and tells a supplier they failed two clauses they demonstrably met.",
+  "lane": "sbom",
+  "document": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "version": 1,
+    "metadata": {
+      "timestamp": "2026-01-15T09:00:00Z",
+      "authors": [
+        {
+          "name": "Supplier Ltd"
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "library",
+        "bom-ref": "lib-0@1.0.0",
+        "name": "lib-0",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-1@1.0.0",
+        "name": "lib-1",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-2@1.0.0",
+        "name": "lib-2",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-3@1.0.0",
+        "name": "lib-3",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-4@1.0.0",
+        "name": "lib-4",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-5@1.0.0",
+        "name": "lib-5",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-6@1.0.0",
+        "name": "lib-6",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-7@1.0.0",
+        "name": "lib-7",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-8@1.0.0",
+        "name": "lib-8",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-9@1.0.0",
+        "name": "lib-9",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-10@1.0.0",
+        "name": "lib-10",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-11@1.0.0",
+        "name": "lib-11",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-12@1.0.0",
+        "name": "lib-12",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-13@1.0.0",
+        "name": "lib-13",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-14@1.0.0",
+        "name": "lib-14",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-15@1.0.0",
+        "name": "lib-15",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-16@1.0.0",
+        "name": "lib-16",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-17@1.0.0",
+        "name": "lib-17",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-18@1.0.0",
+        "name": "lib-18",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-19@1.0.0",
+        "name": "lib-19",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-20@1.0.0",
+        "name": "lib-20",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-21@1.0.0",
+        "name": "lib-21",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-22@1.0.0",
+        "name": "lib-22",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-23@1.0.0",
+        "name": "lib-23",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-24@1.0.0",
+        "name": "lib-24",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-25@1.0.0",
+        "name": "lib-25",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-26@1.0.0",
+        "name": "lib-26",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-27@1.0.0",
+        "name": "lib-27",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-28@1.0.0",
+        "name": "lib-28",
+        "version": "1.0.0"
+      },
+      {
+        "type": "library",
+        "bom-ref": "lib-29@1.0.0",
+        "name": "lib-29",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "expected": {
+    "fields": {
+      "author_name": "present",
+      "timestamp": "present"
+    },
+    "coverage": {
+      "author_name": [
+        1,
+        1
+      ],
+      "timestamp": [
+        1,
+        1
+      ]
+    }
+  }
+}
