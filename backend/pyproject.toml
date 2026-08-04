@@ -1,0 +1,53 @@
+[project]
+name = "bom-factory-backend"
+version = "0.1.0"
+description = "CERT-In BOM conformance engine — FastAPI + LangGraph"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "langgraph>=0.2.45",
+    "structlog>=24.4",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.7",
+    "mypy>=1.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = ["error::RuntimeWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.ruff.lint.per-file-ignores]
+# B008 forbids calls in default arguments. Depends(), Query() and Body() in a
+# signature are exactly how FastAPI declares dependencies and validation, so the
+# rule is wrong for routers specifically — not worth contorting the signature.
+"app/routers/*.py" = ["B008"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_ignores = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

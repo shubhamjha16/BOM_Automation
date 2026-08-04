@@ -1,0 +1,35 @@
+# Local infra only. The API and Vite run on the host via `make dev` so that
+# reload is instant and the debugger attaches without a container hop.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: bom
+      POSTGRES_PASSWORD: bom
+      POSTGRES_DB: bom_factory
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bom -d bom_factory"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:
+  redisdata:

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Env — never commit a real one
+.env
+.env.local
+.env.*.local
+
+# Generated conformance artifacts for this repo (S13 commits the scores, not the BOMs)
+dist/*.json
+!dist/.gitkeep
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

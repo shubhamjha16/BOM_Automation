@@ -1,0 +1,48 @@
+name: backend
+
+# Path-filtered: the point of the monorepo. A PR touching only frontend/ does not
+# run this suite.
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', 'packages/api-types/**', '.github/workflows/backend.yml']
+  pull_request:
+    paths: ['backend/**', 'packages/api-types/**', '.github/workflows/backend.yml']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-extras
+      - name: ruff
+        run: uv run ruff check app tests
+      - name: mypy
+        run: uv run mypy app
+      - name: pytest
+        run: uv run pytest -q
+        env:
+          GROQ_API_KEY: ci-placeholder
+          ANTHROPIC_API_KEY: ci-placeholder
+          JWT_SECRET: ci-placeholder
+      - name: lockfile drift
+        run: uv lock --check
+
+  # A supply-chain conformance tool shipping known-vulnerable dependencies is not
+  # commercially survivable. Blocking, per §10.
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --all-extras
+      - run: uv run --with pip-audit pip-audit --strict

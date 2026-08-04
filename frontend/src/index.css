@@ -1,0 +1,25 @@
+:root {
+  --pass: #0f7b3f;
+  --warn: #8a5a00;
+  --fail: #a4262c;
+  --neutral: #555;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+body { margin: 0; padding: 2rem; max-width: 72rem; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 2rem; }
+th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid #ddd; }
+code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
+
+.badge { padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.85em; color: #fff; }
+.badge--pass { background: var(--pass); }
+.badge--warn { background: var(--warn); }
+.badge--fail { background: var(--fail); }
+.badge--neutral { background: var(--neutral); }
+
+.clause-ref { text-decoration: underline dotted; cursor: help; white-space: nowrap; }
+.lane-strip { display: flex; gap: 1rem; list-style: none; padding: 0; flex-wrap: wrap; }
+.lane-strip__item { border: 1px solid #ddd; padding: 1rem; min-width: 12rem; }
+.lane-strip__note { font-size: 0.85em; color: var(--neutral); }
+.score-dial strong { display: block; font-size: 1.6rem; }

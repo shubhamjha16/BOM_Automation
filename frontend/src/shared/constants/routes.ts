@@ -1,0 +1,15 @@
+export const ROUTES = {
+  root: '/',
+  signin: '/signin',
+  dashboard: '/dashboard',
+  engagements: '/engagements',
+  engagement: (id: string) => `/engagements/${id}`,
+  submissions: '/submissions',
+  submission: (id: string) => `/submissions/${id}`,
+  submissionLane: (id: string, lane: string) => `/submissions/${id}/lanes/${lane}`,
+  rejected: (id: string) => `/submissions/${id}/rejected`,
+  identifiers: '/identifiers',
+  vex: '/vex',
+  elements: '/elements',
+  audit: '/audit',
+} as const;

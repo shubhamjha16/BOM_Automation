@@ -1,0 +1,8 @@
+{
+  "name": "@bom-factory/api-types",
+  "private": true,
+  "version": "0.1.0",
+  "description": "TypeScript types generated from the backend OpenAPI schema (S3)",
+  "types": "index.d.ts",
+  "files": ["index.d.ts"]
+}

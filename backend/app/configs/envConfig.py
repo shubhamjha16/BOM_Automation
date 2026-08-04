@@ -1,0 +1,123 @@
+"""Typed, fail-fast configuration.
+
+The sibling repos use ``os.environ.get("GROQ_API_KEY", "")``, which lets a service
+boot with no LLM key and fail once per request, in production, on a client's
+submission. This module refuses to import instead, naming every variable that is
+missing or malformed.
+"""
+
+from __future__ import annotations
+
+from functools import lru_cache
+from typing import Literal
+
+from pydantic import Field, ValidationError, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+Lane = Literal["sbom", "cbom", "qbom", "aibom", "hbom"]
+ALL_LANES: tuple[Lane, ...] = ("sbom", "cbom", "qbom", "aibom", "hbom")
+
+
+class MissingConfiguration(RuntimeError):
+    """Raised at import when required configuration is absent or malformed."""
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=(".env.local", ".env"),
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="ignore",
+    )
+
+    # --- required: no defaults, deliberately -------------------------------
+    GROQ_API_KEY: str
+    ANTHROPIC_API_KEY: str
+    JWT_SECRET: str
+
+    # --- infrastructure ----------------------------------------------------
+    DATABASE_URL: str = "postgresql+asyncpg://bom:bom@localhost:5432/bom_factory"
+    REDIS_URL: str = "redis://localhost:6379/0"
+    PORT: int = 8005
+    CORS_ORIGINS: str = "http://localhost:5173"
+    SENTRY_DSN: str | None = None
+
+    # --- models ------------------------------------------------------------
+    ROUTER_MODEL: str = "llama-3.3-70b-versatile"
+    DRAFTER_MODEL: str = "claude-sonnet-4-5"
+
+    # --- storage -----------------------------------------------------------
+    S3_BUCKET: str | None = None
+    AWS_REGION: str = "ap-south-1"
+    KMS_KEY_ID: str | None = None
+    PRESIGN_TTL_SECONDS: int = 900
+    MAX_BOM_MB: int = 100
+
+    # --- guideline pinning -------------------------------------------------
+    GUIDELINE_VERSION: str = "2.0"
+    GUIDELINE_DATE: str = "2025-07-09"
+
+    # --- scoring / lanes ---------------------------------------------------
+    ENABLED_LANES: str = "sbom,aibom,cbom,qbom,hbom"
+    PASS_THRESHOLD: float = 85.0
+    LANE_TIMEOUT_SECONDS: int = 120
+    SELF_CONFORMANCE_MIN: float = 90.0
+
+    # --- agents (S10–S12) --------------------------------------------------
+    AGENTS_ENABLED: bool = True
+    AGENT_MAX_HOPS: int = 3
+    AGENT_BATCH_SIZE: int = 50
+    AGENT_MIN_CONFIDENCE: float = Field(default=0.6, ge=0.0, le=1.0)
+
+    # --- enrichment feeds (S10) --------------------------------------------
+    NVD_API_KEY: str | None = None
+    KB_SYNC_CRON: str = "0 3 * * *"
+
+    # --- retention ---------------------------------------------------------
+    SUBMISSION_RETENTION_DAYS: int = 1095
+
+    @field_validator("ENABLED_LANES")
+    @classmethod
+    def _known_lanes(cls, raw: str) -> str:
+        lanes = [item.strip().lower() for item in raw.split(",") if item.strip()]
+        if not lanes:
+            raise ValueError("must name at least one lane")
+        unknown = [lane for lane in lanes if lane not in ALL_LANES]
+        if unknown:
+            raise ValueError(f"unknown lane(s) {unknown}; valid lanes are {list(ALL_LANES)}")
+        return ",".join(lanes)
+
+    @property
+    def enabled_lanes(self) -> tuple[Lane, ...]:
+        """Deployment-wide default. An engagement narrows this; it never widens it."""
+        return tuple(lane for lane in ALL_LANES if lane in self.ENABLED_LANES.split(","))
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+
+
+def _describe(error: ValidationError) -> str:
+    lines = []
+    for detail in error.errors():
+        name = ".".join(str(part) for part in detail["loc"]) or "<root>"
+        if detail["type"] == "missing":
+            lines.append(f"  {name}: required, not set in the environment or .env.local")
+        else:
+            lines.append(f"  {name}: {detail['msg']}")
+    return "\n".join(lines)
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    try:
+        return Settings()  # type: ignore[call-arg]
+    except ValidationError as error:
+        raise MissingConfiguration(
+            "Configuration is incomplete; the service will not start.\n"
+            f"{_describe(error)}\n"
+            "See backend/.env.example for the full set."
+        ) from error
+
+
+settings = get_settings()

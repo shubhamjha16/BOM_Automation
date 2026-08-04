@@ -1,0 +1,41 @@
+name: self-bom
+
+# We ship what we ask for: this repository publishes its own SBOM per release and
+# is scored by its own engine. Retrofitting this later is how a conformance tool
+# ends up non-conformant (rec. 7.2.2).
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  generate-and-score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - uses: astral-sh/setup-uv@v5
+      - run: yarn install --frozen-lockfile
+      - name: Generate our own CycloneDX SBOM
+        run: make self-bom
+      - name: Score it with our own engine
+        working-directory: backend
+        env:
+          GROQ_API_KEY: ci-placeholder
+          ANTHROPIC_API_KEY: ci-placeholder
+          JWT_SECRET: ci-placeholder
+        # S13 turns this into a gate: a PR dropping our score below
+        # SELF_CONFORMANCE_MIN fails CI. Reported, not enforced, until the
+        # enrichment (S10) and identifier (S11) lanes can actually populate the
+        # fields the score depends on — gating before then would only prove that
+        # unimplemented sprints score badly.
+        run: uv run python -m app.services.self.selfScore ../dist/bom-factory.cdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bom-factory-sbom
+          path: dist/bom-factory.cdx.json
