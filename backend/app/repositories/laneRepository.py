@@ -9,6 +9,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.models.bomDocument import BomDocument
+from app.models.correlationFinding import CorrelationFindingRow
 from app.models.laneResult import FieldVerdictRow, LaneResult
 from app.models.rawEntry import RawEntry
 from app.repositories.base import TenantScopedRepository
@@ -137,3 +138,31 @@ class LaneRepository(TenantScopedRepository[LaneResult]):
             }
             for entry, document in result.all()
         ]
+
+    # --- correlation findings (S9) -----------------------------------------
+
+    async def record_findings(self, *, submission_id: uuid.UUID, findings: list[Any]) -> int:
+        for finding in findings:
+            self.session.add(
+                CorrelationFindingRow(
+                    org_id=self.org_id,
+                    submission_id=submission_id,
+                    rule_key=finding.rule_key,
+                    severity=str(finding.severity),
+                    clause=finding.clause,
+                    detail=finding.detail,
+                    left_ref=finding.left_ref,
+                    right_ref=finding.right_ref,
+                )
+            )
+        await self.session.flush()
+        return len(findings)
+
+    async def findings_for(self, submission_id: uuid.UUID) -> list[CorrelationFindingRow]:
+        result = await self.session.execute(
+            select(CorrelationFindingRow)
+            .where(CorrelationFindingRow.org_id == self.org_id)
+            .where(CorrelationFindingRow.submission_id == submission_id)
+            .order_by(CorrelationFindingRow.severity, CorrelationFindingRow.rule_key)
+        )
+        return list(result.scalars().all())

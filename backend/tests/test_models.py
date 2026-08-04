@@ -36,6 +36,7 @@ EXPECTED_TABLES = {
     "minimum_elements",
     "lane_results",
     "field_verdicts",
+    "correlation_findings",
 }
 
 

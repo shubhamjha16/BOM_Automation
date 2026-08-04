@@ -468,3 +468,61 @@ async def test_a_lane_with_no_result_is_a_404_not_an_empty_report(wired):
         headers=_headers(org_a),
     )
     assert response.status_code == 404
+
+
+# --- S9: cross-BOM findings over HTTP ---------------------------------------
+
+
+async def test_correlations_are_reported_with_their_clause_and_the_rule_catalogue(wired):
+    """A finding no single-lane tool could produce, cited and inspectable."""
+    http, org_a, _, engagement = wired
+    payload = cyclonedx_document(
+        [component("openssl", "3.0.0"), component("express", "4.18.0")]
+    )
+    created = await http.post(
+        "/api/v1/submissions",
+        json={
+            "engagement_id": str(engagement.id),
+            "documents": [{**_document("sbom"), "payload": payload}],
+        },
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+    await http.post(f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a))
+
+    response = await http.get(
+        f"/api/v1/submissions/{submission_id}/correlations", headers=_headers(org_a)
+    )
+    assert response.status_code == 200
+    body = response.json()
+
+    findings = {finding["rule_key"]: finding for finding in body["findings"]}
+    assert "cryptoInSbom" in findings
+    assert findings["cryptoInSbom"]["clause"] == "8.4.1.2"
+    assert findings["cryptoInSbom"]["severity"] == "high"
+    assert "OpenSSL" in findings["cryptoInSbom"]["detail"]
+
+    # The rules are readable, as the minimum elements are.
+    rules = {rule["key"]: rule for rule in body["rules"]}
+    assert rules["firmwareInHbom"]["implemented"] is False
+    assert all(rule["rationale"] for rule in body["rules"])
+
+
+async def test_a_submission_with_nothing_to_correlate_reports_no_findings(wired):
+    """Not an error, and not an empty page — an explicit empty finding list."""
+    http, org_a, _, engagement = wired
+    created = await http.post(
+        "/api/v1/submissions",
+        json={"engagement_id": str(engagement.id), "documents": [_document("sbom")]},
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+    await http.post(f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a))
+
+    body = (
+        await http.get(
+            f"/api/v1/submissions/{submission_id}/correlations", headers=_headers(org_a)
+        )
+    ).json()
+    assert body["findings"] == []
+    assert body["rules"], "the catalogue should still say what was checked"

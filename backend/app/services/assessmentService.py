@@ -8,13 +8,19 @@ does not change when they do.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from app.configs.envConfig import Lane
 from app.configs.jobTypes import JobStatus, LaneVerdict
 from app.services.graph.builder import compile_assessment_graph
-from app.services.graph.state import GraphState, LaneResult, NodeRun, SubmissionDocument
+from app.services.graph.state import (
+    CorrelationFinding,
+    GraphState,
+    LaneResult,
+    NodeRun,
+    SubmissionDocument,
+)
 from app.services.score.weighting import overall_score
 from app.utils.logger import get_logger
 
@@ -40,6 +46,7 @@ class AssessmentSummary:
     lane_results: list[LaneResult]
     node_runs: list[NodeRun]
     errors: list[str]
+    correlation_findings: list[CorrelationFinding] = field(default_factory=list)
     gate_reason: str | None = None
 
     @property
@@ -76,6 +83,7 @@ def _summarise(state: GraphState, job_id: str, submission_id: str) -> Assessment
         lane_results=sorted(results, key=lambda result: result.lane),
         node_runs=state.get("node_runs", []),
         errors=state.get("errors", []),
+        correlation_findings=state.get("correlation_findings", []),
         gate_reason=state.get("gate_reason"),
     )
 

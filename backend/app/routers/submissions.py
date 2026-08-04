@@ -86,3 +86,17 @@ async def fields_for(
     if report is None:
         raise HTTPException(404, f"no {lane} result for this submission")
     return report
+
+
+@router.get("/{submission_id}/correlations")
+async def correlations(
+    submission_id: UUID, submissions: SubmissionRepoDep, lanes: LaneRepoDep
+) -> dict:
+    """Cross-BOM findings — the class of result no single-lane tool can produce.
+
+    Also reports which rules ran and which could not, because "found nothing" and
+    "did not run" are different answers.
+    """
+    if await submissions.get(submission_id) is None:
+        raise HTTPException(404, "submission not found")
+    return await controller.correlation_report(lanes, submission_id)

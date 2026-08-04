@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S7 complete (Phase 1: the engine)
+## Current state — S1–S9 complete (Phase 1: the engine, done)
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -157,8 +157,41 @@ lane result is pinned to the version it was scored under.
   total: two compensating errors give the right percentage from the wrong
   verdicts.
 
+**S8 is the blocking gate, and it has no bypass flag.** Nothing renders unless
+every clause it would cite resolves in the pinned guideline version — field
+verdicts and correlation findings alike. A fabricated reference terminates the
+job as `blocked_conformance` naming the field.
+
+There is no parameter, environment variable or override that skips it. A flag
+would be used, eventually, by someone under deadline, and the assessment it let
+through would carry a citation that resolves to nothing. Two tests enforce this
+structurally: the gate takes `state` and nothing else, and imports no settings.
+
+The determinability rule is enforced at the gate too, not merely in the scorer:
+a `not_determinable` field carrying coverage, a consumer determination given a
+supplier verdict, or one rendered without its consumer action all block.
+
+**S9 correlates across lanes** — the class of finding no single-lane tool can
+produce, because each rule compares one document's declarations against
+another's.
+
+| Rule | Clause | Finding |
+|---|---|---|
+| `cryptoInSbom` | s.8.4.1.2 | OpenSSL in the SBOM, no cryptographic assets declared anywhere |
+| `modelDepsInSbom` | s.9.3(6) | AIBOM declares `torch`, the SBOM does not carry it — the SBOM is incomplete |
+| `algorithmQuantumExposure` | s.8.5.1 | CBOM declares RSA, no post-quantum migration entry |
+| `firmwareInHbom` | s.10.2.4 | pending the HBOM lane (S16) |
+| `vexCoverage` | rec. 7.1.6 | pending enrichment (S10) and VEX (S12) |
+
+**A rule whose inputs are absent does not fire.** A submission carrying only an
+SBOM has not failed to declare its cryptography — it was never asked to, and
+firing anyway would manufacture findings about documents nobody submitted. Rules
+that could not run are reported as skipped, because "found nothing" and "did not
+run" are different answers.
+
 **Not yet built** (and not claimed): no enrichment, identifier mapping or VEX
-(S10–S12); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`. BOM payloads are held in a
+(S10–S12); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`, so the two
+rules that need them are declared but inactive. BOM payloads are held in a
 `bom_documents.payload` column until object storage lands in S13; that column is
 the wrong blast radius for an architecture disclosure and is marked interim in
 the model. Google OAuth has a controller path but no live token exchange.

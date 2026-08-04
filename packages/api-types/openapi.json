@@ -1473,6 +1473,57 @@
         ]
       }
     },
+    "/api/v1/submissions/{submission_id}/correlations": {
+      "get": {
+        "description": "Cross-BOM findings \u2014 the class of result no single-lane tool can produce.\n\nAlso reports which rules ran and which could not, because \"found nothing\" and\n\"did not run\" are different answers.",
+        "operationId": "correlations_api_v1_submissions__submission_id__correlations_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "submission_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Submission Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Correlations Api V1 Submissions  Submission Id  Correlations Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Correlations",
+        "tags": [
+          "submissions"
+        ]
+      }
+    },
     "/api/v1/submissions/{submission_id}/lanes": {
       "get": {
         "description": "Five lane results side by side.",

@@ -72,3 +72,56 @@ def validate(results: Iterable[FieldResult]) -> None:
     materialised = list(results)
     assert_not_scored(materialised)
     assert_human_fields_undetermined(materialised)
+
+
+# --- row-shaped checks, for the gate ----------------------------------------
+#
+# The gate sees field verdicts as the flat dicts the lanes carry, not as
+# `FieldResult` objects. Same two rules, applied to that shape.
+
+
+HUMAN_DETERMINABILITY = "human"
+NOT_DETERMINABLE = "not_determinable"
+
+
+def assert_rows_not_scored(rows: Iterable[dict]) -> None:
+    """Both determinability rules, over the graph's flat field rows.
+
+    Checked at the gate rather than trusted from the scorer: the scorer is
+    correct today, and the point of a gate is that nothing renders on the basis
+    of a component being correct today.
+    """
+    leaked: list[str] = []
+    misjudged: list[str] = []
+
+    for row in rows:
+        verdict = str(row.get("verdict", ""))
+        determinability = str(row.get("determinability", ""))
+        clause = row.get("clause", "?")
+        label = row.get("label") or row.get("element_key", "?")
+
+        # A not_determinable field carrying coverage means it was scored.
+        if verdict == NOT_DETERMINABLE and int(row.get("total") or 0) > 0:
+            leaked.append(f"{clause} {label}")
+
+        # A consumer determination given a supplier verdict.
+        if determinability == HUMAN_DETERMINABILITY and verdict != NOT_DETERMINABLE:
+            misjudged.append(f"{clause} {label} = {verdict}")
+
+        # A not_determinable field with no action reads as a shrug, and the
+        # reader assumes it passed.
+        if verdict == NOT_DETERMINABLE and not row.get("consumer_action"):
+            misjudged.append(f"{clause} {label} is not determinable but names no action")
+
+    problems: list[str] = []
+    if leaked:
+        problems.append(
+            "not_determinable field(s) carry coverage and so entered the supplier "
+            "score: " + ", ".join(leaked)
+        )
+    if misjudged:
+        problems.append(
+            "consumer-determined field(s) were mishandled: " + ", ".join(misjudged)
+        )
+    if problems:
+        raise DeterminabilityViolation("; ".join(problems))

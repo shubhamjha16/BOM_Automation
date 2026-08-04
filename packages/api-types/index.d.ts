@@ -259,6 +259,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/submissions/{submission_id}/correlations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Correlations
+         * @description Cross-BOM findings — the class of result no single-lane tool can produce.
+         *
+         *     Also reports which rules ran and which could not, because "found nothing" and
+         *     "did not run" are different answers.
+         */
+        get: operations["correlations_api_v1_submissions__submission_id__correlations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/submissions/{submission_id}/lanes": {
         parameters: {
             query?: never;
@@ -1071,6 +1094,39 @@ export interface operations {
         };
     };
     commit_api_v1_submissions__submission_id__commit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                submission_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    correlations_api_v1_submissions__submission_id__correlations_get: {
         parameters: {
             query?: never;
             header?: never;

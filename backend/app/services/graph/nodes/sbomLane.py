@@ -74,6 +74,7 @@ def score_sbom(documents: list[SubmissionDocument]) -> LaneResult:
         engine_version=ENGINE_VERSION,
         inputs_hash=catalogue_checksum("sbom"),
         field_results=[_as_row(item) for item in results],
+        entities=entities,
         rejected_count=rejected,
     )
 

@@ -82,6 +82,11 @@ class LaneResult:
     field_results: list[dict[str, Any]] = field(default_factory=list)
     #: Entries the parser refused, so the count is reportable per lane.
     rejected_count: int = 0
+    #: The normalised entities this lane scored, carried to the join.
+    #: Correlation compares one lane's declarations against another's, so it
+    #: needs the entities themselves and not merely the verdicts about them.
+    #: These are references to objects already in memory, not copies.
+    entities: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def counts_toward_overall(self) -> bool:

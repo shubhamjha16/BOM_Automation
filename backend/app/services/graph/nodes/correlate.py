@@ -1,10 +1,14 @@
-"""Cross-BOM reconciliation — what the join buys. Rules land in S9.
+"""Cross-BOM reconciliation — what the join buys.
 
-The one rule enforced from S1 is the negative one: **a single-lane submission
-produces zero correlation findings rather than false positives.** Correlation
-compares one lane's declarations against another's; with only one lane present
-there is nothing to compare against, and a rule that fires anyway is inventing a
-finding about a document that was never submitted.
+Rules live in `services/correlate/`, held as data with their clause references so
+a correlation finding cites the guideline exactly as a field verdict does and
+passes the same conformance gate.
+
+The node's own responsibility is narrow: gather what each lane actually carried,
+hand it to the engine, and record what ran. **A lane that reported absent,
+timed out or was not applicable declared nothing**, so it can be neither side of
+a correlation — which is how "a single-lane submission produces zero correlation
+findings rather than false positives" is enforced.
 """
 
 from __future__ import annotations
@@ -12,41 +16,51 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from app.configs.jobTypes import LaneVerdict
-from app.services.graph.state import GraphState, NodeRun
+from app.services.correlate.engine import correlate as run_rules
+from app.services.graph.state import CorrelationFinding, GraphState, NodeRun
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+#: Verdicts meaning the lane declared nothing usable for comparison.
+_DECLARED_NOTHING = (
+    LaneVerdict.LANE_ABSENT,
+    LaneVerdict.LANE_TIMEOUT,
+    LaneVerdict.LANE_NOT_APPLICABLE,
+)
 
-def _lanes_with_content(state: GraphState) -> set[str]:
-    """Lanes that actually carried a scored document.
 
-    An absent, timed-out or not-applicable lane declared nothing, so it can be
-    neither side of a correlation.
-    """
+def _lane_entities(state: GraphState) -> dict[str, list[dict]]:
     return {
-        result.lane
+        result.lane: list(result.entities)
         for result in state.get("lane_results", [])
-        if result.verdict
-        not in (
-            LaneVerdict.LANE_ABSENT,
-            LaneVerdict.LANE_TIMEOUT,
-            LaneVerdict.LANE_NOT_APPLICABLE,
-        )
+        if result.verdict not in _DECLARED_NOTHING
     }
 
 
 async def correlate(state: GraphState) -> GraphState:
     started_at = datetime.now(UTC)
-    participating = _lanes_with_content(state)
+    lane_entities = _lane_entities(state)
 
-    findings: list = []
-    if len(participating) < 2:
-        logger.info("correlate_skipped", reason="fewer than two lanes carried content")
-    else:
-        # S9 applies correlate/rules.py here: cryptoInSbom, modelDepsInSbom,
-        # firmwareInHbom, algorithmQuantumExposure, vexCoverage.
-        logger.info("correlate", participating=sorted(participating), findings=0)
+    report = run_rules(lane_entities)
+    findings = [
+        CorrelationFinding(
+            rule_key=finding.rule_key,
+            severity=str(finding.severity),  # type: ignore[arg-type]
+            clause=finding.clause,
+            detail=finding.detail,
+            left_ref=finding.left_ref,
+            right_ref=finding.right_ref,
+        )
+        for finding in report.findings
+    ]
+
+    if findings:
+        logger.info(
+            "correlation_findings",
+            count=len(findings),
+            rules=[finding.rule_key for finding in findings],
+        )
 
     return GraphState(
         correlation_findings=findings,

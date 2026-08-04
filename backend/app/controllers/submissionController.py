@@ -245,3 +245,27 @@ async def field_report(
         # never as a supplier defect.
         "consumer_determinations": [shape(row) for row in determined],
     }
+
+
+async def correlation_report(lanes: Any, submission_id: uuid.UUID) -> dict[str, Any]:
+    """Findings, plus the rule catalogue so a reader can see what was checked."""
+    from app.services.correlate.engine import rule_catalogue
+
+    findings = await lanes.findings_for(submission_id)
+    return {
+        "submission_id": str(submission_id),
+        "findings": [
+            {
+                "rule_key": row.rule_key,
+                "severity": row.severity,
+                "clause": row.clause,
+                "detail": row.detail,
+                "left_ref": row.left_ref,
+                "right_ref": row.right_ref,
+            }
+            for row in findings
+        ],
+        # Inspectable, as the minimum elements are: a reader can see which rules
+        # exist, which are implemented, and what each one is for.
+        "rules": rule_catalogue(),
+    }

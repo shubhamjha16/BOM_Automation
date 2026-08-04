@@ -140,6 +140,11 @@ async def run_assessment_task(
             guideline_version_id=version.id if version else None,
         )
 
+        # Cross-BOM findings, cited and gated exactly as field verdicts are.
+        await lanes.record_findings(
+            submission_id=submission.id, findings=summary.correlation_findings
+        )
+
         # Every entry the parsers refused, kept with its reason so
         # GET /submissions/{id}/rejected can answer "why 380 and not 400?".
         for document in submission.documents:

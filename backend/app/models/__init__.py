@@ -18,6 +18,7 @@ from app.models.auditEvent import AuditEvent
 from app.models.base import Base
 from app.models.bomDocument import BomDocument
 from app.models.client import Client
+from app.models.correlationFinding import CorrelationFindingRow
 from app.models.engagement import Engagement
 from app.models.enums import (
     BomFormat,
@@ -44,6 +45,7 @@ __all__ = [
     "BomDocument",
     "BomFormat",
     "Client",
+    "CorrelationFindingRow",
     "DocumentStatus",
     "Engagement",
     "FieldVerdictRow",
