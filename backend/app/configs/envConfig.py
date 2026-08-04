@@ -88,6 +88,13 @@ class Settings(BaseSettings):
     AGENT_MIN_CONFIDENCE: float = Field(default=0.6, ge=0.0, le=1.0)
 
     # --- enrichment feeds (S10) --------------------------------------------
+    #: Whether the enrich node may call the feeds live.
+    #:
+    #: On in production; off in tests, and that is not merely convenience. A
+    #: suite that queries NVD on every run is flaky by construction and rude to a
+    #: shared public service. The feed clients are verified against the live
+    #: services separately; the graph is verified with the network switched off.
+    ENRICHMENT_ONLINE: bool = True
     NVD_API_KEY: str | None = None
     KB_SYNC_CRON: str = "0 3 * * *"
 

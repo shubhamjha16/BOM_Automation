@@ -279,6 +279,7 @@ def test_the_gate_runs_before_anything_renders():
     """Wiring check: the gate sits between correlate and the end of the graph."""
     builder = (BACKEND / "app" / "services" / "graph" / "builder.py").read_text()
     assert '"correlate", "conformanceGate"' in builder
+    assert '"join", "enrich"' in builder
     assert '"conformanceGate", END' in builder
 
 

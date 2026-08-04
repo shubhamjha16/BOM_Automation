@@ -2,7 +2,7 @@
 
     intake → detect → fanout ─┬→ sbomLane  ─┐
                               ├→ cbomLane  ─┤
-                              ├→ qbomLane  ─┼→ join → correlate → conformanceGate
+                              ├→ qbomLane  ─┼→ join → enrich → correlate → gate
                               ├→ aibomLane ─┤
                               └→ hbomLane  ─┘
 
@@ -26,6 +26,7 @@ from app.services.graph.nodes.cbomLane import cbom_lane
 from app.services.graph.nodes.conformanceGate import conformance_gate
 from app.services.graph.nodes.correlate import correlate
 from app.services.graph.nodes.detect import detect
+from app.services.graph.nodes.enrich import enrich
 from app.services.graph.nodes.fanout import fanout
 from app.services.graph.nodes.hbomLane import hbom_lane
 from app.services.graph.nodes.intake import intake
@@ -52,6 +53,7 @@ def build_assessment_graph() -> StateGraph:
     for lane in ALL_LANES:
         graph.add_node(f"{lane}Lane", LANE_NODES[lane])
     graph.add_node("join", join)
+    graph.add_node("enrich", enrich)
     graph.add_node("correlate", correlate)
     graph.add_node("conformanceGate", conformance_gate)
 
@@ -66,7 +68,11 @@ def build_assessment_graph() -> StateGraph:
         graph.add_edge("fanout", f"{lane}Lane")
         graph.add_edge(f"{lane}Lane", "join")
 
-    graph.add_edge("join", "correlate")
+    # enrich sits between join and correlate: the feeds populate KEV data that
+    # vexCoverage reads, so correlating first would evaluate that rule against
+    # entities whose vulnerabilities had not yet been looked up.
+    graph.add_edge("join", "enrich")
+    graph.add_edge("enrich", "correlate")
     graph.add_edge("correlate", "conformanceGate")
     graph.add_edge("conformanceGate", END)
 

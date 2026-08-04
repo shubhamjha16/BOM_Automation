@@ -37,6 +37,15 @@ EXPECTED_TABLES = {
     "lane_results",
     "field_verdicts",
     "correlation_findings",
+    "cves",
+    "kev_entries",
+    "eol_records",
+    "advisories",
+    "agent_runs",
+    "agent_evidence",
+    "supplier_registry_entries",
+    "registry_proposals",
+    "identifier_mappings",
 }
 
 

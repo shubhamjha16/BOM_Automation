@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S9 complete (Phase 1: the engine, done)
+## Current state — S1–S11 complete
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -189,9 +189,41 @@ firing anyway would manufacture findings about documents nobody submitted. Rules
 that could not run are reported as skipped, because "found nothing" and "did not
 run" are different answers.
 
-**Not yet built** (and not claimed): no enrichment, identifier mapping or VEX
-(S10–S12); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`, so the two
-rules that need them are declared but inactive. BOM payloads are held in a
+**S10 enriches the four fields no generator emits.** NVD, CISA KEV and
+endoflife.date are wired and verified against the live services — Python 3.8 →
+EOL 2024-10-07, Django 3.2 → 2024-04-01, log4shell CVSS 10.0 and KEV-listed.
+
+- **Provenance is recorded on every enriched value.** 4.2(8)–4.2(11) are fields
+  the *supplier* was required to declare; when we fill one from NVD the
+  assessment says so, or a reader concludes the supplier declared it.
+- **A feed that is down is a reported gap**, never an empty vulnerability list —
+  an empty list is the claim "we checked and there is nothing".
+- The bounded agent handles only what the feeds miss: plan → retrieve →
+  sufficiency → re-query, capped at `AGENT_MAX_HOPS`, **batched per distinct
+  product**. An exhausted budget reports unresolved, never a plausible date.
+
+**S11 builds the CERT-In identifier.** Table 3's worked example converts exactly:
+
+```
+pkg:maven/org.apache.tomcat/tomcat-catalina@9.0.71
+  -> pkg:supplier/ApacheSoftwareFoundation/tomcat-catalina@9.0.71
+```
+
+`supplier` is not a registered PURL type, which is why no generator emits it and
+why 4.2(21) is absent on every real BOM until a registry exists. Resolution runs
+a deterministic ladder — curated (1.0) → declared supplier (0.8) → PURL namespace
+(0.5) → unresolved (0.0) — and **an unresolvable component reports absent rather
+than emitting a plausible-looking wrong identifier**.
+
+The sufficiency check is the point: `azer` (a real npm publisher) and
+`com.github.someone` are **refused**, because a username must not become a
+CERT-In supplier identifier. The agent proposes; a human confirms; confirmation
+permanently improves the curated asset.
+
+**Not yet built** (and not claimed): no VEX (S12), no self-conformance gate
+(S13); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`. **The console
+is still at S5's level** — one screen, no router — and S13 is where the plan
+schedules it becoming clickable. BOM payloads are held in a
 `bom_documents.payload` column until object storage lands in S13; that column is
 the wrong blast radius for an architecture disclosure and is marked interim in
 the model. Google OAuth has a controller path but no live token exchange.

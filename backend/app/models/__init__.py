@@ -33,36 +33,58 @@ from app.models.enums import (
 )
 from app.models.guideline import GuidelineVersion, MinimumElement
 from app.models.job import Job, NodeRun
+from app.models.knowledge import (
+    Advisory,
+    AgentEvidence,
+    AgentRun,
+    Cve,
+    EolRecord,
+    KevEntry,
+)
 from app.models.laneResult import FieldVerdictRow, LaneResult
 from app.models.org import Org
 from app.models.rawEntry import RawEntry
+from app.models.registry import (
+    IdentifierMapping,
+    RegistryProposal,
+    SupplierRegistryEntry,
+)
 from app.models.submission import Submission
 from app.models.user import User
 
 __all__ = [
+    "Advisory",
+    "AgentEvidence",
+    "AgentRun",
     "AuditEvent",
     "Base",
     "BomDocument",
     "BomFormat",
     "Client",
+    "Cve",
     "CorrelationFindingRow",
     "DocumentStatus",
     "Engagement",
+    "EolRecord",
     "FieldVerdictRow",
     "GuidelineVersion",
+    "IdentifierMapping",
     "LaneResult",
     "MinimumElement",
     "EngagementKind",
     "EngagementStatus",
     "Job",
+    "KevEntry",
     "JobStatus",
     "JobType",
     "NodeRun",
     "Org",
     "RawEntry",
+    "RegistryProposal",
     "Role",
     "Sector",
     "Submission",
+    "SupplierRegistryEntry",
     "SubmissionStatus",
     "User",
 ]

@@ -17,6 +17,10 @@ os.environ.setdefault("ENABLED_LANES", "sbom,aibom,cbom,qbom,hbom")
 # The HTTP tests exercise the real commit path; running the assessment in-process
 # keeps them hermetic. The queue itself is covered in test_queue_integration.py.
 os.environ.setdefault("JOBS_INLINE", "true")
+# The graph is tested with the network off. A suite that queries NVD and CISA on
+# every run is flaky by construction and rude to a shared public service; the
+# feed clients are verified against the live services separately.
+os.environ.setdefault("ENRICHMENT_ONLINE", "false")
 
 from pathlib import Path  # noqa: E402
 from typing import Any  # noqa: E402

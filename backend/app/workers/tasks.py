@@ -204,3 +204,20 @@ async def reconcile_stale_jobs(
         if not borrowed:
             await session.commit()
     return len(reconciled)
+
+
+async def sync_kb(ctx: dict[str, Any], older_than_seconds: int = 0) -> dict[str, int]:
+    """Refresh the knowledge base. Scheduled, never on the assessment path.
+
+    **Why this is a task and not a lazy fetch.** The CISA KEV catalogue is ~1,600
+    entries refreshed once a day. Fetching it inside an assessment meant twenty
+    concurrent submissions downloaded it twenty times, each holding a database
+    transaction open across seconds of network I/O. The same lesson as catalogue
+    seeding: work that is shared, slow and infrequent belongs on a schedule.
+    """
+    from app.services.kb import kevClient
+
+    entries = await kevClient.fetch_catalog()
+    kevClient.prime_cache(entries)
+    logger.info("kb_synced", kev_entries=len(entries))
+    return {"kev_entries": len(entries)}
