@@ -1,5 +1,16 @@
-# Local infra only. The API and Vite run on the host via `make dev` so that
-# reload is instant and the debugger attaches without a container hop.
+# Two ways to run this stack:
+#
+#   docker compose up -d postgres redis     infra only; API and Vite on the host
+#                                           via `make dev` — instant reload, the
+#                                           debugger attaches without a container
+#                                           hop. This is the default for dev.
+#
+#   docker compose --profile full up        everything containerised: api, worker
+#                                           and the console behind nginx.
+#
+# The app services sit behind a profile so `make infra` and `make dev` keep
+# working untouched and never build an image they do not need.
+
 services:
   postgres:
     image: postgres:16
@@ -29,6 +40,69 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+
+  api:
+    profiles: ["full"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8005"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_factory
+      REDIS_URL: redis://redis:6379/0
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8080
+      # Required or the app refuses to import, naming the variable. Placeholders
+      # here are exactly that — override them in a real deployment.
+      GROQ_API_KEY: ${GROQ_API_KEY:-dev-placeholder}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-dev-placeholder}
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-secret}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8005/api/v1/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  worker:
+    profiles: ["full"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # Same image as the API, different command — the two cannot drift apart.
+    # Lands in S4; until arqApp exists this service will not start, which is why
+    # it sits behind the profile rather than in the default set.
+    command: ["arq", "app.workers.arqApp.WorkerSettings"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_factory
+      REDIS_URL: redis://redis:6379/0
+      GROQ_API_KEY: ${GROQ_API_KEY:-dev-placeholder}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-dev-placeholder}
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-secret}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        # Baked in at build time: Vite inlines env into the bundle.
+        VITE_API_BASE_URL: http://localhost:8005/api/v1
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
 
 volumes:
   pgdata:
