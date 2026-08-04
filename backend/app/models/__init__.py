@@ -14,6 +14,7 @@ stays complete.
 
 from __future__ import annotations
 
+from app.models.assessment import Assessment, AssessmentSection
 from app.models.auditEvent import AuditEvent
 from app.models.base import Base
 from app.models.bomDocument import BomDocument
@@ -51,9 +52,12 @@ from app.models.registry import (
 )
 from app.models.submission import Submission
 from app.models.user import User
+from app.models.vex import CsafAdvisory, VexStatement
 
 __all__ = [
     "Advisory",
+    "Assessment",
+    "AssessmentSection",
     "AgentEvidence",
     "AgentRun",
     "AuditEvent",
@@ -62,6 +66,7 @@ __all__ = [
     "BomFormat",
     "Client",
     "Cve",
+    "CsafAdvisory",
     "CorrelationFindingRow",
     "DocumentStatus",
     "Engagement",
@@ -87,4 +92,5 @@ __all__ = [
     "SupplierRegistryEntry",
     "SubmissionStatus",
     "User",
+    "VexStatement",
 ]

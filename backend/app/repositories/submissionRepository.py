@@ -71,6 +71,17 @@ class SubmissionRepository(TenantScopedRepository[Submission]):
         await self.session.flush()
         return document
 
+    async def list_recent(self, *, limit: int = 50, offset: int = 0) -> list[Submission]:
+        """Newest first. Documents come along via the selectin relationship, so
+        the list view does not fan out one query per row."""
+        result = await self.session.execute(
+            self.scoped()
+            .order_by(Submission.created_at.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+        return list(result.scalars().all())
+
     async def get_with_documents(self, submission_id: uuid.UUID) -> Submission | None:
         """Eager-loads documents: the detail view always renders them, and a lazy
         load here would be an N+1 across a five-document submission."""

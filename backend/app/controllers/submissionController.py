@@ -154,6 +154,16 @@ def rollup_response(summary: Any) -> list[dict[str, Any]]:
 # --- read models -------------------------------------------------------------
 
 
+async def list_submissions(
+    submissions: SubmissionRepository, *, limit: int = 50, offset: int = 0
+) -> list[Any]:
+    """Newest first, with documents eager-loaded for the list view."""
+    from app.schemas.response.submission import SubmissionOut
+
+    rows = await submissions.list_recent(limit=limit, offset=offset)
+    return [SubmissionOut.model_validate(row) for row in rows]
+
+
 async def rejected_report(
     submissions: SubmissionRepository, lanes: Any, submission_id: uuid.UUID
 ) -> dict[str, Any]:

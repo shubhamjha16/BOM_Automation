@@ -46,6 +46,10 @@ EXPECTED_TABLES = {
     "supplier_registry_entries",
     "registry_proposals",
     "identifier_mappings",
+    "vex_statements",
+    "csaf_advisories",
+    "assessments",
+    "assessment_sections",
 }
 
 

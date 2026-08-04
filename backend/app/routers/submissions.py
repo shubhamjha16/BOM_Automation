@@ -25,6 +25,14 @@ async def create(body: SubmissionCreate, submissions: SubmissionRepoDep) -> Subm
     return SubmissionOut.model_validate(submission)
 
 
+@router.get("", response_model=list[SubmissionOut])
+async def list_submissions(
+    submissions: SubmissionRepoDep, limit: int = 50, offset: int = 0
+) -> list[SubmissionOut]:
+    """Every submission in this tenant, newest first."""
+    return await controller.list_submissions(submissions, limit=limit, offset=offset)
+
+
 @router.get("/{submission_id}", response_model=SubmissionDetailOut)
 async def get(submission_id: UUID, submissions: SubmissionRepoDep) -> SubmissionDetailOut:
     submission = await submissions.get_with_documents(submission_id)

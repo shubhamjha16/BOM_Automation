@@ -215,7 +215,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * List Submissions
+         * @description Every submission in this tenant, newest first.
+         */
+        get: operations["list_submissions_api_v1_submissions_get"];
         put?: never;
         /** Create */
         post: operations["create_api_v1_submissions_post"];
@@ -1016,6 +1020,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["JobDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_submissions_api_v1_submissions_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmissionOut"][];
                 };
             };
             /** @description Validation Error */

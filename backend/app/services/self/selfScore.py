@@ -41,6 +41,24 @@ async def score_self(payload: dict, name: str) -> int:
     return 0
 
 
+def emit_self_boms(destination: Path) -> dict[str, Path]:
+    """Write our own AIBOM and CBOM beside the generated SBOM.
+
+    Written rather than generated: 9.3(15)-(16) are governance declarations and
+    a CBOM is not derivable from a dependency scan. Both are the honest form of
+    "we ship what we ask for".
+    """
+    from app.services.self import aibom, cbom
+
+    destination.mkdir(parents=True, exist_ok=True)
+    written: dict[str, Path] = {}
+    for name, builder in (("aibom", aibom.build), ("cbom", cbom.build)):
+        path = destination / f"bom-factory.{name}.cdx.json"
+        path.write_text(json.dumps(builder(), indent=2) + "\n")
+        written[name] = path
+    return written
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("usage: python -m app.services.self.selfScore <sbom.cdx.json>", file=sys.stderr)

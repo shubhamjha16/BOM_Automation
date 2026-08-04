@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S11 complete
+## Current state — S1–S13 complete · the console is clickable
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -220,10 +220,37 @@ The sufficiency check is the point: `azer` (a real npm publisher) and
 CERT-In supplier identifier. The agent proposes; a human confirms; confirmation
 permanently improves the curated asset.
 
-**Not yet built** (and not claimed): no VEX (S12), no self-conformance gate
-(S13); CBOM/QBOM (S14) and HBOM (S16) still report `lane_absent`. **The console
-is still at S5's level** — one screen, no router — and S13 is where the plan
-schedules it becoming clickable. BOM payloads are held in a
+**S12 is VEX, and the agent never decides.** The four statuses of rec. 7.1.6 are
+exhaustive — `mitigated` is rejected naming all four — and `not_affected` cannot
+be saved without a written justification. The evidence agent drafts justifications
+and **has no code path that sets a status**; where evidence merely *mentions* a
+CVE rather than supporting a determination it proposes `under_investigation`,
+never `not_affected`. CSAF 2.0 export validates.
+
+**S13 is the review gate and self-conformance.** An assessor cannot approve their
+own assessment *however senior* — a partner who wrote it is still the same pair
+of eyes. Unapproved exports carry "AI-assisted draft — not reviewed". Log
+redaction keeps paths, hostnames and BOM payloads out of storage. Resubmission
+diffing is **per field**: two compensating changes give an identical total from
+different verdicts, and a total-only diff would report "no change" for exactly the
+resubmission worth looking at.
+
+Our own AIBOM declares both governance statements, including plainly that this
+product **does not issue legal or regulatory opinions**.
+
+## Run the demo
+
+```bash
+make demo      # SQLite, no Docker, no Postgres, no Redis
+```
+
+Sign in as `assessor@firm-a.example` / `demo-password-1234`, run the assessment
+and drill from the five-lane strip into 4.2(5) and its clause reference. The
+seeded submission carries **real cdxgen output** — 76 components — so the score
+is a real score.
+
+**Not yet built** (and not claimed): CBOM/QBOM (S14) and HBOM (S16) still report
+`lane_absent`; no DOCX/PDF/XLSX export yet (S15), so the deliverable is JSON. BOM payloads are held in a
 `bom_documents.payload` column until object storage lands in S13; that column is
 the wrong blast radius for an architecture disclosure and is marked interim in
 the model. Google OAuth has a controller path but no live token exchange.

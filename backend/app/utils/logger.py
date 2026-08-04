@@ -13,6 +13,8 @@ from typing import Any
 
 import structlog
 
+from app.utils.redaction import redaction_processor
+
 _configured = False
 
 
@@ -37,6 +39,9 @@ def configure_logging(*, json_output: bool | None = None, level: int = logging.I
             structlog.processors.TimeStamper(fmt="iso", utc=True),
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
+            # Last before rendering, so nothing a later processor adds escapes it.
+            # A BOM is an architecture disclosure and logs outlive engagements.
+            redaction_processor,
             renderer,
         ],
         wrapper_class=structlog.make_filtering_bound_logger(level),

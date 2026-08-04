@@ -10,7 +10,7 @@ COMPOSE := $(shell command -v docker >/dev/null 2>&1 && echo "docker compose" ||
 .PHONY: help install install-backend install-frontend infra infra-down dev dev-api dev-web \
         test test-backend test-frontend lint fmt typecheck migrate revision self-bom clean \
         docker-build docker-up docker-down docker-logs docker-config api-types api-types-check \
-        seed-catalogue
+        seed-catalogue demo demo-seed demo-api demo-web demo-reset
 
 help: ## Show available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -71,6 +71,36 @@ typecheck: ## mypy + tsc
 
 migrate: ## alembic upgrade head (S2)
 	cd $(BACKEND) && uv run alembic upgrade head
+
+# --- demo: the whole stack on SQLite, no Docker ------------------------------
+# The models are dialect-portable (that is why the repository guards are testable
+# without a live database), so a demo needs no Postgres and no Redis. Production
+# is Postgres; this is a demo path, not a supported deployment.
+
+DEMO_ENV := DATABASE_URL=sqlite+aiosqlite:///./demo.db JOBS_INLINE=true MFA_REQUIRED=false
+
+demo: ## Seed and run the whole stack on SQLite, then open the console
+	@$(MAKE) demo-seed
+	@trap 'kill 0' EXIT INT TERM; \
+	$(MAKE) demo-api & \
+	$(MAKE) demo-web & \
+	echo ""; \
+	echo "  console  http://localhost:5173"; \
+	echo "  api      http://localhost:8005/docs"; \
+	echo ""; \
+	wait
+
+demo-seed: ## Create demo.db with a catalogue, an account and a real BOM
+	cd $(BACKEND) && $(DEMO_ENV) uv run python -m app.scripts.seedDemo
+
+demo-api: ## Run the API against the demo database
+	cd $(BACKEND) && $(DEMO_ENV) uv run uvicorn app.main:app --port 8005
+
+demo-web: ## Run the console against the demo API
+	cd $(FRONTEND) && yarn dev
+
+demo-reset: ## Delete the demo database
+	rm -f $(BACKEND)/demo.db && echo "demo.db removed"
 
 seed-catalogue: ## Seed the minimum-element catalogue (deployment step, after migrate)
 	cd $(BACKEND) && uv run python -m app.scripts.seedCatalogue

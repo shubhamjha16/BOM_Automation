@@ -23,3 +23,35 @@ code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
 .lane-strip__item { border: 1px solid #ddd; padding: 1rem; min-width: 12rem; }
 .lane-strip__note { font-size: 0.85em; color: var(--neutral); }
 .score-dial strong { display: block; font-size: 1.6rem; }
+
+/* --- shell ---------------------------------------------------------------- */
+.shell__bar {
+  display: flex; align-items: center; gap: 2rem;
+  padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #ddd;
+}
+.shell__brand { display: flex; flex-direction: column; }
+.shell__tag { font-size: 0.75rem; color: var(--neutral); }
+.shell__nav { display: flex; gap: 1rem; margin-left: auto; }
+.shell__nav a { text-decoration: none; color: #333; padding: 0.25rem 0; }
+.shell__nav a.active { border-bottom: 2px solid #333; font-weight: 600; }
+.shell__user { display: flex; align-items: center; gap: 0.75rem; }
+.shell__role { font-size: 0.8rem; color: var(--neutral); text-transform: capitalize; }
+
+/* --- auth ----------------------------------------------------------------- */
+.auth { max-width: 24rem; margin: 4rem auto; }
+.auth__lead { color: var(--neutral); margin-bottom: 2rem; }
+.auth form { display: flex; flex-direction: column; gap: 0.35rem; }
+.auth label { font-size: 0.85rem; margin-top: 0.75rem; }
+.auth input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+.auth button { margin-top: 1.25rem; padding: 0.6rem; cursor: pointer; }
+.auth__error { color: var(--fail); margin-top: 1rem; }
+
+/* --- detail --------------------------------------------------------------- */
+.detail__head { display: flex; align-items: flex-start; justify-content: space-between; }
+.detail__meta { color: var(--neutral); }
+.tabs { display: flex; gap: 0.5rem; margin: 1rem 0; }
+.tabs button { padding: 0.35rem 0.75rem; cursor: pointer; background: #f4f4f4; border: 1px solid #ddd; }
+.tabs button[aria-pressed='true'] { background: #333; color: #fff; border-color: #333; }
+dl div { margin-bottom: 1rem; }
+dt { font-weight: 600; }
+dd { margin-left: 0; color: #444; }
