@@ -21,7 +21,16 @@ from app.models import Base
 
 BACKEND = Path(__file__).resolve().parent.parent
 
-EXPECTED_TABLES = {"orgs", "users", "clients", "engagements", "jobs", "node_runs"}
+EXPECTED_TABLES = {
+    "orgs",
+    "users",
+    "clients",
+    "engagements",
+    "jobs",
+    "node_runs",
+    "submissions",
+    "bom_documents",
+}
 
 
 def test_importing_the_package_registers_every_table():

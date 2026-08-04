@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S2 complete
+## Current state — S1–S3 complete
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -79,8 +79,28 @@ migration hand-written and hand-reviewed per §5.
   work starts. Orphans are marked `failed`, never silently requeued — whether a
   re-run is safe depends on what the job already wrote.
 
-**Not yet built** (and not claimed): no queue (S4), no auth (S5), no SPDX parsing
-(S6), no enrichment, identifier mapping or VEX (S10–S12).
+**S3 adds the layered HTTP surface and generated API types.**
+`routers/` → `controllers/` → `services/` → `repositories/`, enforced by tests:
+route handlers stay under 15 lines and an AST check fails the build if a router
+or controller builds a query. Repositories own SQL, so an endpoint cannot
+accidentally add one that forgets its org scope.
+
+- **A submission with zero documents returns 422**, naming rec. 7.1.2 — never an
+  assessment. Every violation is reported at once rather than one per round trip.
+- **An oversized body is refused at the edge.** Pure-ASGI middleware checks
+  `Content-Length` before touching the body and also counts bytes as they stream,
+  because `Content-Length` is a claim the client can omit or lie about. A 300 MB
+  document returns 413 having been read zero times.
+- **`packages/api-types` is generated from the OpenAPI schema** and consumed by
+  the console. `make api-types-check` regenerates and diffs: a backend schema
+  change without regenerated types exits non-zero in CI.
+
+**Not yet built** (and not claimed): no queue (S4) — commit runs the assessment
+inline; no auth (S5) — the org scope comes from a dev header; no SPDX parsing
+(S6); no enrichment, identifier mapping or VEX (S10–S12). BOM payloads are held
+in a `bom_documents.payload` column until object storage lands in S13; that
+column is the wrong blast radius for an architecture disclosure and is marked as
+interim in the model.
 
 ### Testing the database layer without a database
 

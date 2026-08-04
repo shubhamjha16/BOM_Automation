@@ -46,7 +46,10 @@ def upgrade_sql() -> str:
 
 @lru_cache(maxsize=1)
 def downgrade_sql() -> str:
-    return _alembic("downgrade", "0001_foundation:base", "--sql")
+    # head:base, not a pinned revision — a new migration must not silently
+    # fall outside the range this test checks. That is exactly what happened
+    # when 0002 landed against a hardcoded "0001_foundation:base".
+    return _alembic("downgrade", "head:base", "--sql")
 
 
 def _migration_tables() -> dict[str, set[str]]:

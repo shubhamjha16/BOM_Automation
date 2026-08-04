@@ -15,23 +15,31 @@ stays complete.
 from __future__ import annotations
 
 from app.models.base import Base
+from app.models.bomDocument import BomDocument
 from app.models.client import Client
 from app.models.engagement import Engagement
 from app.models.enums import (
+    BomFormat,
+    DocumentStatus,
     EngagementKind,
     EngagementStatus,
     JobStatus,
     JobType,
     Role,
     Sector,
+    SubmissionStatus,
 )
 from app.models.job import Job, NodeRun
 from app.models.org import Org
+from app.models.submission import Submission
 from app.models.user import User
 
 __all__ = [
     "Base",
+    "BomDocument",
+    "BomFormat",
     "Client",
+    "DocumentStatus",
     "Engagement",
     "EngagementKind",
     "EngagementStatus",
@@ -42,5 +50,7 @@ __all__ = [
     "Org",
     "Role",
     "Sector",
+    "Submission",
+    "SubmissionStatus",
     "User",
 ]

@@ -9,7 +9,7 @@ COMPOSE := $(shell command -v docker >/dev/null 2>&1 && echo "docker compose" ||
 .DEFAULT_GOAL := help
 .PHONY: help install install-backend install-frontend infra infra-down dev dev-api dev-web \
         test test-backend test-frontend lint fmt typecheck migrate revision self-bom clean \
-        docker-build docker-up docker-down docker-logs docker-config
+        docker-build docker-up docker-down docker-logs docker-config api-types api-types-check
 
 help: ## Show available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -73,6 +73,17 @@ migrate: ## alembic upgrade head (S2)
 
 revision: ## alembic revision --autogenerate -m "$(M)" (hand-review it; see §5)
 	cd $(BACKEND) && uv run alembic revision --autogenerate -m "$(M)"
+
+api-types: ## Regenerate packages/api-types from the backend OpenAPI schema
+	cd $(BACKEND) && uv run python -m app.scripts.dumpOpenapi ../packages/api-types/openapi.json
+	yarn workspace @bom-factory/api-types generate
+
+api-types-check: api-types ## Fail if the generated types are stale (CI gate)
+	@git diff --exit-code -- packages/api-types \
+	  || (echo ""; \
+	      echo "packages/api-types is stale. The backend schema changed without"; \
+	      echo "regenerating the TypeScript. Run 'make api-types' and commit."; \
+	      exit 1)
 
 self-bom: ## Emit a CycloneDX SBOM for this repository into dist/ (rec. 7.2.2)
 	@mkdir -p dist

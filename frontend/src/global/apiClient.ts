@@ -2,9 +2,10 @@ import { env } from './env';
 import { ApiError } from './errors';
 
 /**
- * The single HTTP entry point. S3 replaces the `unknown` returns with the
- * generated types from `packages/api-types`, and a backend schema change that
- * is not reflected there fails CI.
+ * The single HTTP entry point. Callers pass a type drawn from
+ * `global/apiTypes.ts`, which re-exports the generated OpenAPI types — a
+ * backend schema change that is not regenerated fails CI, so these are never
+ * hand-maintained guesses about the wire format.
  */
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${env.apiBaseUrl}${path}`, {

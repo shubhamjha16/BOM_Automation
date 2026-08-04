@@ -36,6 +36,21 @@ jobs:
 
       # Renders the migration offline and diffs it against the models. Catches
       # schema drift with no Postgres in CI at all.
+      # A backend schema change that is not reflected in packages/api-types
+      # fails here, rather than surfacing as a runtime shape mismatch in the
+      # console. Needs node, because the generator is a node tool.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - name: generated API types are current
+        run: yarn install --frozen-lockfile && cd .. && make api-types-check
+        working-directory: .
+        env:
+          GROQ_API_KEY: ci-placeholder
+          ANTHROPIC_API_KEY: ci-placeholder
+          JWT_SECRET: ci-placeholder
+
       - name: migration renders and matches the models
         run: uv run pytest tests/test_migrations.py tests/test_models.py -q
         env:

@@ -12,7 +12,17 @@ from enum import StrEnum
 
 from app.configs.jobTypes import JobStatus, JobType
 
-__all__ = ["EngagementKind", "EngagementStatus", "JobStatus", "JobType", "Role", "Sector"]
+__all__ = [
+    "BomFormat",
+    "DocumentStatus",
+    "EngagementKind",
+    "EngagementStatus",
+    "JobStatus",
+    "JobType",
+    "Role",
+    "Sector",
+    "SubmissionStatus",
+]
 
 
 class Role(StrEnum):
@@ -44,3 +54,32 @@ class EngagementStatus(StrEnum):
     ACTIVE = "active"
     PAUSED = "paused"
     CLOSED = "closed"
+
+
+class SubmissionStatus(StrEnum):
+    """The submission lifecycle.
+
+    `returned` is a first-class state, not an error: returning a submission to
+    the supplier with its gap register attached is the workflow this product
+    exists to support (S13).
+    """
+
+    RECEIVED = "received"
+    PARSED = "parsed"
+    SCORED = "scored"
+    ASSESSED = "assessed"
+    RETURNED = "returned"
+    ACCEPTED = "accepted"
+
+
+class BomFormat(StrEnum):
+    CYCLONEDX = "CycloneDX"
+    SPDX = "SPDX"
+
+
+class DocumentStatus(StrEnum):
+    RECEIVED = "received"
+    PARSED = "parsed"
+    #: The document could not be read at all. Never silently an empty component
+    #: list, because an empty list renders a green assessment (rec. 7.1.5).
+    REJECTED = "rejected"
