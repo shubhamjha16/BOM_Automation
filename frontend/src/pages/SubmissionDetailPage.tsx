@@ -12,6 +12,7 @@ import {
   useSubmission,
 } from '@/features/submissions';
 import { LANES, type Lane } from '@/shared/constants/lanes';
+import { ROUTES } from '@/shared/constants/routes';
 import { formatCoverage, formatScore } from '@/utils/format';
 
 export function SubmissionDetailPage() {
@@ -184,8 +185,9 @@ export function SubmissionDetailPage() {
         </>
       )}
 
-      <p>
+      <p className="detail__links">
         <Link to="/submissions">← All submissions</Link>
+        {scored && <Link to={ROUTES.assessment(id)}>View assessment →</Link>}
       </p>
     </section>
   );

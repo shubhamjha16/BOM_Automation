@@ -44,7 +44,29 @@ class Coverage:
         return round(self.ratio * 100, 2)
 
 
+def applicable(entities: Sequence[dict[str, Any]], element: MinimumElement) -> list[dict[str, Any]]:
+    """The entities an element could apply to.
+
+    Usually all of them — every s.4.2 element applies to every component. The
+    exception is the CBOM lane, where Table 9's fields are per asset type: a
+    classical security level is meaningful for an algorithm and meaningless for a
+    certificate.
+
+    Out-of-scope assets leave the **denominator**, they are not counted as
+    populated. Counting them would inflate the score until it measured document
+    composition rather than declaration quality.
+    """
+    scope = getattr(element.probe, "applies_to", None)
+    if not scope:
+        return list(entities)
+
+    from app.services.catalogue.probes import asset_type_of
+
+    return [entity for entity in entities if asset_type_of(entity) in scope]
+
+
 def measure(entities: Sequence[dict[str, Any]], element: MinimumElement) -> Coverage:
-    """Count how many entities populate this element."""
-    populated = sum(1 for entity in entities if element.probe(entity))
-    return Coverage(populated=populated, total=len(entities))
+    """Count how many applicable entities populate this element."""
+    candidates = applicable(entities, element)
+    populated = sum(1 for entity in candidates if element.probe(entity))
+    return Coverage(populated=populated, total=len(candidates))

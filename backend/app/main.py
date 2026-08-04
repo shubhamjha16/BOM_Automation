@@ -14,6 +14,7 @@ from app.configs.envConfig import settings
 from app.controllers.authController import AuthenticationFailed, MfaRequired
 from app.routers import api_router
 from app.services.access.authz import Forbidden
+from app.services.render.exporters.pdf import PdfUnavailable
 from app.utils.bodyLimit import BodySizeLimitMiddleware
 from app.utils.logger import configure_logging, get_logger
 from app.validators.submissionValidator import SubmissionInvalid, max_document_bytes
@@ -108,6 +109,15 @@ def create_app() -> FastAPI:
         so acknowledging the resource leaks nothing. Cross-tenant denials return
         404 instead, and that distinction is deliberate."""
         return JSONResponse(status_code=403, content={"detail": str(error)})
+
+    @app.exception_handler(PdfUnavailable)
+    async def _pdf_unavailable(_: Request, error: PdfUnavailable) -> JSONResponse:
+        """501, not 500: the request was valid and the server lacks the renderer.
+
+        The message names the formats that do work, because a client hitting
+        this needs a way forward rather than a diagnosis.
+        """
+        return JSONResponse(status_code=501, content={"detail": str(error)})
 
     app.include_router(api_router)
 

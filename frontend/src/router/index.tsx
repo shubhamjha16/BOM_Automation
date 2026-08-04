@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
+import { AssessmentPage } from '@/pages/AssessmentPage';
 import { CataloguePage } from '@/pages/CataloguePage';
 import { SignInPage } from '@/pages/SignInPage';
 import { SubmissionDetailPage } from '@/pages/SubmissionDetailPage';
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to={ROUTES.submissions} replace /> },
       { path: 'submissions', element: <SubmissionsPage /> },
       { path: 'submissions/:id', element: <SubmissionDetailPage /> },
+      { path: 'submissions/:id/assessment', element: <AssessmentPage /> },
       { path: 'elements', element: <CataloguePage /> },
     ],
   },

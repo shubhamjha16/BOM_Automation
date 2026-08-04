@@ -93,3 +93,40 @@ def never(_: dict[str, Any]) -> bool:
     total and every element is uniformly shaped.
     """
     return False
+
+
+def asset_type_of(entity: dict[str, Any]) -> str:
+    """The Table 9 asset type of a cryptographic asset."""
+    for path in ("asset_type", "cryptoProperties.assetType", "assetType"):
+        if value := _read(entity, path):
+            return str(value).strip().lower()
+    return ""
+
+
+def for_asset_types(
+    types: set[str], probe: Callable[[dict[str, Any]], bool]
+) -> Callable[[dict[str, Any]], bool]:
+    """Apply a probe only to the asset types an element governs.
+
+    **Why the CBOM lane needs this and the SBOM lane does not.** Every s.4.2
+    element applies to every component. Table 9's do not: a classical security
+    level is meaningful for an algorithm and meaningless for a certificate, and
+    reporting a certificate as missing its cipher mode is a category error, not a
+    gap.
+
+    Assets outside the element's scope are *excluded from the denominator* rather
+    than counted as absent — otherwise a document of ten certificates would score
+    zero on every algorithm field and the score would measure document
+    composition rather than declaration quality.
+    """
+
+    def scoped(entity: dict[str, Any]) -> bool:
+        # Only ever consulted for in-scope assets; `coverage.measure` filters the
+        # rest out of the denominator using `applies_to` below. Returning True
+        # here for an out-of-scope asset would count it as *populated*, which
+        # inflates the score — a document of ten certificates would report 100%
+        # on every algorithm field.
+        return probe(entity)
+
+    scoped.applies_to = types  # type: ignore[attr-defined]
+    return scoped

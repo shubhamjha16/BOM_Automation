@@ -78,10 +78,18 @@ def test_the_four_known_consumer_determinations():
     }
 
 
-def test_unimplemented_lanes_are_empty_rather_than_approximated():
-    """A guessed catalogue would produce a score against invented clauses."""
-    for lane in ("cbom", "qbom", "hbom"):
-        assert get_catalogue(lane).elements == ()
+def test_the_unimplemented_lane_is_empty_rather_than_approximated():
+    """A guessed catalogue would produce a score against invented clauses.
+
+    CBOM and QBOM were encoded in S14; HBOM waits for S16, because its data is
+    procurement data — asset registers and purchase records, not scanner output.
+    """
+    assert get_catalogue("hbom").elements == ()
+
+
+def test_the_crypto_lanes_are_now_encoded():
+    assert len(get_catalogue("cbom").elements) >= 15
+    assert len(get_catalogue("qbom").elements) >= 8
 
 
 def test_checksums_are_stable_and_distinct_per_lane():

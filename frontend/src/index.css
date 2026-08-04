@@ -55,3 +55,17 @@ code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
 dl div { margin-bottom: 1rem; }
 dt { font-weight: 600; }
 dd { margin-left: 0; color: #444; }
+
+/* --- assessment ----------------------------------------------------------- */
+.watermark {
+  background: #fdf2f2; border: 1px solid var(--fail); color: var(--fail);
+  padding: 0.6rem 1rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 1.5rem;
+}
+.exports { display: flex; gap: 0.5rem; }
+.exports button { padding: 0.4rem 0.9rem; cursor: pointer; }
+.section { margin-bottom: 2rem; }
+.section__body { white-space: pre-wrap; font-family: inherit; background: #fafafa;
+  padding: 1rem; border-left: 3px solid #ddd; margin: 0; }
+.section__provenance { font-size: 0.8rem; color: var(--neutral); margin-top: 0.4rem; }
+.detail__links { display: flex; gap: 2rem; margin-top: 2rem; }

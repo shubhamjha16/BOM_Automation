@@ -26,9 +26,9 @@ class LaneSpec:
 LANE_SPECS: dict[Lane, LaneSpec] = {
     "sbom": LaneSpec("sbom", "Software BOM", "4.2", implemented=True),
     "aibom": LaneSpec("aibom", "AI BOM", "9.3", implemented=True),
-    # S14 implements CBOM and QBOM; S16 implements HBOM.
-    "cbom": LaneSpec("cbom", "Cryptography BOM", "8.4", implemented=False),
-    "qbom": LaneSpec("qbom", "Quantum BOM", "8.5", implemented=False),
+    "cbom": LaneSpec("cbom", "Cryptography BOM", "8.4", implemented=True),
+    "qbom": LaneSpec("qbom", "Quantum BOM", "8.5", implemented=True),
+    # S16 implements HBOM; its data is procurement data, not scanner output.
     "hbom": LaneSpec("hbom", "Hardware BOM", "10.2", implemented=False),
 }
 

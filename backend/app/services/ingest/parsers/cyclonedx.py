@@ -20,6 +20,16 @@ SUPPORTED_SPEC_VERSIONS: frozenset[str] = frozenset({"1.4", "1.5", "1.6"})
 #: CycloneDX component types that are AI models rather than software components.
 MODEL_TYPES: frozenset[str] = frozenset({"machine-learning-model"})
 
+#: CycloneDX 1.6 cryptographic assets — the CBOM and QBOM lanes' entities.
+CRYPTO_TYPES: frozenset[str] = frozenset({"cryptographic-asset"})
+
+#: Which component types each lane scores. A lane never guesses.
+LANE_TYPES: dict[str, frozenset[str]] = {
+    "aibom": MODEL_TYPES,
+    "cbom": CRYPTO_TYPES,
+    "qbom": CRYPTO_TYPES,
+}
+
 
 class UnrecognisedDocument(ValueError):
     """The payload is not a CycloneDX document, or not a supported version."""
@@ -87,6 +97,53 @@ def _normalise_component(
         "eol_date": None,
         "certin_id": None,
         "supplier_org": None,
+    }
+
+
+def _normalise_crypto(component: dict[str, Any]) -> dict[str, Any]:
+    """A CycloneDX 1.6 ``cryptographic-asset`` flattened to Table 9's shape.
+
+    CycloneDX nests the interesting fields three deep and differently per asset
+    type; Table 9 is flat. Flattening here keeps the catalogue probes readable
+    and means a future CycloneDX layout change touches one function.
+    """
+    crypto = component.get("cryptoProperties") or {}
+    algorithm = crypto.get("algorithmProperties") or {}
+    certificate = crypto.get("certificateProperties") or {}
+    protocol = crypto.get("protocolProperties") or {}
+    material = crypto.get("relatedCryptoMaterialProperties") or {}
+
+    cipher_suites = protocol.get("cipherSuites") or []
+    return {
+        "name": component.get("name"),
+        "bom_ref": component.get("bom-ref"),
+        "asset_type": crypto.get("assetType"),
+        "oid": crypto.get("oid"),
+        # algorithm
+        "primitive": algorithm.get("primitive"),
+        "mode": algorithm.get("mode"),
+        "crypto_functions": algorithm.get("cryptoFunctions"),
+        "classical_security_level": algorithm.get("classicalSecurityLevel"),
+        "nist_quantum_security_level": algorithm.get("nistQuantumSecurityLevel"),
+        # key / related crypto material
+        "key_id": material.get("id") or component.get("bom-ref"),
+        "state": material.get("state"),
+        "size": material.get("size"),
+        "creation_date": material.get("creationDate"),
+        "activation_date": material.get("activationDate"),
+        # protocol
+        "version": protocol.get("version"),
+        "cipher_suites": [
+            suite.get("name") if isinstance(suite, dict) else suite for suite in cipher_suites
+        ]
+        or None,
+        # certificate
+        "subject": certificate.get("subjectName"),
+        "issuer": certificate.get("issuerName"),
+        "not_valid_before": certificate.get("notValidBefore"),
+        "not_valid_after": certificate.get("notValidAfter"),
+        "signature_algorithm": certificate.get("signatureAlgorithmRef"),
+        "format": certificate.get("certificateFormat"),
     }
 
 
@@ -159,14 +216,21 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         declared_entries=len(components) if isinstance(components, list) else 0,
     )
     dependencies = _dependency_index(payload)
-    wants_models = lane == "aibom"
+    # A lane scores exactly one component type. `sbom` takes everything else,
+    # which is why it is expressed as the complement rather than a set.
+    wanted = LANE_TYPES.get(lane)
 
     for ordinal, component in enumerate(components):
         if not isinstance(component, dict):
             result.reject(ordinal, "entry is not an object", payload=component)
             continue
-        is_model = component.get("type") in MODEL_TYPES
-        if is_model != wants_models:
+        component_type = component.get("type")
+        in_scope = (
+            component_type in wanted
+            if wanted is not None
+            else component_type not in MODEL_TYPES | CRYPTO_TYPES
+        )
+        if not in_scope:
             result.reject(
                 ordinal,
                 f"component type {component.get('type')!r} is not scored by the "
@@ -183,11 +247,12 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
                 ref=str(component.get("bom-ref") or component.get("purl") or ""),
             )
             continue
-        result.entities.append(
-            _normalise_model(component)
-            if is_model
-            else _normalise_component(component, dependencies)
-        )
+        if wanted is CRYPTO_TYPES:
+            result.entities.append(_normalise_crypto(component))
+        elif wanted is MODEL_TYPES:
+            result.entities.append(_normalise_model(component))
+        else:
+            result.entities.append(_normalise_component(component, dependencies))
 
     result.assert_conserved()
     return result

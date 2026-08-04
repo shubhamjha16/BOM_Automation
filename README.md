@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S13 complete · the console is clickable
+## Current state — S1–S15 complete · four lanes scoring · exports working
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -249,8 +249,39 @@ and drill from the five-lane strip into 4.2(5) and its clause reference. The
 seeded submission carries **real cdxgen output** — 76 components — so the score
 is a real score.
 
-**Not yet built** (and not claimed): CBOM/QBOM (S14) and HBOM (S16) still report
-`lane_absent`; no DOCX/PDF/XLSX export yet (S15), so the deliverable is JSON. BOM payloads are held in a
+**S14 brings CBOM and QBOM to production.** Four lanes now score. Table 9's four
+asset types — algorithms, keys, protocols, certificates — are scored **per asset
+type**: a classical security level is meaningful for an algorithm and meaningless
+for a certificate, so out-of-scope assets leave the denominator rather than
+counting as absent. Reporting a certificate as missing its cipher mode would be a
+category error, not a gap.
+
+Document-level checks catch what coverage cannot: expired certificates, TLS 1.0,
+3DES and SHA-1 signatures. **A severe configuration finding caps the verdict
+below `pass`** — a document can be completely declared and still declare an
+expired certificate, and a lane reporting `pass` there would be arithmetically
+correct and wrong in the client's favour.
+
+**S15 is assessment depth and export breadth.** Nine sections built from what the
+engine computed, every figure passing `figureProvenanceValidator`. Gaps are
+ordered **by tier, not clause number** — clause order would put 4.2(1) Component
+Name above 4.2(21) CERT-In Identifier and invert the priority.
+
+| Export | State |
+|---|---|
+| XLSX gap register | one tab per lane, clause column first, tier-ordered, formula injection rendered inert |
+| DOCX | full assessment, watermark banner when unapproved |
+| JSON | carries the provenance chain, not just the prose |
+| PDF | **unverified** — the stack fixes `python-docx → LibreOffice` and LibreOffice is not installed here; the endpoint returns 501 naming the formats that work |
+
+**Not yet built** (and not claimed): HBOM (S16) still reports `lane_absent`,
+because its data is procurement data — asset registers and purchase records, not
+scanner output.
+
+**Exit proofs that need a human, and have not happened:** a cryptography
+practitioner signing the CBOM/QBOM checklist (S14), and a practitioner signing a
+full assessment plus a procurement reader stating the top three gaps unaided
+(S15). The checklist is generated so that review has something to run against. BOM payloads are held in a
 `bom_documents.payload` column until object storage lands in S13; that column is
 the wrong blast radius for an architecture disclosure and is marked interim in
 the model. Google OAuth has a controller path but no live token exchange.

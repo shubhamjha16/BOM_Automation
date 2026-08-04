@@ -8,6 +8,7 @@ export const ROUTES = {
   submission: (id: string) => `/submissions/${id}`,
   submissionLane: (id: string, lane: string) => `/submissions/${id}/lanes/${lane}`,
   rejected: (id: string) => `/submissions/${id}/rejected`,
+  assessment: (id: string) => `/submissions/${id}/assessment`,
   identifiers: '/identifiers',
   vex: '/vex',
   elements: '/elements',
