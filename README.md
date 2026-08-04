@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1 complete
+## Current state — S1–S2 complete
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -61,8 +61,39 @@ intake → detect → fanout ─┬→ sbomLane  ─┐
 - This repo generates and scores **its own SBOM**: currently **38.28%, fail**,
   855 components — see below.
 
-**Not yet built** (and not claimed): no database, queue, auth or tenancy (S2–S5);
-no SPDX parsing (S6); no enrichment, identifier mapping or VEX (S10–S12).
+**S2 adds Postgres and Alembic, and there is no `jobs.json`.** A job is a row:
+`orgs`, `users`, `clients`, `engagements`, `jobs`, `node_runs`, with the first
+migration hand-written and hand-reviewed per §5.
+
+- **Terminal finality** is a conditional `UPDATE ... WHERE terminal_at IS NULL`,
+  not a read-then-write. A read-then-write races: a lane finishing as a timeout
+  handler fires gives two writers who both see `None`, and the loser overwrites a
+  terminal verdict. It matters most for `blocked_conformance` — a late write-back
+  flipping it to `succeeded` would make an assessment the gate refused to issue
+  become issuable.
+- **Tenancy is enforced at the repository layer.** A repository cannot be
+  constructed without an org scope and every query it builds carries it. Reads
+  for another tenant return nothing rather than an error, so existence does not
+  leak.
+- **A crash leaves a reconcilable row**, because the row is written before the
+  work starts. Orphans are marked `failed`, never silently requeued — whether a
+  re-run is safe depends on what the job already wrote.
+
+**Not yet built** (and not claimed): no queue (S4), no auth (S5), no SPDX parsing
+(S6), no enrichment, identifier mapping or VEX (S10–S12).
+
+### Testing the database layer without a database
+
+The models are deliberately dialect-portable, so repository logic runs on SQLite
+via `aiosqlite` and the guards are exercised on every push. The migration is
+validated by rendering it through Alembic's **offline mode** and diffing the
+result against the model metadata — schema drift is caught in CI with no Postgres
+at all.
+
+What that cannot cover is stated at the foot of `tests/test_repositories.py`:
+real `text[]`/`JSONB`/native enums, the genuinely partial index, and concurrent
+writers actually racing the guard. `alembic upgrade head`, `downgrade -1` and the
+round-trip need a live Postgres and are the deferred exit proofs.
 
 ### On parallelism, measured rather than assumed
 
