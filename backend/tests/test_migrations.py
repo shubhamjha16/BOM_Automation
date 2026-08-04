@@ -52,10 +52,20 @@ def downgrade_sql() -> str:
     return _alembic("downgrade", "head:base", "--sql")
 
 
+ADD_COLUMN = re.compile(r"ALTER TABLE (\w+) ADD COLUMN (\w+)")
+DROP_COLUMN = re.compile(r"ALTER TABLE (\w+) DROP COLUMN (\w+)")
+
+
 def _migration_tables() -> dict[str, set[str]]:
-    """Table → column names, as the migration actually creates them."""
-    tables = {}
-    for name, body in CREATE_TABLE.findall(upgrade_sql()):
+    """Table → column names, as the migrations actually leave them.
+
+    Later revisions ALTER what earlier ones CREATE, so reading only CREATE TABLE
+    misses every column added by a subsequent migration — which is precisely what
+    happened when 0003 added `users.mfa_secret`.
+    """
+    sql = upgrade_sql()
+    tables: dict[str, set[str]] = {}
+    for name, body in CREATE_TABLE.findall(sql):
         if name == "alembic_version":
             continue
         columns = set()
@@ -65,6 +75,11 @@ def _migration_tables() -> dict[str, set[str]]:
                 continue
             columns.add(line.split()[0])
         tables[name] = columns
+
+    for table, column in ADD_COLUMN.findall(sql):
+        tables.setdefault(table, set()).add(column)
+    for table, column in DROP_COLUMN.findall(sql):
+        tables.get(table, set()).discard(column)
     return tables
 
 

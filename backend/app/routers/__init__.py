@@ -8,10 +8,11 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.routers import elements, health, jobs, submissions
+from app.routers import auth, elements, health, jobs, submissions
 
 api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(health.router)
+api_router.include_router(auth.router)
 api_router.include_router(elements.router)
 api_router.include_router(submissions.router)
 api_router.include_router(jobs.router)

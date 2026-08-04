@@ -60,7 +60,17 @@ async def wired():
 
 
 def _headers(org):
-    return {"X-Dev-Org-Id": str(org.id)}
+    """A real access token. The dev header is gone — S5 replaced it with JWT."""
+    from app.utils.security import issue_token
+
+    token = issue_token(
+        user_id=uuid.uuid4(),
+        org_id=org.id,
+        role="assessor",
+        kind="access",
+        mfa_satisfied=True,
+    )
+    return {"Authorization": f"Bearer {token}"}
 
 
 def _document(lane="sbom", components=None):
@@ -185,15 +195,38 @@ async def test_a_valid_submission_is_created_and_then_assessed(wired):
     )
     assert committed.status_code == 200, committed.text
     body = committed.json()
-    assert body["status"] == "succeeded"
-    assert body["overall_score"] is not None
+    # Commit returns the job, not the assessment: the work is asynchronous and a
+    # handler that waited would tie scoring to an HTTP timeout.
+    assert body["created"] is True
+    job_id = body["job_id"]
 
-    lanes = {lane["lane"]: lane for lane in body["lanes"]}
-    assert set(lanes) == {"sbom", "cbom", "qbom", "aibom", "hbom"}
-    assert lanes["sbom"]["score"] is not None
-    # lane_not_applicable is excluded from the overall score; lane_absent is not.
-    assert lanes["cbom"]["verdict"] == "lane_absent"
-    assert lanes["cbom"]["is_finding"] is True
+    job = await http.get(f"/api/v1/jobs/{job_id}", headers=_headers(org_a))
+    assert job.json()["status"] == "succeeded"
+
+    lanes = {run["lane"] for run in job.json()["node_runs"] if run["lane"]}
+    assert lanes == {"sbom", "cbom", "qbom", "aibom", "hbom"}
+
+
+async def test_committing_the_same_submission_twice_returns_one_job(wired):
+    """One job_id, one execution — the S4 idempotency contract, over HTTP."""
+    http, org_a, _, engagement = wired
+    created = await http.post(
+        "/api/v1/submissions",
+        json={"engagement_id": str(engagement.id), "documents": [_document("sbom")]},
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+
+    first = await http.post(
+        f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a)
+    )
+    second = await http.post(
+        f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a)
+    )
+
+    assert first.json()["created"] is True
+    assert second.json()["created"] is False
+    assert first.json()["job_id"] == second.json()["job_id"]
 
 
 async def test_the_job_and_its_node_runs_are_readable_after_the_assessment(wired):
@@ -270,13 +303,32 @@ async def test_the_limit_is_derived_from_max_bom_mb():
 # --- layering rules ---------------------------------------------------------
 
 
+def _route_handlers(path: Path):
+    """Functions decorated with @router.<verb>.
+
+    Precise rather than "every function in routers/": `deps.py` holds
+    dependencies, not handlers, and the under-15-lines rule is about keeping HTTP
+    plumbing thin, not about capping every helper in the package.
+    """
+    for node in ast.walk(ast.parse(path.read_text())):
+        if not isinstance(node, ast.AsyncFunctionDef | ast.FunctionDef):
+            continue
+        for decorator in node.decorator_list:
+            target = decorator.func if isinstance(decorator, ast.Call) else decorator
+            if isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name):
+                if target.value.id == "router":
+                    yield node
+                    break
+
+
 def test_every_route_handler_is_under_fifteen_lines():
+    checked = 0
     for path in (BACKEND / "app" / "routers").glob("*.py"):
-        tree = ast.parse(path.read_text())
-        for node in ast.walk(tree):
-            if isinstance(node, ast.AsyncFunctionDef | ast.FunctionDef):
-                length = node.end_lineno - node.lineno + 1
-                assert length <= 15, f"{path.name}:{node.name} is {length} lines"
+        for node in _route_handlers(path):
+            checked += 1
+            length = node.end_lineno - node.lineno + 1
+            assert length <= 15, f"{path.name}:{node.name} is {length} lines"
+    assert checked >= 10, "the handler scan found suspiciously few routes"
 
 
 def _called_names(path: Path) -> set[str]:

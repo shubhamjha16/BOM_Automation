@@ -1,13 +1,13 @@
 """Shared route dependencies.
 
-**The org scope is resolved here and nowhere else.** Every repository is
-constructed from it, so a handler cannot obtain an unscoped repository even by
-accident — there is no constructor that takes a session alone.
+**The org scope is resolved here and nowhere else.** It comes from the verified
+JWT, and every repository is constructed from it — a handler cannot obtain an
+unscoped repository even by accident, because no repository constructor takes a
+session alone.
 
-Real authentication lands in S5 with JWT, Google OAuth and enforced MFA. Until
-then the scope comes from a header, which is why `main.py` mounts this only when
-the deployment is not production and why the header is named as a development
-affordance rather than something that looks like auth.
+The token carries the org, but the token is not the enforcement. The repository
+layer applies the scope to every query regardless of where it came from, so a
+forged or swapped claim still cannot reach another tenant's rows.
 """
 
 from __future__ import annotations
@@ -15,34 +15,79 @@ from __future__ import annotations
 import uuid
 from typing import Annotated
 
-from fastapi import Depends, Header, HTTPException
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.configs.dbConfig import get_session
+from app.configs.envConfig import settings
+from app.models.enums import Role
+from app.models.user import User
 from app.repositories.jobRepository import JobRepository
 from app.repositories.submissionRepository import SubmissionRepository
+from app.repositories.userRepository import UserRepository
+from app.utils.security import InvalidToken, decode_token
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
-async def current_org_id(
-    x_dev_org_id: Annotated[str | None, Header(alias="X-Dev-Org-Id")] = None,
-) -> uuid.UUID:
-    """The tenant this request acts within.
+bearer = HTTPBearer(auto_error=False)
 
-    S5 replaces this with the JWT subject's org. The shape does not change:
-    everything downstream already takes an org id and cannot be constructed
-    without one.
+
+async def current_claims(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)] = None,
+) -> dict:
+    """Verify the bearer token and return its claims.
+
+    `expect="access"` is what stops a refresh token — or the short-lived
+    `mfa_pending` token, which proves only that a password was accepted — being
+    presented here. Without that check, surviving a password prompt would be
+    enough to read a submission.
     """
-    if not x_dev_org_id:
-        raise HTTPException(401, "X-Dev-Org-Id is required until authentication lands (S5)")
+    if credentials is None or not credentials.credentials:
+        raise HTTPException(401, "authentication required", {"WWW-Authenticate": "Bearer"})
     try:
-        return uuid.UUID(x_dev_org_id)
-    except ValueError:
-        raise HTTPException(401, "X-Dev-Org-Id is not a valid UUID") from None
+        claims = decode_token(credentials.credentials, expect="access")
+    except InvalidToken as error:
+        raise HTTPException(401, str(error), {"WWW-Authenticate": "Bearer"}) from None
+    if settings.MFA_REQUIRED and not claims.get("mfa"):
+        raise HTTPException(401, "multi-factor authentication was not completed")
+    return claims
+
+
+ClaimsDep = Annotated[dict, Depends(current_claims)]
+
+
+async def current_org_id(claims: ClaimsDep) -> uuid.UUID:
+    """The tenant this request acts within, from the verified token."""
+    return uuid.UUID(claims["org"])
+
+
+async def current_role(claims: ClaimsDep) -> Role:
+    return Role(claims["role"])
+
+
+async def user_repository(session: SessionDep) -> UserRepository:
+    return UserRepository(session)
+
+
+UserRepoDep = Annotated[UserRepository, Depends(user_repository)]
+
+
+async def current_user(claims: ClaimsDep, users: UserRepoDep) -> User:
+    """The acting user, re-read rather than reconstructed from the token.
+
+    A deactivated account must stop working immediately, not at token expiry.
+    """
+    user = await users.by_id(uuid.UUID(claims["sub"]), org_id=uuid.UUID(claims["org"]))
+    if user is None or not user.is_active:
+        raise HTTPException(401, "this account is no longer active")
+    return user
 
 
 OrgDep = Annotated[uuid.UUID, Depends(current_org_id)]
+RoleDep = Annotated[Role, Depends(current_role)]
+CurrentUserDep = Annotated[User, Depends(current_user)]
 
 
 async def submission_repository(session: SessionDep, org_id: OrgDep) -> SubmissionRepository:

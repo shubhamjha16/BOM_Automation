@@ -12,8 +12,11 @@ import os
 
 os.environ.setdefault("GROQ_API_KEY", "test-key")
 os.environ.setdefault("ANTHROPIC_API_KEY", "test-key")
-os.environ.setdefault("JWT_SECRET", "test-secret")
+os.environ.setdefault("JWT_SECRET", "test-secret-that-is-at-least-32-bytes-long")
 os.environ.setdefault("ENABLED_LANES", "sbom,aibom,cbom,qbom,hbom")
+# The HTTP tests exercise the real commit path; running the assessment in-process
+# keeps them hermetic. The queue itself is covered in test_queue_integration.py.
+os.environ.setdefault("JOBS_INLINE", "true")
 
 from pathlib import Path  # noqa: E402
 from typing import Any  # noqa: E402

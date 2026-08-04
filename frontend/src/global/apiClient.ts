@@ -1,3 +1,4 @@
+import { useSessionStore } from '@/features/auth/store';
 import { env } from './env';
 import { ApiError } from './errors';
 
@@ -7,10 +8,24 @@ import { ApiError } from './errors';
  * backend schema change that is not regenerated fails CI, so these are never
  * hand-maintained guesses about the wire format.
  */
+/**
+ * Read straight from the store rather than taking the token as an argument: a
+ * per-call token is a per-call opportunity to forget one, and an unauthenticated
+ * request fails at the server as a 401 that looks like a bug.
+ */
+function authHeaders(): Record<string, string> {
+  const token = useSessionStore.getState().accessToken;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     ...init,
-    headers: { 'Content-Type': 'application/json', ...init.headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders(),
+      ...init.headers,
+    },
     credentials: 'include',
   });
 

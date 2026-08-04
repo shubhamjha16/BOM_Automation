@@ -11,20 +11,29 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+from dataclasses import dataclass
 from typing import Any
 
-from app.configs.jobTypes import JobType
-from app.models.enums import BomFormat, SubmissionStatus
+from app.configs.laneConfig import resolve_lanes
+from app.models.enums import BomFormat
 from app.repositories.jobRepository import JobRepository
 from app.repositories.submissionRepository import SubmissionRepository
-from app.services.assessmentService import lane_rollup, run_assessment
-from app.services.graph.state import SubmissionDocument
-from app.services.jobService import persist_summary
+from app.services.assessmentService import lane_rollup
+from app.services.queueService import enqueue_assessment, run_inline
 from app.utils.logger import get_logger
 from app.validators.submissionValidator import validate_submission
 
 logger = get_logger(__name__)
 
+
+@dataclass(frozen=True, slots=True)
+class CommitResult:
+    job_id: uuid.UUID
+    status: str
+    #: False when an identical document set was already submitted inside the
+    #: idempotency window. The same job_id is returned either way.
+    created: bool
+    queued: bool
 
 def checksum_of(payload: dict[str, Any]) -> str:
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
@@ -95,49 +104,45 @@ async def commit_submission(
     jobs: JobRepository,
     *,
     submission_id: uuid.UUID,
-) -> Any:
-    """Finalise a submission and run its assessment.
+    enabled_lanes: list[str] | None = None,
+    user_id: uuid.UUID | None = None,
+    inline: bool = False,
+) -> CommitResult | None:
+    """Finalise a submission and enqueue its assessment.
 
-    S4 moves the execution onto arq; the job row is already created first here,
-    so that change is a swap of one call rather than a restructure — and a crash
-    mid-assessment already leaves a reconcilable row today.
+    Returns the job, never the assessment: the work is asynchronous, and a
+    handler that waited for it would tie a 50,000-component scoring run to an
+    HTTP timeout. Callers poll `GET /jobs/{id}`.
+
+    `inline=True` runs the same task function in-process — for single-process
+    development and tests, not a second code path.
     """
     submission = await submissions.get_with_documents(submission_id)
     if submission is None:
         return None
 
-    job = await jobs.create(
-        job_type=JobType.ASSESS_SUBMISSION,
-        engagement_id=submission.engagement_id,
+    lanes = enabled_lanes or list(resolve_lanes())
+    result = await enqueue_assessment(
+        jobs,
         submission_id=submission.id,
+        engagement_id=submission.engagement_id,
+        document_checksums=[document.checksum for document in submission.documents],
+        enabled_lanes=lanes,
+        user_id=user_id,
+        inline=inline,
     )
-    await jobs.mark_running(job.id)
 
-    documents = [
-        SubmissionDocument(
-            lane=document.lane,  # type: ignore[arg-type]
-            format=document.format.value,
-            payload=document.payload,
-            spec_version=document.spec_version,
-            filename=document.filename,
+    if inline and result.created:
+        await run_inline(
+            submissions.session, submissions.org_id, submission.id, result.job.id
         )
-        for document in submission.documents
-        if document.payload is not None
-    ]
 
-    summary = await run_assessment(
-        org_id=str(submissions.org_id),
-        submission_id=str(submission.id),
-        documents=documents,
-        job_id=str(job.id),
+    return CommitResult(
+        job_id=result.job.id,
+        status=str(result.job.status),
+        created=result.created,
+        queued=result.queued,
     )
-    await persist_summary(jobs, job.id, summary)
-    await submissions.set_status(
-        submission.id,
-        SubmissionStatus.SCORED,
-        overall_score=summary.overall_score,
-    )
-    return summary
 
 
 def rollup_response(summary: Any) -> list[dict[str, Any]]:

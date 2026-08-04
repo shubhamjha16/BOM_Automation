@@ -42,6 +42,24 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:5173"
     SENTRY_DSN: str | None = None
 
+    # --- auth (S5) ---------------------------------------------------------
+    GOOGLE_CLIENT_ID: str | None = None
+    GOOGLE_CLIENT_SECRET: str | None = None
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8005/api/v1/auth/google/callback"
+    #: A BOM is an architecture disclosure and this system holds many suppliers'
+    #: at once. MFA is on by default and turning it off is a deliberate act.
+    MFA_REQUIRED: bool = True
+    ACCESS_TOKEN_TTL_MINUTES: int = 30
+    REFRESH_TOKEN_TTL_DAYS: int = 14
+    JWT_ALGORITHM: str = "HS256"
+
+    #: Run assessments in the request process instead of handing them to arq.
+    #: For single-process development and tests only. It is a real setting rather
+    #: than an implicit fallback because a production deployment silently running
+    #: assessments inline — because Redis happened to be unreachable — would tie
+    #: a 50,000-component scoring run to an HTTP timeout and look like a hang.
+    JOBS_INLINE: bool = False
+
     # --- models ------------------------------------------------------------
     ROUTER_MODEL: str = "llama-3.3-70b-versatile"
     DRAFTER_MODEL: str = "claude-sonnet-4-5"
@@ -75,6 +93,19 @@ class Settings(BaseSettings):
 
     # --- retention ---------------------------------------------------------
     SUBMISSION_RETENTION_DAYS: int = 1095
+
+    @field_validator("JWT_SECRET")
+    @classmethod
+    def _strong_signing_key(cls, raw: str) -> str:
+        """RFC 7518 §3.2: an HMAC key below the hash output length weakens the
+        signature. PyJWT warns; we refuse, because a short secret here means
+        forgeable tokens across every tenant."""
+        if len(raw.encode()) < 32:
+            raise ValueError(
+                f"must be at least 32 bytes for HS256 (got {len(raw.encode())}); "
+                "generate one with `openssl rand -base64 48`"
+            )
+        return raw
 
     @field_validator("ENABLED_LANES")
     @classmethod

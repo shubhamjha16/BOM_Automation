@@ -14,6 +14,7 @@ stays complete.
 
 from __future__ import annotations
 
+from app.models.auditEvent import AuditEvent
 from app.models.base import Base
 from app.models.bomDocument import BomDocument
 from app.models.client import Client
@@ -35,6 +36,7 @@ from app.models.submission import Submission
 from app.models.user import User
 
 __all__ = [
+    "AuditEvent",
     "Base",
     "BomDocument",
     "BomFormat",

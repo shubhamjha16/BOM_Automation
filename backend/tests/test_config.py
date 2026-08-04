@@ -39,7 +39,7 @@ def _base_env(backend_dir) -> dict[str, str]:
 def test_boot_without_groq_api_key_exits_non_zero_naming_that_variable(tmp_path, backend_dir):
     env = _base_env(backend_dir) | {
         "ANTHROPIC_API_KEY": "x",
-        "JWT_SECRET": "x",
+        "JWT_SECRET": "x" * 32,
     }
     result = _boot(env, cwd=str(tmp_path))
 
@@ -61,7 +61,7 @@ def test_boot_succeeds_with_the_required_variables(tmp_path, backend_dir):
     env = _base_env(backend_dir) | {
         "GROQ_API_KEY": "x",
         "ANTHROPIC_API_KEY": "x",
-        "JWT_SECRET": "x",
+        "JWT_SECRET": "x" * 32,
     }
     result = _boot(env, cwd=str(tmp_path))
     assert result.returncode == 0, result.stderr
@@ -71,7 +71,7 @@ def test_an_unknown_lane_is_refused_by_name(tmp_path, backend_dir):
     env = _base_env(backend_dir) | {
         "GROQ_API_KEY": "x",
         "ANTHROPIC_API_KEY": "x",
-        "JWT_SECRET": "x",
+        "JWT_SECRET": "x" * 32,
         "ENABLED_LANES": "sbom,dbom",
     }
     result = _boot(env, cwd=str(tmp_path))
@@ -85,7 +85,7 @@ def test_enabled_lanes_narrows_the_fan_out(tmp_path, backend_dir):
     env = _base_env(backend_dir) | {
         "GROQ_API_KEY": "x",
         "ANTHROPIC_API_KEY": "x",
-        "JWT_SECRET": "x",
+        "JWT_SECRET": "x" * 32,
         "ENABLED_LANES": "sbom,aibom",
     }
     script = (

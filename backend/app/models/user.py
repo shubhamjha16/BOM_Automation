@@ -33,3 +33,8 @@ class User(UuidPrimaryKey, Timestamped, Base):
         default=Role.ASSESSOR,
     )
     mfa_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    #: TOTP shared secret. Null until enrolment completes — a secret is generated
+    #: at enrolment but only stored once a code proves the user has it, so a
+    #: half-finished enrolment cannot lock anyone out.
+    mfa_secret: Mapped[str | None] = mapped_column(String(64))
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

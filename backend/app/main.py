@@ -11,7 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.configs.envConfig import settings
+from app.controllers.authController import AuthenticationFailed, MfaRequired
 from app.routers import api_router
+from app.services.access.authz import Forbidden
 from app.utils.bodyLimit import BodySizeLimitMiddleware
 from app.utils.logger import configure_logging, get_logger
 from app.validators.submissionValidator import SubmissionInvalid, max_document_bytes
@@ -69,6 +71,43 @@ def create_app() -> FastAPI:
                 ],
             },
         )
+
+    @app.exception_handler(AuthenticationFailed)
+    async def _auth_failed(_: Request, error: AuthenticationFailed) -> JSONResponse:
+        """401 with a deliberately uninformative body.
+
+        Without this the exception escapes as a 500, which is both a broken API
+        and an oracle: a 500 on a real account and a 401 on an unknown one tells
+        an attacker which addresses exist.
+        """
+        return JSONResponse(
+            status_code=401,
+            content={"detail": str(error)},
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    @app.exception_handler(MfaRequired)
+    async def _mfa_required(_: Request, error: MfaRequired) -> JSONResponse:
+        """200 carrying a challenge, not an error.
+
+        The password was correct; the caller has more to do. Signalling this as a
+        4xx would make a normal step of sign-in look like a failure.
+        """
+        return JSONResponse(
+            status_code=200,
+            content={
+                "mfa_required": True,
+                "enrolled": error.enrolled,
+                "pending_token": error.pending_token,
+            },
+        )
+
+    @app.exception_handler(Forbidden)
+    async def _forbidden(_: Request, error: Forbidden) -> JSONResponse:
+        """403 is correct here and only here: the caller is inside their own org,
+        so acknowledging the resource leaks nothing. Cross-tenant denials return
+        404 instead, and that distinction is deliberate."""
+        return JSONResponse(status_code=403, content={"detail": str(error)})
 
     app.include_router(api_router)
 

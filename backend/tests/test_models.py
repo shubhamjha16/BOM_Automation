@@ -30,6 +30,7 @@ EXPECTED_TABLES = {
     "node_runs",
     "submissions",
     "bom_documents",
+    "audit_events",
 }
 
 

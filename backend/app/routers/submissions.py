@@ -6,6 +6,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
 
+from app.configs.envConfig import settings
 from app.controllers import submissionController as controller
 from app.routers.deps import JobRepoDep, SubmissionRepoDep
 from app.schemas.request.submission import SubmissionCreate
@@ -36,14 +37,14 @@ async def get(submission_id: UUID, submissions: SubmissionRepoDep) -> Submission
 async def commit(
     submission_id: UUID, submissions: SubmissionRepoDep, jobs: JobRepoDep
 ) -> dict:
-    summary = await controller.commit_submission(
-        submissions, jobs, submission_id=submission_id
+    result = await controller.commit_submission(
+        submissions, jobs, submission_id=submission_id, inline=settings.JOBS_INLINE
     )
-    if summary is None:
+    if result is None:
         raise HTTPException(404, "submission not found")
     return {
-        "job_id": summary.job_id,
-        "status": str(summary.status),
-        "overall_score": summary.overall_score,
-        "lanes": controller.rollup_response(summary),
+        "job_id": str(result.job_id),
+        "status": result.status,
+        "created": result.created,
+        "queued": result.queued,
     }
