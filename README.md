@@ -309,13 +309,12 @@ auditor tests.
   and marks the section undrafted. Turning it on needs a real `ANTHROPIC_API_KEY` —
   recognised by its `sk-ant-` prefix, so a placeholder cannot cause a live call from a
   test run.
-- **Frontend XSS rests on React's default escaping and is not asserted by a test.** There is
-  no `dangerouslySetInnerHTML` anywhere in `frontend/src`, which is the real protection, but
-  component names are supplier-controlled text and that property deserves a test rather than
-  a grep.
-- **The repo sandbox has not been re-tested against a hostile build script.** It refuses when
-  isolation is unavailable, and that refusal is tested; an adversarial `postinstall` payload
-  proving the container boundary holds is not.
+- **Five sandbox containment tests skip without a container runtime.** They are skipped with
+  a stated reason rather than passed, because a containment assertion that quietly no-ops
+  turns an unproven property into a green suite. What runs everywhere is the argv guard —
+  `--network none`, `--read-only`, `--cap-drop ALL`, no forwarded environment, one mount —
+  asserted on the real invocation, so an edit that drops a flag fails on a laptop with no
+  Docker.
 - **`vexCoverage` correlation is not live** — reported as pending with its reason, never
   silently absent.
 - **No Playwright end-to-end suite.** The critical path is covered by API-level and

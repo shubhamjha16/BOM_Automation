@@ -420,9 +420,10 @@ the software.
 | Zip bombs | Refused on the **measured** decompression ratio, not the declared size — the header is written by whoever built the archive |
 | Nested JSON | Refused beyond 40 levels, checked as it descends rather than by catching `RecursionError` |
 | Formula injection | `=cmd\|'/c calc'!A1` and every `= + - @ \t \r` lead exported inert |
+| Frontend XSS | Supplier-controlled text rendered inert, asserted on the DOM against six real payloads; plus an AST guard over all of `src/` so a future component reintroducing `dangerouslySetInnerHTML` fails the build |
 | Body size | Refused at the middleware before anything reads it |
 | Log redaction | Last structlog processor before rendering; no hostname, path, email or secret from a BOM reaches log storage |
-| Sandbox | `--network none`; refuses to run untrusted builds when isolation is unavailable |
+| Sandbox | `--network none`, read-only, `--cap-drop ALL`, no forwarded environment, one mount; refuses untrusted builds when isolation is unavailable. Exercised against a hostile `postinstall` that attempts credential harvesting, exfiltration, writing outside the tree and outliving the run — with a control case proving the payload succeeds *unprotected*, so a containment pass is not measuring a broken fixture. |
 | Webhooks | HMAC-SHA256 over the raw body with the timestamp inside the signed payload; a one-character tamper is rejected |
 | Storage | `ap-south-1`, presigned only, SSE-KMS, per-client keys |
 | Dependencies | `pip-audit --strict` blocking in CI |
@@ -642,8 +643,7 @@ auditor tests.
 | **Catalogue provenance is 25.7% confirmed** | 75 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
 | **Narrative drafting is off by default** | `NARRATIVE_ENABLED=false`. Sections fall back to `NullGenerator`, which restates the engine's findings and marks the section undrafted. Enabling it needs a real key — recognised by its `sk-ant-` prefix, so a placeholder cannot produce a live call from a test run. |
 | **Retrieval ranks in Python, not in the database** | The embedding column is a real `vector(384)` on Postgres, but nearest-neighbour work happens in the application over org-scoped candidates. Exact search is correct at every corpus size and only slow at large ones; an `ivfflat` index is the stated follow-up, and it wants a populated table to choose its list count sensibly. |
-| **Frontend XSS is not asserted by a test** | No `dangerouslySetInnerHTML` appears anywhere in `frontend/src`, and React escapes by default — that is the real protection. But component names are supplier-controlled text, and the property deserves a test rather than a grep. |
-| **The sandbox has not been re-tested against a hostile build script** | It refuses when isolation is unavailable, and that refusal is tested. An adversarial `postinstall` payload proving the container boundary holds is not. |
+| **Five sandbox containment tests skip without a container runtime** | Skipped with a stated reason rather than passed — a containment assertion that quietly no-ops turns an unproven property into a green suite. The argv guard runs everywhere and fails if any isolation flag is dropped. |
 | **`vexCoverage` correlation is not live** | Reported as pending with its reason, never silently absent. |
 | **No Playwright end-to-end suite** | The critical path is covered by API-level and component tests. Browser E2E requires browser binaries and both servers running, and untested E2E configuration would be worse than none. |
 | **Rate limiting is per process** | Two API instances therefore allow twice the configured rate. Redis would fix it; a limiter that fails closed on a Redis blip turns a cache outage into an outage, and one that fails open is this with more moving parts. The limit exists to stop a runaway client script, and per-process is enough for that. |

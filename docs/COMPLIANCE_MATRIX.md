@@ -130,6 +130,17 @@ read what was declared and judge it:
 | `deprecatedCipherSuite` | s.8.4.2.2 | high | RC4, 3DES, NULL, EXPORT, anonymous suites |
 | `weakCertificateSignature` | s.8.4.3.4 | high | SHA-1 or MD5 certificate signatures |
 
+### The S20 security review, as tested
+
+| Surface | Proven by |
+|---|---|
+| XXE in SPDX/CycloneDX XML | A live payload parsed; entity resolves to nothing. Asserted behaviourally — the earlier introspection check read an lxml attribute that does not exist and would have raised on a *safe* parser too |
+| Formula injection on XLSX export | `=cmd\|'/c calc'!A1` and every `= + - @ \t \r` lead exported inert, through the real exporter |
+| Zip bombs | Refused on the **measured** decompression ratio, not the declared size |
+| Nested JSON | Refused beyond 40 levels, checked as it descends rather than by catching `RecursionError` |
+| Frontend XSS | Six payloads through the components that render supplier text, asserted inert on the DOM; plus an AST guard over all of `src/` — a grep would match this documentation, which is a mistake the backend suite has made three times |
+| Sandbox boundary | A hostile `postinstall` attempting credential harvesting, exfiltration, escape from the tree and outliving the run. A control case proves the payload succeeds *unprotected*, so a containment pass cannot be a broken fixture. Containment tests skip without a container runtime, with a stated reason; the argv guard runs everywhere |
+
 Implementation: `backend/app/services/score/cryptoChecks.py`
 
 **A high-severity configuration finding caps the lane verdict below `pass`.** Coverage
