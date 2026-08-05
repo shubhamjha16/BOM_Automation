@@ -24,3 +24,6 @@ dist/*.json
 .DS_Store
 .idea/
 .vscode/
+
+# The sprint plan is internal and is not published.
+BOM_FACTORY_SPRINTS.md
