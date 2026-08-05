@@ -293,6 +293,19 @@ auditor tests.
 - **Catalogue provenance is 25.7% confirmed.** 75 of 101 clause references are provisional.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
+- **Org-scoped retrieval over past assessments is not built.** The specification calls for
+  pgvector plus hybrid search over the firm's own prior assessments, policies and house
+  remediation wording — scoped per org and never across clients — feeding *narrative wording
+  only*. Neither it nor the narrative-drafting path it was meant to feed exists: there are no
+  drafter nodes, `services/graph/prompts/` is empty, and the three `narrative_*` job types are
+  declared in the enum and wired to nothing.
+- **Frontend XSS rests on React's default escaping and is not asserted by a test.** There is
+  no `dangerouslySetInnerHTML` anywhere in `frontend/src`, which is the real protection, but
+  component names are supplier-controlled text and that property deserves a test rather than
+  a grep.
+- **The repo sandbox has not been re-tested against a hostile build script.** It refuses when
+  isolation is unavailable, and that refusal is tested; an adversarial `postinstall` payload
+  proving the container boundary holds is not.
 - **`vexCoverage` correlation is not live** — reported as pending with its reason, never
   silently absent.
 - **No Playwright end-to-end suite.** The critical path is covered by API-level and

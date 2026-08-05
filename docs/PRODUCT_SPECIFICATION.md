@@ -640,6 +640,9 @@ auditor tests.
 | Limitation | Detail |
 |---|---|
 | **Catalogue provenance is 25.7% confirmed** | 75 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
+| **Org-scoped retrieval over past assessments is not built** | The specification calls for pgvector plus hybrid search over the firm's own prior assessments, policies and house remediation wording, scoped per org, feeding *narrative wording only*. Neither it nor the narrative-drafting path it was meant to feed exists — no drafter nodes, no prompts, and the three `narrative_*` job types are declared and wired to nothing. |
+| **Frontend XSS is not asserted by a test** | No `dangerouslySetInnerHTML` appears anywhere in `frontend/src`, and React escapes by default — that is the real protection. But component names are supplier-controlled text, and the property deserves a test rather than a grep. |
+| **The sandbox has not been re-tested against a hostile build script** | It refuses when isolation is unavailable, and that refusal is tested. An adversarial `postinstall` payload proving the container boundary holds is not. |
 | **`vexCoverage` correlation is not live** | Reported as pending with its reason, never silently absent. |
 | **No Playwright end-to-end suite** | The critical path is covered by API-level and component tests. Browser E2E requires browser binaries and both servers running, and untested E2E configuration would be worse than none. |
 | **Rate limiting is per process** | Two API instances therefore allow twice the configured rate. Redis would fix it; a limiter that fails closed on a Redis blip turns a cache outage into an outage, and one that fails open is this with more moving parts. The limit exists to stop a runaway client script, and per-process is enough for that. |
