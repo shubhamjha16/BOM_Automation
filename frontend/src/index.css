@@ -79,3 +79,36 @@ dd { margin-left: 0; color: #444; }
 }
 tr.attested { background: #fffdf5; }
 .activity__detail { font-size: 0.85rem; color: #444; max-width: 34rem; }
+
+/* --- quotas: a limit is a state, not a fault ------------------------------- */
+/* Deliberately not styled as an error. The request was valid and the service is
+   healthy; a red panel here trains clients to read a billing limit as an outage. */
+.quota-state {
+  border: 1px solid var(--warn); background: #fffdf5; border-radius: 4px;
+  padding: 1.5rem 1.75rem; max-width: 38rem;
+}
+.quota-state__title { margin: 0 0 0.75rem; font-size: 1.15rem; }
+.quota-state__figures { margin: 0 0 0.75rem; }
+.quota-state__remedy { margin: 0 0 0.75rem; color: #333; }
+.quota-state__reset { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--neutral); }
+.quota-state__reset--none { font-style: italic; }
+.quota-state__reassurance { margin: 0 0 1rem; font-size: 0.85rem; color: var(--pass); }
+.button--quiet {
+  padding: 0.4rem 0.9rem; cursor: pointer; background: #fff; border: 1px solid #ccc;
+}
+
+.quota-warning {
+  border-left: 3px solid var(--warn); background: #fffdf5;
+  padding: 0.75rem 1rem; margin-bottom: 1.5rem;
+}
+.quota-warning p { margin: 0 0 0.5rem; font-weight: 600; }
+.quota-meter { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+.quota-meter__label { min-width: 16rem; }
+.quota-meter__value { min-width: 7rem; font-variant-numeric: tabular-nums; }
+.quota-meter__bar {
+  flex: 1; max-width: 12rem; height: 0.5rem; background: #eee;
+  border-radius: 3px; overflow: hidden;
+}
+.quota-meter__fill { display: block; height: 100%; background: var(--pass); }
+.quota-meter[data-tone='warn'] .quota-meter__fill { background: var(--warn); }
+.quota-meter[data-tone='fail'] .quota-meter__fill { background: var(--fail); }

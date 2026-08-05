@@ -18,6 +18,21 @@ from app.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
+def is_asset_register(
+    payload: Any, *, lane: str, declared_format: str | None = None
+) -> bool:
+    """True for a spreadsheet export rather than a BOM document.
+
+    An asset register has no self-identifying field — it is a spreadsheet — so it
+    is recognised by being *text or bytes* in the HBOM lane, or by the caller
+    saying so outright. A mapping that identifies itself as CycloneDX or SPDX is
+    never one, whatever lane it arrived in.
+    """
+    if (declared_format or "").lower().startswith("assetregister"):
+        return True
+    return lane == "hbom" and isinstance(payload, (str, bytes, bytearray))
+
+
 def ingest_document(
     payload: Any, *, lane: str = "sbom", declared_format: str | None = None
 ) -> ParseResult:
@@ -36,7 +51,17 @@ def ingest_document(
     if isinstance(payload, dict) and set(payload) == {"__text__"}:
         payload = payload["__text__"]
 
-    if lane == "hbom" or (declared_format or "").lower().startswith("assetregister"):
+    # **Routed on the payload's shape, not on the lane alone.** HBOM data is
+    # usually procurement data — a CSV or XLSX export from ServiceNow, SAP or a
+    # spreadsheet — which is why the lane implies the asset-register parser. But
+    # CycloneDX 1.6 carries hardware as `type: device`, and s.10.2.4 makes the
+    # HBOM-with-SBOM pairing explicit, so a CycloneDX HBOM is a legitimate
+    # submission. Routing every hbom document to the register parser refused those
+    # with "an asset register must be CSV text or XLSX bytes, got dict" — an
+    # internal message about our own dispatcher, raised at a supplier who sent a
+    # valid document. Found by the S21 scale measurement, whose HBOM lane was
+    # quietly timing the exception path.
+    if is_asset_register(payload, lane=lane, declared_format=declared_format):
         result = assetRegister.parse(payload, lane=lane)
         logger.info(
             "document_ingested",

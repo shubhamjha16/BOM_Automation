@@ -39,6 +39,7 @@ from app.configs.jobTypes import LaneVerdict
 from app.configs.laneConfig import LANE_SPECS, is_implemented
 from app.configs.scoringConfig import ENGINE_VERSION
 from app.services.graph.state import GraphState, LaneResult, NodeRun, SubmissionDocument
+from app.services.observability.trace import LANE_COMPLETE, LANE_FAILED, LANE_STARTED
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -58,6 +59,18 @@ async def run_lane(state: GraphState, lane: Lane, body: LaneBody) -> GraphState:
     documents = documents_for(state, lane)
     errors: list[str] = []
     status = "succeeded"
+
+    # Emitted before any branch below, so that **every** lane has a lifecycle in
+    # the logs — including the ones that do no work. A lane that was not enabled,
+    # or received no document, is precisely the lane a client later asks about,
+    # and it is the one that would otherwise be absent from the trace.
+    logger.info(
+        LANE_STARTED,
+        lane=lane,
+        document_count=len(documents),
+        enabled=lane in state.get("lanes_to_run", []),
+        implemented=is_implemented(lane),
+    )
 
     if lane not in state.get("lanes_to_run", []):
         result = LaneResult(
@@ -105,7 +118,7 @@ async def run_lane(state: GraphState, lane: Lane, body: LaneBody) -> GraphState:
             errors.append(f"{lane}: timed out after {settings.LANE_TIMEOUT_SECONDS}s")
         except Exception as error:  # noqa: BLE001 - a lane never fails the submission
             status = "failed"
-            logger.exception("lane_failed", lane=lane, job_id=state.get("job_id"))
+            logger.exception(LANE_FAILED, lane=lane)
             result = LaneResult(
                 lane=lane,
                 verdict=LaneVerdict.FAIL,
@@ -124,11 +137,11 @@ async def run_lane(state: GraphState, lane: Lane, body: LaneBody) -> GraphState:
         error=errors[0] if errors else None,
     )
     logger.info(
-        "lane_complete",
+        LANE_COMPLETE,
         lane=lane,
-        verdict=result.verdict,
+        verdict=str(result.verdict),
         entity_count=result.entity_count,
         latency_ms=round(node_run.latency_ms, 2),
-        job_id=state.get("job_id"),
+        status=status,
     )
     return GraphState(lane_results=[result], node_runs=[node_run], errors=errors)

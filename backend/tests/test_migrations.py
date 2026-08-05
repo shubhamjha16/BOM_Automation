@@ -163,11 +163,19 @@ def test_downgrade_drops_the_enum_types_too():
     fails with "type already exists" — so the round-trip this sprint exits on
     would not work.
     """
+    downgrade = downgrade_sql()
     created = set(re.findall(r"CREATE TYPE (\w+) AS ENUM", upgrade_sql()))
-    dropped = set(re.findall(r"DROP TYPE (\w+);", downgrade_sql()))
+    dropped = set(re.findall(r"DROP TYPE (\w+);", downgrade))
+    # A type the downgrade renamed aside exists only for the length of that
+    # downgrade — 0008 has to do this, because PostgreSQL has no `DROP VALUE` and
+    # removing an enum value means rebuilding the type. Such a type never exists
+    # at rest, so it is not one the round-trip can collide with.
+    temporary = set(re.findall(r"ALTER TYPE \w+ RENAME TO (\w+)", downgrade))
 
     assert created, "expected native enum types on Postgres"
-    assert created == dropped, f"created but never dropped: {created - dropped}"
+    assert created == dropped - temporary, (
+        f"created but never dropped: {created - dropped}"
+    )
 
 
 def test_tables_are_dropped_in_reverse_dependency_order():

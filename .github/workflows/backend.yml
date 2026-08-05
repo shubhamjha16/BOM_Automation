@@ -58,6 +58,35 @@ jobs:
           ANTHROPIC_API_KEY: ci-placeholder
           JWT_SECRET: ci-placeholder
 
+  # Blocking, because the failure it catches is algorithmic. A per-component cost
+  # that quietly became quadratic passes every functional test and turns a client's
+  # 50,000-component estate into a timeout. The budget is four times the measured
+  # figure so a noisy runner does not fail the build.
+  scale:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      GROQ_API_KEY: ci-placeholder
+      ANTHROPIC_API_KEY: ci-placeholder
+      JWT_SECRET: ci-placeholder
+      ENRICHMENT_ONLINE: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --all-extras
+      - name: 50,000-component SBOM within budget, p95 per lane
+        run: uv run python -m app.scripts.scaleProfile
+      # Informational. It cannot fail, because the audit it reports on is a person
+      # reading a PDF — see `services/catalogue/audit.py`. It is here so the
+      # unconfirmed fraction is visible on every run rather than looked up when
+      # somebody remembers to.
+      - name: catalogue audit worksheet
+        run: uv run python -m app.services.catalogue.audit
+
   # A supply-chain conformance tool shipping known-vulnerable dependencies is not
   # commercially survivable. Blocking, per §10.
   audit:

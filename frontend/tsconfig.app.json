@@ -16,7 +16,8 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "types": ["vitest/globals"],
-    "baseUrl": ".",
+    // No `baseUrl`: it is deprecated from TypeScript 7, and `paths` resolves
+    // relative to this file without it.
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src", "tests"]

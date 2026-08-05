@@ -8,15 +8,44 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.configs.envConfig import settings
 from app.controllers import submissionController as controller
-from app.routers.deps import JobRepoDep, LaneRepoDep, SubmissionRepoDep
+from app.routers.deps import (
+    JobRepoDep,
+    LaneRepoDep,
+    QuotaDep,
+    RateLimited,
+    SubmissionRepoDep,
+)
 from app.schemas.request.submission import SubmissionCreate
 from app.schemas.response.submission import SubmissionDetailOut, SubmissionOut
+from app.services.quota.service import declared_entry_count
 
-router = APIRouter(prefix="/submissions", tags=["submissions"])
+# Rate limiting applies to every submission endpoint, reads included: a runaway
+# polling loop costs the same as a runaway upload loop.
+router = APIRouter(
+    prefix="/submissions", tags=["submissions"], dependencies=[RateLimited]
+)
+
+
+@router.get("/usage")
+async def usage(quotas: QuotaDep) -> dict:
+    """What this tenant has consumed and what remains.
+
+    Exists so the console can show a quota approaching rather than only a quota
+    exhausted. A limit a client discovers by hitting it is a support ticket.
+    """
+    return (await quotas.usage()).as_report()
 
 
 @router.post("", response_model=SubmissionOut, status_code=status.HTTP_201_CREATED)
-async def create(body: SubmissionCreate, submissions: SubmissionRepoDep) -> SubmissionOut:
+async def create(
+    body: SubmissionCreate, submissions: SubmissionRepoDep, quotas: QuotaDep
+) -> SubmissionOut:
+    # Checked before the documents are stored and parsed. Refusing afterwards
+    # would charge us for the work and still tell the client no.
+    await quotas.check_submission()
+    await quotas.check_components(
+        sum(declared_entry_count(document.payload) for document in body.documents)
+    )
     submission = await controller.create_submission(
         submissions,
         engagement_id=body.engagement_id,

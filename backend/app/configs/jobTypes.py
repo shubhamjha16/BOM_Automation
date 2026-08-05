@@ -20,6 +20,11 @@ class JobType(StrEnum):
     # VEX: authored by an analyst, evidenced by an agent (S12).
     VEX_DRAFT_JUSTIFICATION = "vex_draft_justification"
     VEX_CSAF_EXPORT = "vex_csaf_export"
+    # Generation from a connected repository (S17). A job rather than a bare
+    # service call because it takes minutes, is metered separately from
+    # submissions (S21) and is re-run on every release per s.2.3 — all three need
+    # a durable record, and a synchronous call leaves none.
+    GENERATE_FROM_REPO = "generate_from_repo"
 
 
 ASSESSMENT_TYPES: frozenset[JobType] = frozenset(
@@ -31,7 +36,10 @@ NARRATIVE_TYPES: frozenset[JobType] = frozenset(
 VEX_TYPES: frozenset[JobType] = frozenset(
     {JobType.VEX_DRAFT_JUSTIFICATION, JobType.VEX_CSAF_EXPORT}
 )
-ALL_JOB_TYPES: frozenset[JobType] = ASSESSMENT_TYPES | NARRATIVE_TYPES | VEX_TYPES
+GENERATION_TYPES: frozenset[JobType] = frozenset({JobType.GENERATE_FROM_REPO})
+ALL_JOB_TYPES: frozenset[JobType] = (
+    ASSESSMENT_TYPES | NARRATIVE_TYPES | VEX_TYPES | GENERATION_TYPES
+)
 
 
 class JobStatus(StrEnum):

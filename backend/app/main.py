@@ -14,6 +14,7 @@ from app.configs.envConfig import settings
 from app.controllers.authController import AuthenticationFailed, MfaRequired
 from app.routers import api_router
 from app.services.access.authz import Forbidden
+from app.services.quota.service import QuotaExceeded
 from app.services.render.exporters.pdf import PdfUnavailable
 from app.utils.bodyLimit import BodySizeLimitMiddleware
 from app.utils.logger import configure_logging, get_logger
@@ -109,6 +110,23 @@ def create_app() -> FastAPI:
         so acknowledging the resource leaks nothing. Cross-tenant denials return
         404 instead, and that distinction is deliberate."""
         return JSONResponse(status_code=403, content={"detail": str(error)})
+
+    @app.exception_handler(QuotaExceeded)
+    async def _quota_exceeded(_: Request, error: QuotaExceeded) -> JSONResponse:
+        """429 with a way forward — never a 500, and never a bare 429.
+
+        An exhausted quota is a state the client is *in*, not a fault. A 500 says
+        we broke; a bare 429 says stop without saying what bound, for how long, or
+        what to do about it, and the console has nothing to render but a toast. The
+        body carries the quota, the limit, the usage, the reset and the remedy, and
+        `Retry-After` is set because well-behaved clients honour it.
+
+        Registered as a handler rather than left to each route: a quota raised from
+        a service the router did not expect it from would otherwise be a 500, which
+        is precisely the failure this exit condition names.
+        """
+        headers = {"Retry-After": str(error.retry_after)} if error.retry_after else {}
+        return JSONResponse(status_code=429, content=error.as_body(), headers=headers)
 
     @app.exception_handler(PdfUnavailable)
     async def _pdf_unavailable(_: Request, error: PdfUnavailable) -> JSONResponse:

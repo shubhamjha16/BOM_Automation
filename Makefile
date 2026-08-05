@@ -9,7 +9,7 @@ COMPOSE := $(shell command -v docker >/dev/null 2>&1 && echo "docker compose" ||
 .DEFAULT_GOAL := help
 .PHONY: help install install-backend install-frontend infra infra-down dev dev-api dev-web \
         test test-backend test-frontend lint fmt typecheck migrate revision self-bom \
-        catalogue-audit clean \
+        catalogue-audit scale clean \
         docker-build docker-up docker-down docker-logs docker-config api-types api-types-check \
         seed-catalogue demo demo-seed demo-api demo-web demo-reset
 
@@ -119,6 +119,9 @@ api-types-check: api-types ## Fail if the generated types are stale (CI gate)
 	      echo "packages/api-types is stale. The backend schema changed without"; \
 	      echo "regenerating the TypeScript. Run 'make api-types' and commit."; \
 	      exit 1)
+
+scale: ## Measure a 50,000-component SBOM and per-lane p95 (S21)
+	@cd $(BACKEND) && ENRICHMENT_ONLINE=false uv run python -m app.scripts.scaleProfile
 
 catalogue-audit: ## Worksheet of every clause reference, with its provenance (S20)
 	@cd backend && uv run python -m app.services.catalogue.audit

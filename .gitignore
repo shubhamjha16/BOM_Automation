@@ -22,6 +22,7 @@ frontend/dist/
 dist/bom-factory.cdx.json
 !dist/maturity-scorecard.json
 !dist/catalogue-audit.md
+!dist/scale-report.md
 !dist/vex/
 
 # OS / editor

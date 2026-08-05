@@ -22,6 +22,7 @@ from app.services.graph.state import (
     NodeRun,
     SubmissionDocument,
 )
+from app.services.observability.trace import assessment_context
 from app.services.score.weighting import overall_score
 from app.utils.logger import get_logger
 
@@ -117,18 +118,22 @@ async def run_assessment(
         heal_attempts=0,
     )
 
-    logger.info("assessment_started", job_id=job_id, documents=len(documents))
-    final: GraphState = await _get_graph().ainvoke(initial)
-    summary = _summarise(final, job_id, submission_id)
+    # Bound once, for everything underneath — including the lane threads, because
+    # `asyncio.to_thread` copies the context. Passing the ids down through call
+    # signatures would work until the first place somebody forgot, and that place
+    # is the one a client would eventually ask about.
+    with assessment_context(submission_id=submission_id, job_id=job_id, org_id=org_id):
+        logger.info("assessment_started", documents=len(documents), lanes=list(lanes))
+        final: GraphState = await _get_graph().ainvoke(initial)
+        summary = _summarise(final, job_id, submission_id)
 
-    logger.info(
-        "assessment_complete",
-        job_id=job_id,
-        status=str(summary.status),
-        overall_score=summary.overall_score,
-        parallelism_proven=summary.parallelism_proven,
-        verdicts={result.lane: str(result.verdict) for result in summary.lane_results},
-    )
+        logger.info(
+            "assessment_complete",
+            status=str(summary.status),
+            overall_score=summary.overall_score,
+            parallelism_proven=summary.parallelism_proven,
+            verdicts={result.lane: str(result.verdict) for result in summary.lane_results},
+        )
     return summary
 
 

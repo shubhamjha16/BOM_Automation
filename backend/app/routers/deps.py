@@ -27,6 +27,8 @@ from app.repositories.jobRepository import JobRepository
 from app.repositories.laneRepository import LaneRepository
 from app.repositories.submissionRepository import SubmissionRepository
 from app.repositories.userRepository import UserRepository
+from app.services.quota.plans import limits_for
+from app.services.quota.service import QuotaService, limiter
 from app.utils.security import InvalidToken, decode_token
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
@@ -120,3 +122,29 @@ async def lane_repository(
 SubmissionRepoDep = Annotated[SubmissionRepository, Depends(submission_repository)]
 JobRepoDep = Annotated[JobRepository, Depends(job_repository)]
 LaneRepoDep = Annotated[LaneRepository, Depends(lane_repository)]
+
+
+async def quota_service(session: SessionDep, org_id: OrgDep) -> QuotaService:
+    return QuotaService(session, org_id)
+
+
+QuotaDep = Annotated[QuotaService, Depends(quota_service)]
+
+
+async def rate_limited(claims: ClaimsDep, quotas: QuotaDep) -> None:
+    """Refuse before the handler runs, per org rather than per IP.
+
+    Per org because the limit protects our capacity and the bill is per tenant; a
+    per-IP limit would throttle one client's whole office as a unit and let a
+    distributed script through. Raises `QuotaExceeded`, which the app-level
+    handler turns into a 429 — no route needs to know about it.
+    """
+    limits = limits_for(await quotas.plan())
+    limiter.check(
+        f"org:{claims['org']}",
+        limit=limits.requests_per_minute,
+        plan=await quotas.plan(),
+    )
+
+
+RateLimited = Depends(rate_limited)

@@ -48,9 +48,29 @@ def is_meaningful(value: Any) -> bool:
 
 
 def _read(entity: dict[str, Any], path: str) -> Any:
-    """Read a dotted path, tolerating missing intermediates."""
+    """Read a dotted path, tolerating missing intermediates.
+
+    Kept for callers that hold a path as a string. The probe factories below split
+    theirs once at construction instead — see `_segments`.
+    """
+    return _walk(entity, tuple(path.split(".")))
+
+
+def _segments(paths: tuple[str, ...]) -> tuple[tuple[str, ...], ...]:
+    """Pre-split the dotted paths a probe reads.
+
+    A probe is built once and called once per entity per element. A 50,000-
+    component SBOM scored against 21 elements is over a million probe calls, so
+    splitting the same short string a million times is measurable — it was about a
+    fifth of the scoring time before this. The split result is immutable, which is
+    why hoisting it out of the hot path is safe rather than merely faster.
+    """
+    return tuple(tuple(path.split(".")) for path in paths)
+
+
+def _walk(entity: dict[str, Any], segments: tuple[str, ...]) -> Any:
     cursor: Any = entity
-    for part in path.split("."):
+    for part in segments:
         if isinstance(cursor, dict):
             cursor = cursor.get(part)
         else:
@@ -66,8 +86,10 @@ def present(*paths: str) -> Callable[[dict[str, Any]], bool]:
     the source-shaped one.
     """
 
+    segments = _segments(paths)
+
     def probe(entity: dict[str, Any]) -> bool:
-        return any(is_meaningful(_read(entity, path)) for path in paths)
+        return any(is_meaningful(_walk(entity, path)) for path in segments)
 
     return probe
 
@@ -78,9 +100,10 @@ def all_present(*paths: str) -> Callable[[dict[str, Any]], bool]:
     For compound elements — a hash is not a hash without both its algorithm and
     its value, and half of one is not half a pass.
     """
+    segments = _segments(paths)
 
     def probe(entity: dict[str, Any]) -> bool:
-        return all(is_meaningful(_read(entity, path)) for path in paths)
+        return all(is_meaningful(_walk(entity, path)) for path in segments)
 
     return probe
 
@@ -95,10 +118,13 @@ def never(_: dict[str, Any]) -> bool:
     return False
 
 
+_ASSET_TYPE_PATHS = _segments(("asset_type", "cryptoProperties.assetType", "assetType"))
+
+
 def asset_type_of(entity: dict[str, Any]) -> str:
     """The Table 9 asset type of a cryptographic asset."""
-    for path in ("asset_type", "cryptoProperties.assetType", "assetType"):
-        if value := _read(entity, path):
+    for path in _ASSET_TYPE_PATHS:
+        if value := _walk(entity, path):
             return str(value).strip().lower()
     return ""
 
