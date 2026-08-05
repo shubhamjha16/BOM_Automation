@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
 import { AssessmentPage } from '@/pages/AssessmentPage';
 import { CataloguePage } from '@/pages/CataloguePage';
+import { MaturityPage } from '@/pages/MaturityPage';
 import { SignInPage } from '@/pages/SignInPage';
 import { SubmissionDetailPage } from '@/pages/SubmissionDetailPage';
 import { SubmissionsPage } from '@/pages/SubmissionsPage';
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: 'submissions/:id', element: <SubmissionDetailPage /> },
       { path: 'submissions/:id/assessment', element: <AssessmentPage /> },
       { path: 'elements', element: <CataloguePage /> },
+      { path: 'maturity', element: <MaturityPage /> },
     ],
   },
   { path: '*', element: <Navigate to={ROUTES.submissions} replace /> },

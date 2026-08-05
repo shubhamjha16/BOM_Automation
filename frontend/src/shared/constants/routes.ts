@@ -12,5 +12,6 @@ export const ROUTES = {
   identifiers: '/identifiers',
   vex: '/vex',
   elements: '/elements',
+  maturity: '/maturity',
   audit: '/audit',
 } as const;

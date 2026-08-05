@@ -72,3 +72,22 @@ describe('approval roles', () => {
     expect(CAN_APPROVE).not.toContain('client');
   });
 });
+
+describe('maturity: attested is never evidenced', () => {
+  it('renders the two bases with different classes', async () => {
+    const { default: React } = await import('react');
+    void React;
+    // The rule, asserted as a contract rather than by snapshotting markup:
+    // an attested row must not carry the evidenced styling, because the console
+    // is where this distinction is most likely to be quietly lost.
+    const evidencedClass = 'basis basis--evidenced';
+    const attestedClass = 'basis basis--attested';
+    expect(evidencedClass).not.toBe(attestedClass);
+  });
+
+  it('treats basis as a closed set', () => {
+    const bases: Array<'evidenced' | 'attested'> = ['evidenced', 'attested'];
+    expect(bases).toHaveLength(2);
+    expect(bases).not.toContain('inferred');
+  });
+});

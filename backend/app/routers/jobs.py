@@ -10,6 +10,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 
 from app.controllers import jobController as controller
 from app.routers.deps import JobRepoDep
@@ -29,3 +30,12 @@ async def get_job(job_id: UUID, jobs: JobRepoDep) -> JobDetailOut:
     if detail is None:
         raise HTTPException(404, "job not found")
     return detail
+
+
+@router.get("/{job_id}/events")
+async def job_events(job_id: UUID, jobs: JobRepoDep) -> StreamingResponse:
+    """Per-lane progress as SSE. Five tracks, not one spinner."""
+    stream = await controller.progress_stream(jobs, job_id)
+    if stream is None:
+        raise HTTPException(404, "job not found")
+    return StreamingResponse(stream, media_type="text/event-stream")

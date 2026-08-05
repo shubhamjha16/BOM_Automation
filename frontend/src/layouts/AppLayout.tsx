@@ -20,6 +20,7 @@ export function AppLayout() {
         <nav className="shell__nav">
           <NavLink to={ROUTES.submissions}>Submissions</NavLink>
           <NavLink to={ROUTES.elements}>Catalogue</NavLink>
+          <NavLink to={ROUTES.maturity}>Maturity</NavLink>
         </nav>
         <div className="shell__user">
           <span className="shell__role">{role}</span>

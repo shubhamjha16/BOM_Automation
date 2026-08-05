@@ -38,7 +38,7 @@ make dev                         # postgres + redis + API + Vite
 | `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
 | `make help` | every target |
 
-## Current state — S1–S17 complete · all five lanes scoring
+## Current state — S1–S19 complete
 
 The parallel graph, in the target structure, with two lanes scoring:
 
@@ -304,8 +304,45 @@ generation** rather than running it unprotected. The isolation actually enforced
 is reported in every generation, because "generated in a sandbox" means different
 things on different machines.
 
-**Not yet built:** CI gate and per-lane SSE (S18), SSDLC maturity (S19), the
-artifact pack and security review (S20), observability and load (S21).
+**S18 puts the conformance check on the pull request, in warn mode.** A gate that
+blocks builds on day one is disabled by the platform team on day two, and a
+disabled gate reports nothing — so blocking is a per-engagement decision taken
+after an org has seen its own scores. The check names the failing clause and the
+offending component inline, because a developer who has to open another tool to
+find out why their build is unhappy will not open it.
+
+Outbound webhooks are HMAC-SHA256 over the **raw body with the timestamp inside
+the signed payload** — a signature over the body alone is replayable forever. A
+one-character tamper and a ten-minute-old replay are both rejected, and the
+verification snippet we publish is the one our own tests run.
+
+Per-lane SSE means a five-lane assessment reads as five tracks, so a hung CBOM
+lane is visible while SBOM is still counting.
+
+**S19 assesses SSDLC maturity from evidence, and the rule is: attested is never
+evidenced.** Eleven of the fourteen s.3.3 activities are observable from a
+repository; three are not — governance (5.1(d)), procurement clauses (3.3.1.4)
+and training (7.2.15) — and those are *asked*, recorded with the question, and
+never rendered as evidence. An evidenced verdict without an artifact cannot be
+constructed.
+
+**We assess ourselves and publish the gaps:**
+
+```
+BOM Factory — SSDLC maturity, self-assessed
+  position: below start
+  11 evidenced, 3 attested
+
+  what we do not do:
+    [attested ] 5.1(d)    Establish an accountable governance body
+    [evidenced] 3.3.3.2   no SECURITY.md or published disclosure route
+    [evidenced] 2.3       no releases recorded
+```
+
+A maturity tool that reports only its own strengths is not evidence of anything.
+
+**Not yet built:** the artifact pack, org RAG and security review (S20);
+observability, quotas and load (S21).
 
 **Exit proofs that need a human, and have not happened:** a cryptography
 practitioner signing the CBOM/QBOM checklist (S14), and a practitioner signing a

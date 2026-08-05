@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import uuid
+from collections.abc import AsyncIterator
 
 from sqlalchemy import select
 
@@ -30,3 +31,18 @@ async def get_job(jobs: JobRepository, job_id: uuid.UUID) -> JobDetailOut | None
     detail = JobDetailOut.model_validate(job)
     detail.node_runs = [NodeRunOut.model_validate(row) for row in result.scalars().all()]
     return detail
+
+
+async def progress_stream(
+    jobs: JobRepository, job_id: uuid.UUID
+) -> AsyncIterator[str] | None:
+    """SSE frames for one job, replayed from its persisted node runs."""
+    from app.services.progressStream import stream
+
+    job = await jobs.get(job_id)
+    if job is None:
+        return None
+    result = await jobs.session.execute(
+        select(NodeRun).where(NodeRun.job_id == job.id).order_by(NodeRun.started_at)
+    )
+    return stream(job, list(result.scalars().all()))

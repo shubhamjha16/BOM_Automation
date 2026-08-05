@@ -1,0 +1,57 @@
+name: conformance
+
+# S18: this repository is the first one connected, so the gate is exercised
+# against our own pull requests before any client sees it.
+#
+# The gate runs in WARN mode. A gate that blocks builds on day one is disabled by
+# the platform team on day two, and a disabled gate reports nothing at all —
+# blocking is a per-engagement decision taken after an org has seen its own
+# scores.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: yarn install --frozen-lockfile
+      - run: cd backend && uv sync --all-extras
+
+      - name: Generate our own SBOM
+        run: make self-bom
+
+      - name: Score it, and post the summary onto the run
+        working-directory: backend
+        env:
+          GROQ_API_KEY: ci-placeholder
+          ANTHROPIC_API_KEY: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
+        run: |
+          uv run python -m app.services.self.selfScore ../dist/bom-factory.cdx.json \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Assess our own SSDLC maturity, gaps included
+        working-directory: backend
+        env:
+          GROQ_API_KEY: ci-placeholder
+          ANTHROPIC_API_KEY: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
+        run: uv run python -m app.services.self.maturity | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conformance
+          path: |
+            dist/bom-factory.cdx.json
+            dist/maturity-scorecard.json
