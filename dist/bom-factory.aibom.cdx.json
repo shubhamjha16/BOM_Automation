@@ -1,0 +1,114 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-04T18:32:09.673665+00:00",
+    "authors": [
+      {
+        "name": "BOM Factory"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "bom-factory",
+      "version": "0.1.0"
+    },
+    "properties": [
+      {
+        "name": "certin:9.3(15):intended_usage",
+        "value": "BOM Factory assesses Bill of Materials submissions against the CERT-In Technical Guidelines v2.0 and produces a clause-referenced conformance assessment. Language models are used for three things only: classifying intake, drafting narrative prose about verdicts the deterministic engine already computed, and assembling evidence for a VEX justification that an analyst then determines. Every verdict, score and clause reference is produced by deterministic code and is enforced as such by a blocking gate."
+      },
+      {
+        "name": "certin:9.3(16):out_of_scope_usage",
+        "value": "This product does not issue legal or regulatory opinions. A conformance assessment states whether a submission meets the minimum elements of a published technical guideline; it does not establish legal compliance, contractual adequacy or regulatory standing, and it must not be relied upon as advice on any of those. It does not determine VEX status: the four statuses of recommendation 7.1.6 are an analyst's professional judgement and the API refuses an agent-set status. It does not certify a supplier, and a passing score is not an assurance that software is secure \u2014 it states that the declaration is complete, not that what was declared is safe. It is not a vulnerability scanner and does not test running systems."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "llama-3.3-70b-versatile@as-served",
+      "name": "llama-3.3-70b-versatile",
+      "version": "as-served",
+      "supplier": {
+        "name": "Meta Platforms, served by Groq"
+      },
+      "licenses": [
+        {
+          "license": {
+            "name": "Llama 3.3 Community License"
+          }
+        }
+      ],
+      "modelCard": {
+        "modelParameters": {
+          "modelArchitecture": "transformer",
+          "task": "intake classification and cheap structural checks",
+          "datasets": [
+            {
+              "name": "not disclosed by the developer"
+            }
+          ],
+          "inputs": [
+            {
+              "format": "BOM metadata and structural summaries; never full BOM payloads"
+            }
+          ],
+          "outputs": [
+            {
+              "format": "classification labels and routing decisions"
+            }
+          ]
+        },
+        "considerations": {
+          "technicalLimitations": [
+            "produces no verdict, figure or clause reference; those come from services/score and services/catalogue and are enforced in code"
+          ]
+        }
+      }
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "claude-sonnet-4-5@as-served",
+      "name": "claude-sonnet-4-5",
+      "version": "as-served",
+      "supplier": {
+        "name": "Anthropic"
+      },
+      "licenses": [
+        {
+          "license": {
+            "name": "Commercial, per Anthropic's terms"
+          }
+        }
+      ],
+      "modelCard": {
+        "modelParameters": {
+          "modelArchitecture": "transformer",
+          "task": "assessment narrative, VEX justification drafting, critic loop",
+          "datasets": [
+            {
+              "name": "not disclosed by the developer"
+            }
+          ],
+          "inputs": [
+            {
+              "format": "computed verdicts, scores and clause references as inputs to restate"
+            }
+          ],
+          "outputs": [
+            {
+              "format": "prose only; never a status, verdict, figure or clause"
+            }
+          ]
+        },
+        "considerations": {
+          "technicalLimitations": [
+            "drafts VEX justifications but never sets a VEX status \u2014 the four statuses of rec. 7.1.6 are an analyst's determination"
+          ]
+        }
+      }
+    }
+  ]
+}

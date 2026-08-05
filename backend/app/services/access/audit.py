@@ -58,3 +58,41 @@ async def record(
     await session.flush()
     logger.info("audit", action=action, org_id=str(org_id), resource_id=resource_id)
     return event
+
+
+async def record_out_of_band(
+    *,
+    org_id: uuid.UUID,
+    action: str,
+    actor_id: uuid.UUID | None = None,
+    resource: str | None = None,
+    resource_id: str | None = None,
+    meta: dict[str, Any] | None = None,
+) -> None:
+    """Write one audit row on its own session, committed independently.
+
+    **A denial ends in an exception, and the request session is rolled back when
+    it does.** An audit row written on that session would be discarded along with
+    the 404 — the record would disappear at exactly the moment it mattered. So
+    the refusal path gets its own connection and its own commit.
+
+    Failure to audit never propagates: an attacker who could make this write fail
+    would otherwise be able to convert a logged denial into a 500, which is both
+    a different response and a louder oracle than the 404 they were given.
+    """
+    from app.configs.dbConfig import get_sessionmaker
+
+    try:
+        async with get_sessionmaker()() as session:
+            await record(
+                session,
+                org_id=org_id,
+                action=action,
+                actor_id=actor_id,
+                resource=resource,
+                resource_id=resource_id,
+                meta=meta,
+            )
+            await session.commit()
+    except Exception as error:  # pragma: no cover - never masks the denial
+        logger.error("audit_write_failed", action=action, error=str(error))

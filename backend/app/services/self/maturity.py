@@ -28,9 +28,16 @@ from app.services.maturity.scorecard import Scorecard
 #: as attestations and rendered as attestations — never as evidence.
 OUR_ATTESTATIONS: dict[str, tuple[Verdict, str]] = {
     "procurement_clauses": (
-        Verdict.NOT_MET,
-        "No dependency-adoption policy requiring an SBOM from upstream projects "
-        "has been written. S20 drafts one; it does not exist yet.",
+        # PARTIAL, deliberately, and the distinction is the honest part: clause
+        # 3.3.1.4 covers procurement *contracts* with suppliers. We have written
+        # the dependency-adoption half of it and have no commercial procurement
+        # contracts at all, so claiming MET would be reading our own policy as
+        # something it is not.
+        Verdict.PARTIAL,
+        "SECURITY.md carries a dependency-adoption policy requiring a pinned "
+        "lockfile, an identifiable licence, a resolvable supplying organisation "
+        "and a passing audit. We hold no commercial procurement contracts, so the "
+        "contractual half of 3.3.1.4 is not applicable rather than met.",
     ),
     "training": (
         Verdict.NOT_MET,
@@ -45,6 +52,13 @@ OUR_ATTESTATIONS: dict[str, tuple[Verdict, str]] = {
 }
 
 
+def _our_vex_statements() -> list:
+    """Our own published determinations, counted as evidence."""
+    from app.services.self.vexProcess import statements
+
+    return statements()
+
+
 def build(root: Path | None = None) -> Scorecard:
     repository = Path(root or Path(__file__).resolve().parents[4])
     signals = observe_repository(repository)
@@ -55,7 +69,9 @@ def build(root: Path | None = None) -> Scorecard:
             PlatformSignals(
                 # Honest: this deployment has assessed only its own submissions,
                 # and has authored no VEX statements.
-                vex_statements=0,
+                # We now publish VEX statements for our own dependencies, so
+                # this is evidenced rather than aspirational.
+                vex_statements=len(_our_vex_statements()),
                 submissions=0,
                 distinct_periods=0,
                 releases_assessed=0,

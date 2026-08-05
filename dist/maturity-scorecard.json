@@ -1,0 +1,237 @@
+{
+  "position": "below start",
+  "phases": [
+    {
+      "phase": "start",
+      "met": 3,
+      "partial": 1,
+      "not_met": 0,
+      "unknown": 0,
+      "total": 4,
+      "completion": 87.5,
+      "complete": false,
+      "evidenced": 3,
+      "attested": 1
+    },
+    {
+      "phase": "progress",
+      "met": 4,
+      "partial": 0,
+      "not_met": 1,
+      "unknown": 0,
+      "total": 5,
+      "completion": 80.0,
+      "complete": false,
+      "evidenced": 4,
+      "attested": 1
+    },
+    {
+      "phase": "advance",
+      "met": 2,
+      "partial": 0,
+      "not_met": 3,
+      "unknown": 0,
+      "total": 5,
+      "completion": 40.0,
+      "complete": false,
+      "evidenced": 4,
+      "attested": 1
+    }
+  ],
+  "evidenced": 11,
+  "attested": 3,
+  "activities": [
+    {
+      "activity": "inventory_dependencies",
+      "clause": "3.3.1.1",
+      "label": "Maintain an inventory of third-party dependencies",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "backend/pyproject.toml",
+      "question": null,
+      "detail": "4 dependency manifest(s) found"
+    },
+    {
+      "activity": "pin_dependencies",
+      "clause": "3.3.1.2",
+      "label": "Pin dependencies to exact versions",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "backend/uv.lock",
+      "question": null,
+      "detail": "2 lockfile(s) found: builds resolve to exact versions"
+    },
+    {
+      "activity": "generate_sbom",
+      "clause": "3.3.1.3",
+      "label": "Generate an SBOM for each product",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": ".github/workflows/conformance.yml",
+      "question": null,
+      "detail": "SBOM generation is present in the repository"
+    },
+    {
+      "activity": "secure_installation",
+      "clause": "3.3.2.1",
+      "label": "Publish a secure installation and operation checklist",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "README.md",
+      "question": null,
+      "detail": "installation and operation documentation is published"
+    },
+    {
+      "activity": "vulnerability_scanning",
+      "clause": "3.3.2.2",
+      "label": "Scan dependencies for known vulnerabilities",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": ".github/workflows/backend.yml",
+      "question": null,
+      "detail": "a dependency audit runs in the pipeline"
+    },
+    {
+      "activity": "sbom_in_pipeline",
+      "clause": "3.3.2.5",
+      "label": "Integrate SBOM generation into each SSDLC phase",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": ".github/workflows/conformance.yml",
+      "question": null,
+      "detail": "SBOM generation runs in CI, not only locally"
+    },
+    {
+      "activity": "access_controls_on_boms",
+      "clause": "3.3.2.6",
+      "label": "Apply access controls to stored BOMs",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "repositories/base.py: TenantScopedRepository",
+      "question": null,
+      "detail": "stored BOMs are tenant-scoped at the repository layer"
+    },
+    {
+      "activity": "vex_history",
+      "clause": "3.3.3.1",
+      "label": "Maintain a VEX history for disclosed vulnerabilities",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "1 VEX statement(s) in the platform",
+      "question": null,
+      "detail": "a VEX history exists for this organisation"
+    },
+    {
+      "activity": "incident_playbook",
+      "clause": "3.3.3.2",
+      "label": "Operate a VEX and incident-response playbook",
+      "verdict": "met",
+      "basis": "evidenced",
+      "evidence_ref": "SECURITY.md",
+      "question": null,
+      "detail": "a disclosure route is published"
+    },
+    {
+      "activity": "release_cadence",
+      "clause": "2.3",
+      "label": "Re-assess on every release, update and patch",
+      "verdict": "not_met",
+      "basis": "evidenced",
+      "evidence_ref": null,
+      "question": null,
+      "detail": "no releases recorded"
+    },
+    {
+      "activity": "continuous_monitoring",
+      "clause": "3.3.3.3",
+      "label": "Monitor supplier conformance continuously",
+      "verdict": "not_met",
+      "basis": "evidenced",
+      "evidence_ref": null,
+      "question": null,
+      "detail": "fewer than two assessment periods: no trend can be observed"
+    },
+    {
+      "activity": "procurement_clauses",
+      "clause": "3.3.1.4",
+      "label": "Require SBOMs in procurement contracts",
+      "verdict": "partial",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Do your procurement contracts and dependency-adoption policy require suppliers to provide an SBOM? Please provide the clause.",
+      "detail": "SECURITY.md carries a dependency-adoption policy requiring a pinned lockfile, an identifiable licence, a resolvable supplying organisation and a passing audit. We hold no commercial procurement contracts, so the contractual half of 3.3.1.4 is not applicable rather than met."
+    },
+    {
+      "activity": "training",
+      "clause": "7.2.15",
+      "label": "Train development teams on SSDLC practice",
+      "verdict": "not_met",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Is SSDLC and supply-chain security training delivered to development teams, and how often? Please provide the most recent attendance record.",
+      "detail": "No SSDLC training programme is run. This is a single-repository project with no development team to train."
+    },
+    {
+      "activity": "governance_body",
+      "clause": "5.1(d)",
+      "label": "Establish an accountable governance body",
+      "verdict": "not_met",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Which body is accountable for software supply-chain security, who chairs it, and how often does it meet? Please provide its terms of reference.",
+      "detail": "No accountable governance body exists. There is no board, no chair and no terms of reference."
+    }
+  ],
+  "gaps": [
+    {
+      "activity": "procurement_clauses",
+      "clause": "3.3.1.4",
+      "label": "Require SBOMs in procurement contracts",
+      "verdict": "partial",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Do your procurement contracts and dependency-adoption policy require suppliers to provide an SBOM? Please provide the clause.",
+      "detail": "SECURITY.md carries a dependency-adoption policy requiring a pinned lockfile, an identifiable licence, a resolvable supplying organisation and a passing audit. We hold no commercial procurement contracts, so the contractual half of 3.3.1.4 is not applicable rather than met."
+    },
+    {
+      "activity": "training",
+      "clause": "7.2.15",
+      "label": "Train development teams on SSDLC practice",
+      "verdict": "not_met",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Is SSDLC and supply-chain security training delivered to development teams, and how often? Please provide the most recent attendance record.",
+      "detail": "No SSDLC training programme is run. This is a single-repository project with no development team to train."
+    },
+    {
+      "activity": "release_cadence",
+      "clause": "2.3",
+      "label": "Re-assess on every release, update and patch",
+      "verdict": "not_met",
+      "basis": "evidenced",
+      "evidence_ref": null,
+      "question": null,
+      "detail": "no releases recorded"
+    },
+    {
+      "activity": "continuous_monitoring",
+      "clause": "3.3.3.3",
+      "label": "Monitor supplier conformance continuously",
+      "verdict": "not_met",
+      "basis": "evidenced",
+      "evidence_ref": null,
+      "question": null,
+      "detail": "fewer than two assessment periods: no trend can be observed"
+    },
+    {
+      "activity": "governance_body",
+      "clause": "5.1(d)",
+      "label": "Establish an accountable governance body",
+      "verdict": "not_met",
+      "basis": "attested",
+      "evidence_ref": null,
+      "question": "Which body is accountable for software supply-chain security, who chairs it, and how often does it meet? Please provide its terms of reference.",
+      "detail": "No accountable governance body exists. There is no board, no chair and no terms of reference."
+    }
+  ]
+}

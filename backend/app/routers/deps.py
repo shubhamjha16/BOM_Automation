@@ -64,6 +64,11 @@ async def current_org_id(claims: ClaimsDep) -> uuid.UUID:
     return uuid.UUID(claims["org"])
 
 
+async def current_actor_id(claims: ClaimsDep) -> uuid.UUID:
+    """Who is acting, for the audit trail. Not an authorisation input."""
+    return uuid.UUID(claims["sub"])
+
+
 async def current_role(claims: ClaimsDep) -> Role:
     return Role(claims["role"])
 
@@ -87,20 +92,29 @@ async def current_user(claims: ClaimsDep, users: UserRepoDep) -> User:
 
 
 OrgDep = Annotated[uuid.UUID, Depends(current_org_id)]
+ActorDep = Annotated[uuid.UUID, Depends(current_actor_id)]
 RoleDep = Annotated[Role, Depends(current_role)]
 CurrentUserDep = Annotated[User, Depends(current_user)]
 
 
-async def submission_repository(session: SessionDep, org_id: OrgDep) -> SubmissionRepository:
-    return SubmissionRepository(session, org_id)
+# Every repository is handed the acting user as well as the tenant. The actor is
+# never an authorisation input — the org scope decides what is reachable — but a
+# denied cross-tenant read is audited, and an audit row without an actor names
+# only the firm, not the person.
+async def submission_repository(
+    session: SessionDep, org_id: OrgDep, actor_id: ActorDep
+) -> SubmissionRepository:
+    return SubmissionRepository(session, org_id, actor_id=actor_id)
 
 
-async def job_repository(session: SessionDep, org_id: OrgDep) -> JobRepository:
-    return JobRepository(session, org_id)
+async def job_repository(session: SessionDep, org_id: OrgDep, actor_id: ActorDep) -> JobRepository:
+    return JobRepository(session, org_id, actor_id=actor_id)
 
 
-async def lane_repository(session: SessionDep, org_id: OrgDep) -> LaneRepository:
-    return LaneRepository(session, org_id)
+async def lane_repository(
+    session: SessionDep, org_id: OrgDep, actor_id: ActorDep
+) -> LaneRepository:
+    return LaneRepository(session, org_id, actor_id=actor_id)
 
 
 SubmissionRepoDep = Annotated[SubmissionRepository, Depends(submission_repository)]

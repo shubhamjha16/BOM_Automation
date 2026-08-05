@@ -16,9 +16,13 @@ frontend/dist/
 .env.local
 .env.*.local
 
-# Generated conformance artifacts for this repo (S13 commits the scores, not the BOMs)
-dist/*.json
-!dist/.gitkeep
+# Generated BOMs are rebuilt per release and not committed. The *scored results*
+# and the published VEX advisories are, because §11 requires this repository to
+# publish what it asks of suppliers.
+dist/bom-factory.cdx.json
+!dist/maturity-scorecard.json
+!dist/catalogue-audit.md
+!dist/vex/
 
 # OS / editor
 .DS_Store

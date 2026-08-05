@@ -18,6 +18,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.services.catalogue.audit import cite
+
 TIER_RANK = {"critical": 0, "standard": 1, "contextual": 2}
 
 
@@ -115,7 +117,7 @@ def executive_summary(assessment: AssessmentInput) -> Section:
             populated, total = row.get("populated", 0), row.get("total", 0)
             parts.append(
                 f"  {index}. {row.get('label') or row.get('element_key')} "
-                f"({lane.upper()}, clause {row.get('clause')}) — declared on "
+                f"({lane.upper()}, clause {cite(str(row.get('clause')))}) — declared on "
                 f"{populated} of {total} entries."
             )
     else:
@@ -186,7 +188,8 @@ def consumer_determinations(assessment: AssessmentInput, ord: int) -> Section:
     ]
     for lane, row in rows:
         lines.append(
-            f"{row.get('clause')} {row.get('label') or row.get('element_key')} ({lane.upper()})"
+            f"{cite(str(row.get('clause')))} "
+            f"{row.get('label') or row.get('element_key')} ({lane.upper()})"
         )
         lines.append(f"    Action required: {row.get('consumer_action')}")
 
@@ -215,7 +218,10 @@ def remediation_roadmap(assessment: AssessmentInput, ord: int) -> Section:
         populated, total = row.get("populated", 0), row.get("total", 0)
         tier = str(row.get("tier")).upper()
         label = row.get("label") or row.get("element_key")
-        lines.append(f"{index}. [{tier}] {label} — {lane.upper()} clause {row.get('clause')}")
+        lines.append(
+            f"{index}. [{tier}] {label} — {lane.upper()} clause "
+            f"{cite(str(row.get('clause')))}"
+        )
         lines.append(
             f"    Currently declared on {populated} of {total}. {row.get('detail') or ''}".rstrip()
         )
@@ -224,7 +230,7 @@ def remediation_roadmap(assessment: AssessmentInput, ord: int) -> Section:
         lines.append("")
         lines.append("Cross-document findings:")
         for finding in assessment.correlation_findings:
-            lines.append(f"  - clause {finding.clause}: {finding.detail}")
+            lines.append(f"  - clause {cite(finding.clause)}: {finding.detail}")
 
     return Section(
         ord=ord,
@@ -249,7 +255,8 @@ def field_appendix(assessment: AssessmentInput, ord: int) -> Section:
         lines.append(f"{lane.lane.upper()}")
         for row in rows:
             lines.append(
-                f"  {row.get('clause'):<10} {row.get('label') or row.get('element_key'):<42} "
+                f"  {cite(str(row.get('clause'))):<10} "
+                f"{row.get('label') or row.get('element_key'):<42} "
                 f"{row.get('populated')}/{row.get('total'):<6} {row.get('verdict')}"
             )
             keys.append(f"{lane.lane}:{row.get('element_key')}")

@@ -37,6 +37,7 @@ class TenantScopedRepository[ModelT: Base]:
         org_id: uuid.UUID,
         *,
         engagement_ids: frozenset[uuid.UUID] | None = None,
+        actor_id: uuid.UUID | None = None,
     ) -> None:
         if org_id is None:  # pragma: no cover - defensive; typing forbids it
             raise ValueError("a repository cannot be constructed without an org scope")
@@ -48,6 +49,10 @@ class TenantScopedRepository[ModelT: Base]:
         #: applied in `scoped()` for exactly the reason tenancy is: a router-level
         #: check is one forgotten `where` clause away from leaking.
         self.engagement_ids = engagement_ids
+        #: Recorded on a denied cross-tenant read. Optional because background
+        #: workers have no acting user; the org and the resource are enough to
+        #: make the row useful without one.
+        self.actor_id = actor_id
 
     def scoped(self) -> Select[tuple[ModelT]]:
         """The only entry point for building a query.
@@ -76,7 +81,47 @@ class TenantScopedRepository[ModelT: Base]:
 
     async def get(self, entity_id: uuid.UUID) -> ModelT | None:
         result = await self.session.execute(self.scoped().where(self.model.id == entity_id))  # type: ignore[attr-defined]
-        return result.scalar_one_or_none()
+        entity = result.scalar_one_or_none()
+        if entity is None:
+            await self._audit_if_another_tenants(entity_id)
+        return entity
+
+    async def _audit_if_another_tenants(self, entity_id: uuid.UUID) -> None:
+        """Record a reachable-but-denied read. Tells the caller nothing.
+
+        The caller gets the same empty answer either way — that is the whole
+        point of the 404 — so **the audit row is the only place the attempt is
+        recorded at all**. Without it a cross-tenant sweep is indistinguishable
+        from a client with stale bookmarks, and neither shows up anywhere.
+
+        This is the one query in the codebase that deliberately runs unscoped,
+        which is why it lives here rather than in a subclass: it selects a single
+        `org_id` column, never the row, so nothing crosses the boundary even
+        inside this process. A miss inside the caller's own org is an ordinary
+        404 and is not audited — noise would bury the signal.
+        """
+        if not hasattr(self.model, "org_id"):  # pragma: no cover - defensive
+            return
+        owner = await self.session.execute(
+            select(self.model.org_id).where(self.model.id == entity_id)  # type: ignore[attr-defined]
+        )
+        owning_org = owner.scalar_one_or_none()
+        if owning_org is None or owning_org == self.org_id:
+            return
+
+        from app.services.access.audit import CROSS_TENANT_DENIED, record_out_of_band
+
+        await record_out_of_band(
+            org_id=self.org_id,
+            actor_id=self.actor_id,
+            action=CROSS_TENANT_DENIED,
+            resource=self.model.__tablename__,
+            resource_id=str(entity_id),
+            # The owning org is not named. Knowing *that* it belongs to someone
+            # else is what the reviewer needs; naming the victim would put one
+            # tenant's identity in another's audit trail.
+            meta={"outcome": "not_found", "reason": "resource belongs to another tenant"},
+        )
 
     async def list(self, *, limit: int = 100, offset: int = 0) -> list[ModelT]:
         result = await self.session.execute(self.scoped().limit(limit).offset(offset))

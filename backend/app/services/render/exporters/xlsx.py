@@ -23,6 +23,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
+from app.services.catalogue.audit import cite
+
 TIER_RANK = {"critical": 0, "standard": 1, "contextual": 2}
 
 HEADERS = (
@@ -95,7 +97,7 @@ def build_gap_register(
                 else row.get("detail")
             )
             values = (
-                row.get("clause"),
+                cite(str(row.get("clause"))),
                 row.get("label") or row.get("element_key"),
                 row.get("tier"),
                 row.get("verdict"),

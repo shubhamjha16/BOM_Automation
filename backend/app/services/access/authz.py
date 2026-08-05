@@ -12,6 +12,7 @@ perform this action?
 from __future__ import annotations
 
 from app.models.enums import Role
+from app.services.access.matrix import Action, Resource, may
 
 #: Ordered by breadth. Used for "at least this role" checks, never for tenancy.
 ROLE_RANK: dict[Role, int] = {
@@ -36,17 +37,27 @@ def require(role: Role, minimum: Role, *, action: str) -> None:
         raise Forbidden(f"{action} requires {minimum} or above; caller is {role}")
 
 
+# The predicates below read the matrix rather than restate it. Two hand-written
+# lists of roles drift the moment one of them is edited, and the drift is silent
+# — the endpoint keeps working while the documented matrix quietly stops
+# describing it.
 def can_submit(role: Role) -> bool:
-    """A readonly user cannot create work; a client submits into their own
-    engagement, which is why they are permitted here and not by rank."""
-    return role in (Role.PARTNER, Role.MANAGER, Role.ASSESSOR, Role.CLIENT)
+    """Neither `readonly` nor `client` may create work.
+
+    This corrects an inconsistency the matrix exposed: `can_submit` used to admit
+    `client` while `is_read_only` also called the same role read-only, and both
+    were true at once because nothing forced them to agree. §S16 specifies a
+    *read-only* client role, so the matrix records no submission-create
+    permission for it and both predicates now follow from that one cell.
+    """
+    return may(role, Resource.SUBMISSION, Action.CREATE)
 
 
 def can_approve(role: Role) -> bool:
-    """Manager or above (S13). Approval is also subject to a separation rule the
-    rank cannot express: the assessor who ran an assessment may never approve it,
-    however senior they are."""
-    return at_least(role, Role.MANAGER)
+    """Manager or above (S13). Approval is also subject to a separation rule no
+    matrix cell can express: the assessor who ran an assessment may never approve
+    it, however senior they are — see `may_approve_assessment`."""
+    return may(role, Resource.ASSESSMENT, Action.APPROVE)
 
 
 def may_approve_assessment(role: Role, *, assessor_id: str, approver_id: str) -> bool:
@@ -86,4 +97,4 @@ def engagement_scope_for(
 
 def is_read_only(role: Role) -> bool:
     """`readonly` and `client` may not create work."""
-    return role in (Role.READONLY, Role.CLIENT)
+    return not may(role, Resource.SUBMISSION, Action.CREATE)

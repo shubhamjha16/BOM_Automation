@@ -1,0 +1,66 @@
+{
+  "document": {
+    "category": "csaf_vex",
+    "csaf_version": "2.0",
+    "title": "BOM Factory \u2014 VEX statements for declared dependencies",
+    "publisher": {
+      "category": "vendor",
+      "name": "BOM Factory",
+      "namespace": "https://github.com/shubhamjha16/BOM_Automation"
+    },
+    "tracking": {
+      "id": "BOMFACTORY-VEX-0001",
+      "status": "final",
+      "version": "1",
+      "initial_release_date": "2026-08-05T02:43:08.232321+00:00",
+      "current_release_date": "2026-08-05T02:43:08.232369+00:00",
+      "revision_history": [
+        {
+          "number": "1",
+          "date": "2026-08-05T02:43:08.232377+00:00",
+          "summary": "Initial release"
+        }
+      ]
+    }
+  },
+  "product_tree": {
+    "full_product_names": [
+      {
+        "name": "requests",
+        "product_id": "requests"
+      }
+    ]
+  },
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2024-35195",
+      "product_status": {
+        "known_not_affected": [
+          "requests"
+        ]
+      },
+      "notes": [
+        {
+          "category": "other",
+          "title": "Justification",
+          "text": "The vulnerability requires a Session object to be reused across requests with verify=False after a prior verified request. Every outbound call in services/kb uses a fresh httpx.AsyncClient with verification enabled and never sets verify=False, so the affected code path is unreachable in this product."
+        }
+      ],
+      "flags": [
+        {
+          "label": "vulnerable_code_not_present",
+          "product_ids": [
+            "requests"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "category": "external",
+          "summary": "Evidence",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-35195"
+        }
+      ]
+    }
+  ]
+}

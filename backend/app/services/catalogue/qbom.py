@@ -24,6 +24,19 @@ ANCHORED_CLAUSES: dict[str, str] = {
 
 ELEMENTS: tuple[MinimumElement, ...] = (
     MinimumElement(
+        key="migration_strategy",
+        label="Post-Quantum Migration Strategy",
+        clause="8.5.1",
+        tier=Tier.CRITICAL,
+        determinability=Determinability.AUTO,
+        probe=present("migration", "migration_strategy", "pqc_algorithm"),
+        rationale=(
+            "The declaration s.8.5.1 exists for. A CBOM declaring RSA, ECC, "
+            "Diffie-Hellman or DSA with no migration entry here is the "
+            "quantum-exposure finding the S9 correlation rule raises."
+        ),
+    ),
+    MinimumElement(
         key="model_name",
         label="Quantum System / Model Name",
         clause="8.5.2",
@@ -49,19 +62,6 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         rationale=(
             "Quantum hardware supply is concentrated in a handful of jurisdictions, "
             "which is a procurement consideration rather than a technical one."
-        ),
-    ),
-    MinimumElement(
-        key="migration_strategy",
-        label="Post-Quantum Migration Strategy",
-        clause="8.5.1",
-        tier=Tier.CRITICAL,
-        determinability=Determinability.AUTO,
-        probe=present("migration", "migration_strategy", "pqc_algorithm"),
-        rationale=(
-            "The declaration s.8.5.1 exists for. A CBOM declaring RSA, ECC, "
-            "Diffie-Hellman or DSA with no migration entry here is the "
-            "quantum-exposure finding the S9 correlation rule raises."
         ),
     ),
     MinimumElement(

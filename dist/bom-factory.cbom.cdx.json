@@ -1,0 +1,85 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-04T18:32:09.674860+00:00",
+    "authors": [
+      {
+        "name": "BOM Factory"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "bom-factory",
+      "version": "0.1.0"
+    }
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/Argon2id",
+      "name": "Argon2id",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "password-hashing",
+          "classicalSecurityLevel": 128
+        }
+      },
+      "description": "user password storage"
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/HMAC-SHA256",
+      "name": "HMAC-SHA256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "mac",
+          "classicalSecurityLevel": 128
+        }
+      },
+      "description": "JWT signing (HS256) and outbound webhook signatures"
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/SHA-256",
+      "name": "SHA-256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "classicalSecurityLevel": 128
+        }
+      },
+      "description": "document checksums, idempotency keys, catalogue checksums"
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/TLS 1.3",
+      "name": "TLS 1.3",
+      "cryptoProperties": {
+        "assetType": "protocol",
+        "algorithmProperties": {
+          "primitive": "transport-security",
+          "classicalSecurityLevel": 128
+        }
+      },
+      "description": "all outbound feed calls and inbound API traffic"
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/AWS KMS (SSE-KMS, per-client keys)",
+      "name": "AWS KMS (SSE-KMS, per-client keys)",
+      "cryptoProperties": {
+        "assetType": "key",
+        "algorithmProperties": {
+          "primitive": "key-management",
+          "classicalSecurityLevel": 128
+        }
+      },
+      "description": "encryption at rest for stored BOM documents"
+    }
+  ]
+}
