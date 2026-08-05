@@ -351,7 +351,7 @@ obvious question.
 | s.3.3.2.5 | SBOM in every SSDLC phase | `services/ci/checkRun.py` + `policy.py`, driven by `.github/workflows/conformance.yml` |
 | s.3.3.3.2 | VEX and incident-response playbook | Generated artifact + our own `SECURITY.md` |
 | s.5.1 | Roles and responsibilities | Generated RACI draft; s.5.1(d) accountable body is an attested activity |
-| s.5.3 | BOM access control and distribution | Generated access rules; enforced by the authorization matrix and repository-layer tenancy |
+| s.5.3 | BOM access control and distribution | Generated access rules; enforced by the authorization matrix, repository-layer tenancy, and org-scoped retrieval — the corpus is the one store holding material from every client at once |
 | s.6(d) | Shift-left scanning | The CI conformance gate, `services/ci/policy.py` |
 | rec. 7.1.2 | Sector sensitivity | `clients.sector` — govt, PSU, essential, private |
 | rec. 7.1.5 | An unreadable document is not a clean one | `DocumentStatus.UNREADABLE`; never an empty component list |

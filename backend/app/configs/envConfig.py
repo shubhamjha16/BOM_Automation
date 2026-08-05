@@ -98,6 +98,25 @@ class Settings(BaseSettings):
     NVD_API_KEY: str | None = None
     KB_SYNC_CRON: str = "0 3 * * *"
 
+    # --- narrative drafting (RAG) ------------------------------------------
+    #: Whether a completion provider may be called to draft section prose.
+    #:
+    #: **Off by default, and that is the safe default rather than a timid one.**
+    #: With it off, `NullGenerator` restates the engine's findings and marks the
+    #: section undrafted — correct information in flat prose. Turning it on buys
+    #: better wording and nothing else: every verdict, figure and clause still
+    #: comes from `services/score/`, and `narrative/drafter.verify` refuses a
+    #: draft asserting anything it was not supplied (§11).
+    NARRATIVE_ENABLED: bool = False
+    NARRATIVE_MODEL: str = "claude-opus-5"
+    #: Drafting house prose from supplied facts is not an intelligence-critical
+    #: task, and effort is the cost lever. `medium` is the balance point; raise it
+    #: only if section quality actually warrants the spend.
+    NARRATIVE_EFFORT: Literal["low", "medium", "high", "xhigh", "max"] = "medium"
+    #: Caps thinking *and* response text together. A section is capped at a few
+    #: hundred words, so the headroom here is almost entirely for thinking.
+    NARRATIVE_MAX_TOKENS: int = 8000
+
     # --- retention ---------------------------------------------------------
     SUBMISSION_RETENTION_DAYS: int = 1095
 

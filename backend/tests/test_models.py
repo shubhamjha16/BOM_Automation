@@ -23,6 +23,10 @@ BACKEND = Path(__file__).resolve().parent.parent
 
 EXPECTED_TABLES = {
     "orgs",
+    # Retrieval. Both carry org_id: the corpus holds prose from every client the
+    # firm has ever assessed, so an unscoped read is the worst leak in the product.
+    "corpus_documents",
+    "corpus_chunks",
     "users",
     "clients",
     "engagements",

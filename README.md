@@ -293,12 +293,11 @@ auditor tests.
 - **Catalogue provenance is 25.7% confirmed.** 75 of 101 clause references are provisional.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
-- **Org-scoped retrieval over past assessments is not built.** The specification calls for
-  pgvector plus hybrid search over the firm's own prior assessments, policies and house
-  remediation wording — scoped per org and never across clients — feeding *narrative wording
-  only*. Neither it nor the narrative-drafting path it was meant to feed exists: there are no
-  drafter nodes, `services/graph/prompts/` is empty, and the three `narrative_*` job types are
-  declared in the enum and wired to nothing.
+- **Narrative drafting is off by default** (`NARRATIVE_ENABLED=false`). With it off,
+  sections fall back to `NullGenerator`, which restates the engine's findings plainly
+  and marks the section undrafted. Turning it on needs a real `ANTHROPIC_API_KEY` —
+  recognised by its `sk-ant-` prefix, so a placeholder cannot cause a live call from a
+  test run.
 - **Frontend XSS rests on React's default escaping and is not asserted by a test.** There is
   no `dangerouslySetInnerHTML` anywhere in `frontend/src`, which is the real protection, but
   component names are supplier-controlled text and that property deserves a test rather than
@@ -314,9 +313,11 @@ auditor tests.
   The limit exists to stop a runaway client script, and per-process is enough for that.
 - **Repository generation needs a container runtime.** Without network isolation it refuses
   rather than degrading — dependency resolution executes the repository's own build scripts.
-- **No language model is wired in.** The verdict path never needed one. Where a model would
-  legitimately help — messy field mapping, web research, narrative wording — the slots exist
-  and are unfilled.
+- **No language model touches the verdict path, by design.** Figures, verdicts and clause
+  references come from the scoring engine and the catalogue. A model drafts *wording* only;
+  it is handed fact-masked house prose, and every figure it writes is checked against the
+  facts it was supplied before the section is accepted — an unsupported one is a refusal,
+  not a warning.
 - **Human gates remain open**: counsel has not signed off the generated procurement clause,
   a cryptography practitioner has not reviewed a full CBOM assessment, the catalogue
   re-derivation is outstanding, and no pilot cohort has run. Each is a gate the

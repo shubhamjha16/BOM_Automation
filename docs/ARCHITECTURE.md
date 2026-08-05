@@ -369,6 +369,76 @@ one class nobody verified.
 
 ---
 
+## 5a. Retrieval-augmented drafting
+
+The one place a language model enters this system, and the boundary that keeps §11
+true across it.
+
+```mermaid
+flowchart TB
+    subgraph ingest["Ingest — masking happens HERE, before any write"]
+        I1[house prose] --> I2["mask_facts()<br/>percentages · clauses · CVEs<br/>· dates · versions → placeholders"]
+        I2 --> I3["assert_masked()<br/>verified, not trusted"]
+        I3 --> I4[chunk on paragraphs]
+        I4 --> I5[embed] --> I6[(corpus_chunks<br/>org_id + vector 384)]
+    end
+
+    subgraph search["Retrieve — org-scoped, always"]
+        Q[query] --> V["vector<br/>cosine"]
+        Q --> L["lexical<br/>term overlap"]
+        I6 --> V
+        I6 --> L
+        V --> F["reciprocal rank fusion<br/>position, not score"]
+        L --> F
+    end
+
+    subgraph gen["Augment and generate"]
+        F --> A["prompt: FACTS + HOUSE WORDING<br/>facts from the scoring engine,<br/>wording from the corpus"]
+        A --> G[generator]
+        G --> VER{"verify()<br/>every figure and clause<br/>traces to FACTS?"}
+        VER -- no --> REF["REFUSED<br/>blocked_conformance"]
+        VER -- yes --> OUT[section]
+    end
+
+    style I2 fill:#fff8e1,stroke:#f9a825
+    style VER fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style REF fill:#ffebee,stroke:#c62828
+```
+
+**Facts are masked on the way *in*, not on the way out.** A figure that never
+entered the corpus cannot be retrieved by a future code path that forgets to mask,
+cannot be reached by a manipulated query, and cannot survive a database dump into
+somewhere less careful. What is stored is the sentence shape — which is the entire
+reason to retrieve house wording:
+
+```
+"Licences were absent across 388 of 412 components, failing 4.2(5)."
+→ "Licences were absent across ⟨count⟩ of ⟨count⟩ components, failing ⟨clause⟩."
+```
+
+**Fusion reads position, not score.** Cosine similarity sits around 0.2–0.4 for
+related prose; term overlap is a fraction that frequently saturates at exactly 1.0.
+Adding or averaging those two scales does not combine two opinions — it lets
+lexical dominate whenever it saturates. RRF gives each retriever an equal vote.
+
+**`verify()` is the boundary, and it checks provenance rather than resolution.**
+The conformance gate downstream confirms that a clause reference *resolves*; a
+fabricated `4.2(4)` resolves perfectly, because it is a real clause. So every
+figure and clause in a generated draft is checked against the facts that were
+supplied, and an unsupported one is a refusal — the job goes to
+`blocked_conformance` and is **not retried**, because re-running the same prompt
+against the same model produces the same class of fabrication and eventually ships
+one.
+
+**Tenancy is the property this component lives or dies on.** Every other table
+answers questions about one client; this one exists to surface passages written for
+*other* engagements, and only the org scope separates "another engagement of ours"
+from "a competitor's". `tests/test_retrieval.py` seeds the other tenant with the
+**best possible match** for the query, so a missing predicate surfaces as the first
+result rather than hiding in a tail.
+
+---
+
 ## 6. Request lifecycle and where each rule is enforced
 
 ```mermaid

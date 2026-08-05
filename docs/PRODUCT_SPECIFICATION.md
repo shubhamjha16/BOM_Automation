@@ -343,10 +343,10 @@ not four hundred — and filtered at `AGENT_MIN_CONFIDENCE = 0.6`.
 retained deliberately: a reviewer needs to see what the agent read and rejected, not only
 what it kept.
 
-**No language model is currently wired in.** `services/llm/` is empty and no provider SDK is
-installed; the loop retrieves from deterministic feeds. The architecture reserves the slots
-where a model would legitimately help — messy field mapping, web research, narrative wording
-— and none of them touch a verdict, a figure or a clause reference.
+**A model is wired in for narrative wording only**, behind `NARRATIVE_ENABLED` and off by
+default. It never touches a verdict, a figure or a clause reference: it receives the facts as
+inputs and may only restate them, and `narrative/drafter.verify` refuses a draft asserting
+anything else. The agentic enrichment loop still retrieves from deterministic feeds.
 
 ---
 
@@ -640,7 +640,8 @@ auditor tests.
 | Limitation | Detail |
 |---|---|
 | **Catalogue provenance is 25.7% confirmed** | 75 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
-| **Org-scoped retrieval over past assessments is not built** | The specification calls for pgvector plus hybrid search over the firm's own prior assessments, policies and house remediation wording, scoped per org, feeding *narrative wording only*. Neither it nor the narrative-drafting path it was meant to feed exists — no drafter nodes, no prompts, and the three `narrative_*` job types are declared and wired to nothing. |
+| **Narrative drafting is off by default** | `NARRATIVE_ENABLED=false`. Sections fall back to `NullGenerator`, which restates the engine's findings and marks the section undrafted. Enabling it needs a real key — recognised by its `sk-ant-` prefix, so a placeholder cannot produce a live call from a test run. |
+| **Retrieval ranks in Python, not in the database** | The embedding column is a real `vector(384)` on Postgres, but nearest-neighbour work happens in the application over org-scoped candidates. Exact search is correct at every corpus size and only slow at large ones; an `ivfflat` index is the stated follow-up, and it wants a populated table to choose its list count sensibly. |
 | **Frontend XSS is not asserted by a test** | No `dangerouslySetInnerHTML` appears anywhere in `frontend/src`, and React escapes by default — that is the real protection. But component names are supplier-controlled text, and the property deserves a test rather than a grep. |
 | **The sandbox has not been re-tested against a hostile build script** | It refuses when isolation is unavailable, and that refusal is tested. An adversarial `postinstall` payload proving the container boundary holds is not. |
 | **`vexCoverage` correlation is not live** | Reported as pending with its reason, never silently absent. |
@@ -648,7 +649,7 @@ auditor tests.
 | **Rate limiting is per process** | Two API instances therefore allow twice the configured rate. Redis would fix it; a limiter that fails closed on a Redis blip turns a cache outage into an outage, and one that fails open is this with more moving parts. The limit exists to stop a runaway client script, and per-process is enough for that. |
 | **Repository generation needs a container runtime** | Without network isolation it refuses rather than degrading. |
 | **The fan-out gives no CPU speedup** | Overlap, not parallelism. Documented rather than dressed up. |
-| **No language model is wired in** | The verdict path never needed one. Where a model would help — field mapping, web research, narrative wording — the slots exist and are unfilled. |
+| **No language model touches the verdict path** | By design, not by omission. A model drafts wording only, is handed fact-masked house prose, and `narrative/drafter.py` refuses a draft asserting any figure or clause it was not supplied. |
 | **Human gates remain open** | Counsel has not signed off the generated procurement clause; a cryptography practitioner has not reviewed a full CBOM assessment; the catalogue re-derivation is outstanding; no pilot cohort has run. Each is a gate the specification places on the work, and none can be satisfied by code. |
 
 ---

@@ -45,6 +45,30 @@ def text_array() -> TypeEngine[Any]:
     return JSON().with_variant(postgresql.ARRAY(Text()), "postgresql")
 
 
+#: Dimension of the default embedding space. Fixed rather than configurable
+#: because it is a column type on Postgres: changing it is a migration, and a
+#: setting that silently requires one is a trap.
+EMBEDDING_DIM = 384
+
+
+def embedding_vector(dim: int = EMBEDDING_DIM) -> TypeEngine[Any]:
+    """`vector(n)` on Postgres via pgvector, a JSON float list elsewhere.
+
+    The JSON fallback is not a toy: the same cosine similarity runs over it in
+    Python, so retrieval ranking is exercised by the test suite on SQLite exactly
+    as the tenancy guards are. What Postgres adds is the ANN index — a
+    correctness-preserving speedup, not a behaviour change.
+    """
+    try:
+        from pgvector.sqlalchemy import Vector
+    except ImportError:
+        # pgvector is an optional extra. Without it the models still load and the
+        # JSON path still works, which keeps `make demo` and the test suite
+        # running on a machine that has never seen Postgres.
+        return JSON()
+    return JSON().with_variant(Vector(dim), "postgresql")
+
+
 def utcnow() -> datetime:
     return datetime.now(UTC)
 

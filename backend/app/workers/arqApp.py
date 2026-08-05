@@ -15,7 +15,12 @@ from app.configs.dbConfig import get_sessionmaker
 from app.configs.envConfig import settings
 from app.services.catalogue.seeder import CatalogueDrift, seed
 from app.utils.logger import configure_logging, get_logger
-from app.workers.tasks import reconcile_stale_jobs, run_assessment_task, sync_kb
+from app.workers.tasks import (
+    draft_narrative_task,
+    reconcile_stale_jobs,
+    run_assessment_task,
+    sync_kb,
+)
 
 logger = get_logger(__name__)
 
@@ -50,7 +55,7 @@ async def shutdown(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [run_assessment_task, reconcile_stale_jobs, sync_kb]
+    functions = [run_assessment_task, draft_narrative_task, reconcile_stale_jobs, sync_kb]
     on_startup = startup
     on_shutdown = shutdown
 

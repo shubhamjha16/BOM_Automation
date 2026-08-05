@@ -1,6 +1,6 @@
 # BOM Automation — Data Model
 
-**28 tables, 8 migrations, one tenant boundary.** Every diagram here is generated from
+**30 tables, 9 migrations, one tenant boundary.** Every diagram here is generated from
 the SQLAlchemy models in `backend/app/models/` and matches `alembic/versions/`.
 
 Conformance basis: *CERT-In Technical Guidelines on SBOM, QBOM & CBOM, AIBOM and HBOM*,
@@ -434,6 +434,64 @@ a KEV-listed CVE was not flagged.
 
 ---
 
+## 5a. The corpus — retrieval, and the tenant boundary it depends on
+
+```mermaid
+erDiagram
+    ORGS ||--o{ CORPUS_DOCUMENTS : "owns"
+    ORGS ||--o{ CORPUS_CHUNKS : "owns"
+    CORPUS_DOCUMENTS ||--o{ CORPUS_CHUNKS : "split into"
+    ENGAGEMENTS ||--o{ CORPUS_DOCUMENTS : "written for"
+
+    CORPUS_DOCUMENTS {
+        uuid id PK
+        uuid org_id FK
+        string kind "past_assessment|policy|remediation_wording|house_style"
+        string title
+        string source_ref "so a reviewer can check a passage against its source"
+        uuid engagement_id FK "used to EXCLUDE an engagement's own prior text"
+        jsonb meta
+        timestamptz created_at
+    }
+
+    CORPUS_CHUNKS {
+        uuid id PK
+        uuid org_id FK "denormalised: the scope must apply without a join"
+        uuid document_id FK
+        int ord
+        text content "FACT-MASKED at ingest, never raw prose"
+        text content_lower "the lexical half of hybrid search"
+        vector embedding "vector(384) on Postgres, JSON list elsewhere"
+        string embedding_model "provenance: which space this vector lives in"
+        int embedding_dim
+        int masked_count "evidence the guard ran"
+        timestamptz created_at
+    }
+```
+
+**`org_id` is denormalised onto the chunk deliberately.** The scope predicate has
+to be applicable to the chunk query itself — requiring a join to know which tenant
+a chunk belongs to is exactly how a scope gets forgotten. Both tables are
+constrained anyway, so a join that is ever loosened still cannot cross the
+boundary.
+
+**`content` is fact-masked before the row is written.** The corpus holds the firm's
+prose across every client it has ever assessed, and its purpose is to surface
+passages from one engagement while drafting another. Percentages, clause
+references, CVE identifiers and dates are replaced with typed placeholders at
+ingest, so a figure belonging to one client cannot be retrieved into another's
+report. `masked_count` records how many were removed — non-zero is healthy, and
+zero across a whole corpus of past assessments would mean the masker silently
+stopped matching.
+
+**`embedding_model` and `embedding_dim` are recorded per chunk, not assumed
+globally.** Change the embedder, leave the old vectors in place, and cosine
+similarity still returns a perfectly plausible number computed over two unrelated
+coordinate systems. The ranking looks fine and is noise. `assert_comparable`
+refuses rather than letting that happen silently.
+
+---
+
 ## 6. Assessment, review gate and VEX
 
 ```mermaid
@@ -692,6 +750,7 @@ graph TB
 | `0006_enrichment_identifiers` | `cves`, `kev_entries`, `eol_records`, `advisories`, `agent_runs`, `agent_evidence`, `supplier_registry_entries`, `registry_proposals`, `identifier_mappings` |
 | `0007_vex_assessments` | `vex_statements`, `csaf_advisories`, `assessments`, `assessment_sections` |
 | `0008_generation_job_type` | `generate_from_repo` on the `job_type` enum |
+| `0009_corpus_retrieval` | `corpus_documents`, `corpus_chunks`, the `vector` extension and the full-text index |
 
 Every migration is hand-reviewed. `tests/test_migrations.py` asserts that
 `upgrade head → downgrade base → upgrade head` round-trips, that every native enum type

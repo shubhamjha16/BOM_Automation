@@ -21,6 +21,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.configs.dbConfig import get_sessionmaker
 from app.configs.jobTypes import JobStatus
 from app.models.enums import SubmissionStatus
+from app.repositories.corpusRepository import CorpusRepository
 from app.repositories.jobRepository import JobRepository, TerminalJobWriteRejected
 from app.repositories.laneRepository import LaneRepository
 from app.repositories.submissionRepository import SubmissionRepository
@@ -29,6 +30,8 @@ from app.services.catalogue.seeder import get_active_version
 from app.services.graph.state import SubmissionDocument
 from app.services.ingest.normalize import ingest_document
 from app.services.jobService import persist_lane_results, persist_summary
+from app.services.llm.anthropicClient import active_generator
+from app.services.narrative.drafter import UnsupportedFigure, draft_section
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -225,3 +228,58 @@ async def sync_kb(ctx: dict[str, Any], older_than_seconds: int = 0) -> dict[str,
     kevClient.prime_cache(entries)
     logger.info("kb_synced", kev_entries=len(entries))
     return {"kev_entries": len(entries)}
+
+
+async def draft_narrative_task(
+    ctx: dict[str, Any],
+    org_id: str,
+    job_id: str,
+    section: str,
+    facts: str,
+    engagement_id: str | None = None,
+) -> dict[str, Any]:
+    """Draft one assessment section from the engine's facts and house wording.
+
+    **The three `narrative_*` job types were declared in `JobType` and wired to
+    nothing.** An enum value with no handler is worse than an absent one: it reads
+    as a supported operation, and the first caller to enqueue it gets a job that
+    sits queued forever.
+
+    Runs as a job rather than inline for the same reason assessment does — a
+    provider call is seconds of latency that must not be attached to an HTTP
+    request. The section still carries its findings when no provider is
+    configured, because `NullGenerator` restates them rather than returning
+    nothing (§11: a client reading flat facts is better served than one reading
+    fluent prose that might be wrong).
+    """
+    scoped_org = uuid.UUID(org_id)
+
+    async with _session_for(ctx) as session:
+        jobs = JobRepository(session, scoped_org)
+        job = await jobs.get(uuid.UUID(job_id))
+        if job is None:
+            logger.warning("narrative_job_missing", job_id=job_id)
+            return {"status": "missing"}
+
+        await jobs.mark_running(job.id)
+        try:
+            drafted = await draft_section(
+                CorpusRepository(session, scoped_org),
+                section=section,
+                facts=facts,
+                engagement_id=uuid.UUID(engagement_id) if engagement_id else None,
+                generator=ctx.get("generator") or active_generator(),
+            )
+        except UnsupportedFigure as error:
+            # A draft asserting an unsupplied figure is a refusal, not a retry.
+            # Re-running the same prompt against the same model produces the same
+            # class of fabrication, and a queue that retries it burns the budget
+            # and eventually ships one.
+            logger.error("narrative_refused", section=section, error=str(error))
+            await jobs.mark_terminal(
+                job.id, status=JobStatus.BLOCKED_CONFORMANCE, error=str(error)
+            )
+            return {"status": str(JobStatus.BLOCKED_CONFORMANCE), "reason": str(error)}
+
+        await jobs.mark_terminal(job.id, status=JobStatus.SUCCEEDED)
+        return {"status": str(JobStatus.SUCCEEDED), **drafted.as_row()}

@@ -9,7 +9,7 @@ Nodes that will land here:
 | Module | Node | Sprint |
 |---|---|---|
 | `narrativeStructure.py` | plans the assessment's sections | S15 |
-| `sectionDrafter.py` | drafts prose for one section | S15 |
+| `sectionDrafter.py` | drafts prose for one section | **landed** |
 | `narrativeCritic.py` | critiques a draft, bounded at 2 rounds | S15 |
 | `vexDrafter.py` | drafts a VEX justification, never a status | S12 |
 | `healer.py` | repairs what the critic flagged | S15 |
