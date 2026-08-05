@@ -777,6 +777,6 @@ dropping those rows' type would corrupt the job log.
 
 ---
 
-*Generated from `backend/app/models/` at 28 tables. Guideline basis: CERT-In v2.0,
+*Generated from `backend/app/models/` at 30 tables. Guideline basis: CERT-In v2.0,
 09.07.2025. See [PRODUCT_SPECIFICATION.md](PRODUCT_SPECIFICATION.md) and
 [ARCHITECTURE.md](ARCHITECTURE.md).*

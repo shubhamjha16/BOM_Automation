@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { NarrativePanel } from '@/features/narrative';
 import { downloadExport, useAssessment, type ExportFormat } from '@/features/assessments';
 import { ROUTES } from '@/shared/constants/routes';
 import { formatScore } from '@/utils/format';
@@ -69,6 +70,8 @@ export function AssessmentPage() {
           )}
         </article>
       ))}
+
+      <NarrativePanel submissionId={id} />
 
       <p>
         <Link to={ROUTES.submission(id)}>← Back to submission</Link>

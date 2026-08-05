@@ -112,3 +112,38 @@ tr.attested { background: #fffdf5; }
 .quota-meter__fill { display: block; height: 100%; background: var(--pass); }
 .quota-meter[data-tone='warn'] .quota-meter__fill { background: var(--warn); }
 .quota-meter[data-tone='fail'] .quota-meter__fill { background: var(--fail); }
+
+
+/* --- narrative: the draft, beside the wording it drew on ------------------- */
+.narrative { margin-top: 2.5rem; border-top: 2px solid #eee; padding-top: 1.5rem; }
+.narrative__lede { color: #444; max-width: 46rem; }
+.narrative__idle { color: var(--neutral); font-style: italic; }
+.narrative__draft {
+  border-left: 3px solid var(--pass); background: #f6fbf7;
+  padding: 1rem 1.25rem; margin: 1rem 0;
+}
+/* Undrafted must not look like drafted, for the same reason attested must not
+   look like evidenced: a reader trusts what looks finished. */
+.narrative__draft--undrafted { border-left-style: dashed; border-left-color: var(--warn); background: #fffdf5; }
+.narrative__badge { margin-bottom: 0.6rem; }
+.narrative__body { margin: 0; white-space: pre-wrap; }
+.narrative__refused {
+  border: 1px solid var(--fail); background: #fdf2f2; padding: 1rem 1.25rem; margin: 1rem 0;
+}
+.narrative__sources { margin-top: 1.5rem; }
+.narrative__sources h3 { font-size: 0.95rem; margin-bottom: 0.35rem; }
+.narrative__masked-count { color: var(--warn); font-weight: 600; }
+.narrative__note { font-size: 0.85rem; color: var(--neutral); max-width: 46rem; }
+.passage { margin: 0 0 1rem; border-left: 2px solid #ddd; padding-left: 1rem; }
+.passage figcaption { font-size: 0.8rem; color: #555; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.passage__kind { color: var(--neutral); }
+.passage__found { color: var(--neutral); font-style: italic; }
+.passage blockquote { margin: 0.4rem 0 0; font-size: 0.9rem; color: #333; }
+/* The placeholder is the evidence — make it impossible to miss. */
+mark.masked {
+  background: #fff3cd; color: #7a5b00; border: 1px dashed var(--warn);
+  border-radius: 3px; padding: 0 0.2rem; font-size: 0.85em; font-weight: 600;
+}
+.narrative__facts { margin-top: 1.25rem; font-size: 0.9rem; }
+.narrative__facts summary { cursor: pointer; color: #333; }
+.narrative__facts ul { margin: 0.5rem 0; }

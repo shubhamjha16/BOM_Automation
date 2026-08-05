@@ -23,6 +23,7 @@ from app.configs.dbConfig import get_session
 from app.configs.envConfig import settings
 from app.models.enums import Role
 from app.models.user import User
+from app.repositories.corpusRepository import CorpusRepository
 from app.repositories.jobRepository import JobRepository
 from app.repositories.laneRepository import LaneRepository
 from app.repositories.submissionRepository import SubmissionRepository
@@ -113,6 +114,14 @@ async def job_repository(session: SessionDep, org_id: OrgDep, actor_id: ActorDep
     return JobRepository(session, org_id, actor_id=actor_id)
 
 
+async def corpus_repository(
+    session: SessionDep, org_id: OrgDep, actor_id: ActorDep
+) -> CorpusRepository:
+    """The corpus is org-scoped like every other repository — and it is the one
+    where a missing scope leaks another client's prose rather than an error."""
+    return CorpusRepository(session, org_id, actor_id=actor_id)
+
+
 async def lane_repository(
     session: SessionDep, org_id: OrgDep, actor_id: ActorDep
 ) -> LaneRepository:
@@ -122,6 +131,7 @@ async def lane_repository(
 SubmissionRepoDep = Annotated[SubmissionRepository, Depends(submission_repository)]
 JobRepoDep = Annotated[JobRepository, Depends(job_repository)]
 LaneRepoDep = Annotated[LaneRepository, Depends(lane_repository)]
+CorpusRepoDep = Annotated[CorpusRepository, Depends(corpus_repository)]
 
 
 async def quota_service(session: SessionDep, org_id: OrgDep) -> QuotaService:

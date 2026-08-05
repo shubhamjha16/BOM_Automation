@@ -8,8 +8,9 @@ extracted from the running system, not from a plan.
 |---|---|
 | [PRODUCT_SPECIFICATION.md](PRODUCT_SPECIFICATION.md) | What the product does and refuses to do. The three-state verdict model, scoring arithmetic and its three non-arithmetic overrides, roles, workflows, quotas, API surface, and a plainly-stated limitations section. |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How it is built. System context, containers, the assessment graph and its fan-out, the scoring pipeline, tenancy enforcement, observability, deployment. 15 diagrams. |
-| [DATA_MODEL.md](DATA_MODEL.md) | The schema. 28 tables across 7 entity-relationship diagrams, every index and the rule it carries, migration history, retention. |
+| [DATA_MODEL.md](DATA_MODEL.md) | The schema. 30 tables across 8 entity-relationship diagrams, every index and the rule it carries, migration history, retention. |
 | [COMPLIANCE_MATRIX.md](COMPLIANCE_MATRIX.md) | Clause-by-clause mapping to CERT-In v2.0. All 82 minimum elements, the correlation rules, the s.3.3 maturity activities, and the provenance of every clause reference. |
+| [SCREENSHOTS.md](SCREENSHOTS.md) | The console running, annotated. Nine screens from a real `make demo` — every figure on them came from the scoring engine, not from mock data. |
 
 ## Guideline basis
 

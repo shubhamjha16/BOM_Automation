@@ -19,6 +19,16 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 make demo     # the whole stack on SQLite. No Docker, no Postgres, no Redis.
 ```
 
+## Running
+
+[![The console, running](docs/screenshots/08-maturity-scorecard.png)](docs/SCREENSHOTS.md)
+
+**BOM Automation assessing itself** against CERT-In s.3.3 — *below start*, 11
+evidenced, 3 attested, published whatever it says. Nine annotated screens in
+[docs/SCREENSHOTS.md](docs/SCREENSHOTS.md): the five encoded catalogues, the
+submission list, and the attested-versus-evidenced distinction that the whole
+maturity page is built on.
+
 ---
 
 ## The problem this is built around
@@ -147,9 +157,10 @@ score over a real document.
 |---|---|
 | [Product specification](docs/PRODUCT_SPECIFICATION.md) | The verdict model, scoring, roles, workflows, quotas, API surface, limitations |
 | [Architecture](docs/ARCHITECTURE.md) | Context, containers, the graph, tenancy, observability — 15 diagrams |
-| [Data model](docs/DATA_MODEL.md) | 28 tables, ER diagrams, every index and the rule it carries |
+| [Data model](docs/DATA_MODEL.md) | 30 tables, ER diagrams, every index and the rule it carries |
 | [Compliance matrix](docs/COMPLIANCE_MATRIX.md) | Every implemented clause, where it lives, and its provenance |
 | [SECURITY.md](SECURITY.md) | Disclosure route, the four VEX statuses, our dependency-adoption policy |
+| [Screenshots](docs/SCREENSHOTS.md) | Nine annotated screens from a real `make demo` run |
 
 ---
 

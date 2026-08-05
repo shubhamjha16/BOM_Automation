@@ -8,7 +8,8 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
 
 from app.controllers import assessmentController as controller
-from app.routers.deps import LaneRepoDep, SubmissionRepoDep
+from app.controllers import narrativeController
+from app.routers.deps import CorpusRepoDep, LaneRepoDep, SubmissionRepoDep
 
 router = APIRouter(prefix="/assessments", tags=["assessments"])
 
@@ -37,4 +38,22 @@ async def export(
         content=body,
         media_type=media_type,
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.get("/{submission_id}/narrative/{section}")
+async def narrative(
+    submission_id: UUID,
+    section: str,
+    submissions: SubmissionRepoDep,
+    lanes: LaneRepoDep,
+    corpus: CorpusRepoDep,
+) -> dict:
+    """Draft one section, and return the house wording it drew on."""
+    submission = await submissions.get(submission_id)
+    if submission is None:
+        raise HTTPException(404, "submission not found")
+    return await narrativeController.draft(
+        lanes, corpus, submission_id=submission_id, section=section,
+        engagement_id=submission.engagement_id,
     )
