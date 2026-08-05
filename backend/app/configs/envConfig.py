@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str
 
     # --- infrastructure ----------------------------------------------------
-    DATABASE_URL: str = "postgresql+asyncpg://bom:bom@localhost:5432/bom_factory"
+    DATABASE_URL: str = "postgresql+asyncpg://bom:bom@localhost:5432/bom_automation"
     REDIS_URL: str = "redis://localhost:6379/0"
     PORT: int = 8005
     CORS_ORIGINS: str = "http://localhost:5173"

@@ -3,15 +3,15 @@
   "specVersion": "1.6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-04T18:32:09.674860+00:00",
+    "timestamp": "2026-08-05T05:13:22.738737+00:00",
     "authors": [
       {
-        "name": "BOM Factory"
+        "name": "BOM Automation"
       }
     ],
     "component": {
       "type": "application",
-      "name": "bom-factory",
+      "name": "bom-automation",
       "version": "0.1.0"
     }
   },

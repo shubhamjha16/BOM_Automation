@@ -127,7 +127,7 @@ def new_mfa_secret() -> str:
     return pyotp.random_base32()
 
 
-def mfa_provisioning_uri(secret: str, *, email: str, issuer: str = "BOM Factory") -> str:
+def mfa_provisioning_uri(secret: str, *, email: str, issuer: str = "BOM Automation") -> str:
     return pyotp.TOTP(secret).provisioning_uri(name=email, issuer_name=issuer)
 
 

@@ -1,4 +1,4 @@
-# BOM Factory — Data Model
+# BOM Automation — Data Model
 
 **28 tables, 8 migrations, one tenant boundary.** Every diagram here is generated from
 the SQLAlchemy models in `backend/app/models/` and matches `alembic/versions/`.

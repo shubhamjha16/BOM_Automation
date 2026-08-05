@@ -19,7 +19,7 @@ frontend/dist/
 # Generated BOMs are rebuilt per release and not committed. The *scored results*
 # and the published VEX advisories are, because §11 requires this repository to
 # publish what it asks of suppliers.
-dist/bom-factory.cdx.json
+dist/bom-automation.cdx.json
 !dist/maturity-scorecard.json
 !dist/catalogue-audit.md
 !dist/scale-report.md
@@ -31,4 +31,4 @@ dist/bom-factory.cdx.json
 .vscode/
 
 # The sprint plan is internal and is not published.
-BOM_FACTORY_SPRINTS.md
+BOM_AUTOMATION_SPRINTS.md

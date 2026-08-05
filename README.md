@@ -1,4 +1,4 @@
-# BOM Factory
+# BOM Automation
 
 **CERT-In conformance and attestation platform.** It receives a supplier's Bill of
 Materials, scores all five BOM types against the CERT-In minimum elements, correlates them
@@ -11,9 +11,9 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 |---|---|
 | **Minimum elements encoded** | 82 across five lanes — SBOM 21 · CBOM 20 · AIBOM 16 · HBOM 15 · QBOM 10 |
 | **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
-| **Scale** | 50,000 components in **4.3 s**, 209 MB peak |
+| **Scale** | 50,000 components in **~5 s**, ~210 MB peak — `make scale` |
 | **Clause provenance** | 26 of 101 references confirmed — the rest labelled provisional |
-| **Our own conformance** | **38.28%, fail** — published anyway |
+| **Our own conformance** | **38.21%, fail** — published anyway |
 
 ```bash
 make demo     # the whole stack on SQLite. No Docker, no Postgres, no Redis.
@@ -186,14 +186,14 @@ This repository publishes its own SBOM, AIBOM, CBOM, VEX advisories, maturity sc
 catalogue audit per release, scored by its own engine — whatever the numbers say.
 
 ```
-self-conformance: 38.28% (fail) over 855 components
+self-conformance: 38.21% (fail) over 906 components
   fails on critical gap(s): 4.2(4) Supplier Name, 4.2(21) CERT-In Unique Identifier
 ```
 
 | Published to `dist/` | Contents |
 |---|---|
-| `bom-factory.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
-| `bom-factory.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
+| `bom-automation.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
+| `bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
 | `maturity-scorecard.json` | Our s.3.3 position: **below start** |
 | `catalogue-audit.md` | All 101 clause references with provenance: **26 confirmed** |
 | `scale-report.md` | Measured performance, per lane |
@@ -242,8 +242,9 @@ discovered under load. What the fan-out is actually for is that a hung or crashe
 cannot take the other four with it. Reporting the overlap as a performance win would be
 exactly the kind of unfounded figure the first rule above exists to prevent.
 
-At scale: 50,000 components in **4.3 s** and 209 MB, against a stated budget of 30 s and
-1 GB. The budget is loose on purpose — one set *at* the measurement fails on a slow CI
+At scale: 50,000 components in **about five seconds** and ~210 MB, against a stated budget
+of 30 s and 1 GB. The exact figure moves with the machine, so the prose gives the order of
+magnitude and `dist/scale-report.md` carries the measurement. The budget is loose on purpose — one set *at* the measurement fails on a slow CI
 runner, gets called flaky, and gets deleted. What the tests actually guard is **linearity**,
 because a wall-clock budget catches a slow machine and not an accidental O(n²).
 

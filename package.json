@@ -1,5 +1,5 @@
 {
-  "name": "bom-factory",
+  "name": "bom-automation",
   "private": true,
   "version": "0.1.0",
   "description": "CERT-In BOM conformance and attestation platform — monorepo root",
@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "self-bom": "cdxgen --output dist/bom-factory.cdx.json --spec-version 1.6 --project-name bom-factory --project-version 0.1.0 ."
+    "self-bom": "cdxgen --output dist/bom-automation.cdx.json --spec-version 1.6 --project-name bom-automation --project-version 0.1.0 ."
   },
   "devDependencies": {
     "@cyclonedx/cdxgen": "^11.0.0"

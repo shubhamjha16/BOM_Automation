@@ -5,28 +5,28 @@ Budget: **30s** wall clock and **1024 MB** peak for a 50,000-component SBOM.
 ## The largest single document
 
 - 50,000 components, 21.1 MB of JSON
-- **3.86s** wall clock (3.56s CPU), 0.077 ms per component
-- **208.5 MB** peak RSS
+- **5.05s** wall clock (4.27s CPU), 0.101 ms per component
+- **208.7 MB** peak RSS
 - 50,000 entities scored, nothing dropped, score 56.1
 - within budget: **True**
 
 ## Concurrent five-lane assessments
 
-20 assessments × 5 lanes, 2,000 components in the SBOM lane plus real documents in the other four, in **4.36s** (0.22s each, amortised — per-assessment latency is the p95 column, not this).
+20 assessments × 5 lanes, 2,000 components in the SBOM lane plus real documents in the other four, in **8.48s** (0.42s each, amortised — per-assessment latency is the p95 column, not this).
 
-Throughput across the run was 11,462 components per second — within noise of the single-document rate above. **Concurrency shares the throughput rather than adding to it**, which is the expected consequence of scoring being pure Python: twenty assessments at once finish in about the time twenty assessments in series would take. What concurrency buys is that no client waits behind another client's whole queue, not that the machine does more work.
+Throughput across the run was 5,896 components per second — within noise of the single-document rate above. **Concurrency shares the throughput rather than adding to it**, which is the expected consequence of scoring being pure Python: twenty assessments at once finish in about the time twenty assessments in series would take. What concurrency buys is that no client waits behind another client's whole queue, not that the machine does more work.
 
 | Lane | n | p50 ms | p95 ms | max ms |
 | --- | ---: | ---: | ---: | ---: |
-| aibom | 20 | 698.47 | 2338.67 | 2338.9 |
-| cbom | 20 | 775.43 | 2339.41 | 2367.38 |
-| hbom | 20 | 879.39 | 2339.05 | 2339.26 |
-| qbom | 20 | 879.02 | 2338.81 | 2338.96 |
-| sbom | 20 | 2339.55 | 2374.43 | 2440.2 |
+| aibom | 20 | 1326.2 | 2760.29 | 3056.77 |
+| cbom | 20 | 1364.02 | 2889.65 | 3105.57 |
+| hbom | 20 | 1352.77 | 2760.51 | 3159.54 |
+| qbom | 20 | 1325.69 | 2760.23 | 2760.41 |
+| sbom | 20 | 3390.34 | 3600.04 | 3601.19 |
 
 - lane intervals overlap: **True**
 - every submission reconstructs all five lifecycles from logs: **True**
-- peak RSS across the run: **208.5 MB**
+- peak RSS across the run: **208.7 MB**
 
 ## What the overlap does and does not mean
 

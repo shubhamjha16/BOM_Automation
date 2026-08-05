@@ -34,8 +34,8 @@ jobs:
         # enrichment (S10) and identifier (S11) lanes can actually populate the
         # fields the score depends on — gating before then would only prove that
         # unimplemented sprints score badly.
-        run: uv run python -m app.services.self.selfScore ../dist/bom-factory.cdx.json
+        run: uv run python -m app.services.self.selfScore ../dist/bom-automation.cdx.json
       - uses: actions/upload-artifact@v4
         with:
-          name: bom-factory-sbom
-          path: dist/bom-factory.cdx.json
+          name: bom-automation-sbom
+          path: dist/bom-automation.cdx.json

@@ -68,8 +68,8 @@ def build() -> dict[str, Any]:
         "version": 1,
         "metadata": {
             "timestamp": datetime.now(UTC).isoformat(),
-            "authors": [{"name": "BOM Factory"}],
-            "component": {"type": "application", "name": "bom-factory", "version": "0.1.0"},
+            "authors": [{"name": "BOM Automation"}],
+            "component": {"type": "application", "name": "bom-automation", "version": "0.1.0"},
         },
         "components": [
             {
@@ -94,3 +94,25 @@ def quantum_exposed_assets() -> list[dict[str, Any]]:
     """Assets s.8.5.1 would flag. Currently none — no public-key cryptography is
     in use beyond TLS, whose key exchange is the platform's to migrate."""
     return [asset for asset in ASSETS if asset.get("quantum_vulnerable")]
+
+def main() -> int:
+    """Write the document to ``dist/``. **This exists because it did not.**
+
+    Both self-BOMs were produced by hand once and committed, so when the product
+    was renamed they silently kept the old name while every other published
+    artifact moved. An artifact §11 promises to publish per release needs a
+    command that regenerates it, or it drifts exactly like this.
+    """
+    import json
+    from pathlib import Path
+
+    document = build()
+    destination = Path(__file__).resolve().parents[4] / "dist" / "bom-automation.cbom.cdx.json"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(document, indent=2) + "\n")
+    print(f"  {destination.name}: {len(document.get('components') or [])} components")
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover - console entry point
+    raise SystemExit(main())

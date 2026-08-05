@@ -6,7 +6,7 @@ score into a CI gate at ``SELF_CONFORMANCE_MIN``; until the enrichment (S10) and
 identifier (S11) work can actually populate the fields the score depends on,
 gating would only prove that unimplemented sprints score badly.
 
-Run: ``uv run python -m app.services.self.selfScore dist/bom-factory.cdx.json``
+Run: ``uv run python -m app.services.self.selfScore dist/bom-automation.cdx.json``
 """
 
 from __future__ import annotations
@@ -53,7 +53,7 @@ def emit_self_boms(destination: Path) -> dict[str, Path]:
     destination.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
     for name, builder in (("aibom", aibom.build), ("cbom", cbom.build)):
-        path = destination / f"bom-factory.{name}.cdx.json"
+        path = destination / f"bom-automation.{name}.cdx.json"
         path.write_text(json.dumps(builder(), indent=2) + "\n")
         written[name] = path
     return written

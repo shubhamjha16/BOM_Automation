@@ -35,7 +35,7 @@ from app.utils.security import (
 logger = get_logger(__name__)
 
 #: Verified against when no user exists, so the work done is the same either way.
-_DUMMY_HASH = hash_password("bom-factory-timing-equaliser")
+_DUMMY_HASH = hash_password("bom-automation-timing-equaliser")
 
 
 class AuthenticationFailed(Exception):

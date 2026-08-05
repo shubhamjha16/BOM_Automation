@@ -1,7 +1,7 @@
 """SBOM minimum elements — CERT-In s.4.2, guideline v2.0 (09.07.2025).
 
 **Clause provenance.** Eight positions are anchored directly by the specification
-in ``BOM_FACTORY_SPRINTS.md``: 4.2(5) Licence, 4.2(8) Vulnerabilities, 4.2(9)
+in ``BOM_AUTOMATION_SPRINTS.md``: 4.2(5) Licence, 4.2(8) Vulnerabilities, 4.2(9)
 Patch Status, 4.2(10) Release Date, 4.2(11) End-of-Life, 4.2(12) Criticality,
 4.2(13) Usage Restrictions and 4.2(21) CERT-In Unique Identifier. The remaining
 thirteen ordinals are encoded from the s.4.2 table and carry

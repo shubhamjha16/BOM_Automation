@@ -14,7 +14,7 @@ export function AppLayout() {
     <div className="shell">
       <header className="shell__bar">
         <div className="shell__brand">
-          <strong>BOM Factory</strong>
+          <strong>BOM Automation</strong>
           <span className="shell__tag">CERT-In conformance — not a legal opinion</span>
         </div>
         <nav className="shell__nav">

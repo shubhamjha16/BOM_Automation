@@ -2,7 +2,7 @@
 # inside the web process (§10).
 services:
   - type: web
-    name: bom-factory-api
+    name: bom-automation-api
     runtime: python
     region: singapore
     plan: starter
@@ -12,9 +12,9 @@ services:
     healthCheckPath: /api/v1/health
     envVars:
       - key: DATABASE_URL
-        fromDatabase: { name: bom-factory-db, property: connectionString }
+        fromDatabase: { name: bom-automation-db, property: connectionString }
       - key: REDIS_URL
-        fromService: { name: bom-factory-redis, type: redis, property: connectionString }
+        fromService: { name: bom-automation-redis, type: redis, property: connectionString }
       - { key: GROQ_API_KEY, sync: false }
       - { key: ANTHROPIC_API_KEY, sync: false }
       - { key: JWT_SECRET, generateValue: true }
@@ -23,7 +23,7 @@ services:
       - { key: AWS_REGION, value: ap-south-1 }
 
   - type: worker
-    name: bom-factory-worker
+    name: bom-automation-worker
     runtime: python
     region: singapore
     plan: starter
@@ -31,21 +31,21 @@ services:
     startCommand: cd backend && uv run arq app.workers.arqApp.WorkerSettings
     envVars:
       - key: DATABASE_URL
-        fromDatabase: { name: bom-factory-db, property: connectionString }
+        fromDatabase: { name: bom-automation-db, property: connectionString }
       - key: REDIS_URL
-        fromService: { name: bom-factory-redis, type: redis, property: connectionString }
+        fromService: { name: bom-automation-redis, type: redis, property: connectionString }
       - { key: GROQ_API_KEY, sync: false }
       - { key: ANTHROPIC_API_KEY, sync: false }
       - { key: JWT_SECRET, sync: false }
 
   - type: redis
-    name: bom-factory-redis
+    name: bom-automation-redis
     region: singapore
     plan: starter
     ipAllowList: []
 
 databases:
-  - name: bom-factory-db
+  - name: bom-automation-db
     region: singapore
     plan: basic-256mb
     postgresMajorVersion: "16"

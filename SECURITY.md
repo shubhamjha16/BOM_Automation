@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Email **shubhamjha330@gmail.com** with `[BOM Factory security]` in the subject.
+Email **shubhamjha330@gmail.com** with `[BOM Automation security]` in the subject.
 Please include the version or commit, what you observed, and how to reproduce it.
 
 We will acknowledge within **3 working days** and give an assessment within

@@ -25,7 +25,7 @@ ARG VITE_SENTRY_DSN=
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL \
     VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 
-RUN yarn workspace @bom-factory/frontend build
+RUN yarn workspace @bom-automation/frontend build
 
 
 FROM nginx:1.27-alpine AS runtime

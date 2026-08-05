@@ -17,13 +17,13 @@ services:
     environment:
       POSTGRES_USER: bom
       POSTGRES_PASSWORD: bom
-      POSTGRES_DB: bom_factory
+      POSTGRES_DB: bom_automation
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bom -d bom_factory"]
+      test: ["CMD-SHELL", "pg_isready -U bom -d bom_automation"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -49,7 +49,7 @@ services:
     ports:
       - "8005:8005"
     environment:
-      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_factory
+      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_automation
       REDIS_URL: redis://redis:6379/0
       CORS_ORIGINS: http://localhost:5173,http://localhost:8080
       # Required or the app refuses to import, naming the variable. Placeholders
@@ -79,7 +79,7 @@ services:
     # it sits behind the profile rather than in the default set.
     command: ["arq", "app.workers.arqApp.WorkerSettings"]
     environment:
-      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_factory
+      DATABASE_URL: postgresql+asyncpg://bom:bom@postgres:5432/bom_automation
       REDIS_URL: redis://redis:6379/0
       GROQ_API_KEY: ${GROQ_API_KEY:-dev-placeholder}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-dev-placeholder}

@@ -1,4 +1,4 @@
-# BOM Factory — one entrypoint for both apps.
+# BOM Automation — one entrypoint for both apps.
 # Every target is safe to run from a clean checkout.
 
 SHELL := /bin/bash
@@ -9,7 +9,7 @@ COMPOSE := $(shell command -v docker >/dev/null 2>&1 && echo "docker compose" ||
 .DEFAULT_GOAL := help
 .PHONY: help install install-backend install-frontend infra infra-down dev dev-api dev-web \
         test test-backend test-frontend lint fmt typecheck migrate revision self-bom \
-        catalogue-audit scale clean \
+        catalogue-audit scale self-boms clean \
         docker-build docker-up docker-down docker-logs docker-config api-types api-types-check \
         seed-catalogue demo demo-seed demo-api demo-web demo-reset
 
@@ -111,7 +111,7 @@ revision: ## alembic revision --autogenerate -m "$(M)" (hand-review it; see §5)
 
 api-types: ## Regenerate packages/api-types from the backend OpenAPI schema
 	cd $(BACKEND) && uv run python -m app.scripts.dumpOpenapi ../packages/api-types/openapi.json
-	yarn workspace @bom-factory/api-types generate
+	yarn workspace @bom-automation/api-types generate
 
 api-types-check: api-types ## Fail if the generated types are stale (CI gate)
 	@git diff --exit-code -- packages/api-types \
@@ -126,10 +126,15 @@ scale: ## Measure a 50,000-component SBOM and per-lane p95 (S21)
 catalogue-audit: ## Worksheet of every clause reference, with its provenance (S20)
 	@cd backend && uv run python -m app.services.catalogue.audit
 
+self-boms: ## Regenerate every self-published BOM into dist/ (§11)
+	@$(MAKE) self-bom
+	@cd $(BACKEND) && uv run python -m app.services.self.aibom
+	@cd $(BACKEND) && uv run python -m app.services.self.cbom
+
 self-bom: ## Emit a CycloneDX SBOM for this repository into dist/ (rec. 7.2.2)
 	@mkdir -p dist
 	yarn --silent self-bom
-	@node -e "const b=require('./dist/bom-factory.cdx.json');console.log('self-bom: '+b.bomFormat+' '+b.specVersion+', '+(b.components||[]).length+' components -> dist/bom-factory.cdx.json')"
+	@node -e "const b=require('./dist/bom-automation.cdx.json');console.log('self-bom: '+b.bomFormat+' '+b.specVersion+', '+(b.components||[]).length+' components -> dist/bom-automation.cdx.json')"
 
 # --- containerised stack (the `full` compose profile) ------------------------
 # `make dev` stays the recommended dev loop; these are for running the whole

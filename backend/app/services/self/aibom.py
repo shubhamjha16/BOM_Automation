@@ -60,7 +60,7 @@ MODELS: tuple[dict[str, Any], ...] = (
 
 #: 9.3(15). Authored by us, because only the deploying organisation can state it.
 INTENDED_USAGE = (
-    "BOM Factory assesses Bill of Materials submissions against the CERT-In "
+    "BOM Automation assesses Bill of Materials submissions against the CERT-In "
     "Technical Guidelines v2.0 and produces a clause-referenced conformance "
     "assessment. Language models are used for three things only: classifying "
     "intake, drafting narrative prose about verdicts the deterministic engine "
@@ -96,8 +96,8 @@ def build() -> dict[str, Any]:
         "version": 1,
         "metadata": {
             "timestamp": datetime.now(UTC).isoformat(),
-            "authors": [{"name": "BOM Factory"}],
-            "component": {"type": "application", "name": "bom-factory", "version": "0.1.0"},
+            "authors": [{"name": "BOM Automation"}],
+            "component": {"type": "application", "name": "bom-automation", "version": "0.1.0"},
             "properties": [
                 {"name": "certin:9.3(15):intended_usage", "value": INTENDED_USAGE},
                 {"name": "certin:9.3(16):out_of_scope_usage", "value": OUT_OF_SCOPE_USAGE},
@@ -125,3 +125,25 @@ def build() -> dict[str, Any]:
             for model in MODELS
         ],
     }
+
+def main() -> int:
+    """Write the document to ``dist/``. **This exists because it did not.**
+
+    Both self-BOMs were produced by hand once and committed, so when the product
+    was renamed they silently kept the old name while every other published
+    artifact moved. An artifact §11 promises to publish per release needs a
+    command that regenerates it, or it drifts exactly like this.
+    """
+    import json
+    from pathlib import Path
+
+    document = build()
+    destination = Path(__file__).resolve().parents[4] / "dist" / "bom-automation.aibom.cdx.json"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(document, indent=2) + "\n")
+    print(f"  {destination.name}: {len(document.get('components') or [])} components")
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover - console entry point
+    raise SystemExit(main())

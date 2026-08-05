@@ -252,7 +252,7 @@ def _statements():
 def _document():
     return to_csaf(
         _statements(),
-        document_title="BOM Factory VEX",
+        document_title="BOM Automation VEX",
         publisher_name="Firm A",
         publisher_namespace="https://firm-a.example",
         tracking_id="VEX-2026-0001",

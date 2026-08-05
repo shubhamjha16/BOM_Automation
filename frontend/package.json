@@ -1,5 +1,5 @@
 {
-  "name": "@bom-factory/frontend",
+  "name": "@bom-automation/frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -17,7 +17,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.0",
     "zustand": "^5.0.2",
-    "@bom-factory/api-types": "0.1.0"
+    "@bom-automation/api-types": "0.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

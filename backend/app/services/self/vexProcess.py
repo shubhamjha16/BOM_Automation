@@ -18,7 +18,7 @@ from pathlib import Path
 from app.services.vex.authoring import VexStatement, author
 from app.services.vex.csaf import to_csaf, validate
 
-PUBLISHER = "BOM Factory"
+PUBLISHER = "BOM Automation"
 NAMESPACE = "https://github.com/shubhamjha16/BOM_Automation"
 
 
@@ -49,9 +49,15 @@ def statements() -> list[VexStatement]:
 def build_advisory() -> dict:
     return to_csaf(
         statements(),
-        document_title="BOM Factory — VEX statements for declared dependencies",
+        document_title="BOM Automation — VEX statements for declared dependencies",
         publisher_name=PUBLISHER,
         publisher_namespace=NAMESPACE,
+        # **Deliberately not renamed with the product.** A CSAF tracking id is the
+        # immutable identifier of a published advisory: consumers key off it, and
+        # minting a new one for the same CVE produces a second, unrelated-looking
+        # advisory with no declared relationship to the first. The publisher *name*
+        # above is a display field and does change. This is the discipline we ask
+        # of suppliers in `SECURITY.md`, so we keep it ourselves.
         tracking_id="BOMFACTORY-VEX-0001",
     )
 
@@ -68,6 +74,8 @@ def publish(destination: Path | None = None) -> Path:
 
     target = destination or Path(__file__).resolve().parents[4] / "dist" / "vex"
     target.mkdir(parents=True, exist_ok=True)
+    # Matches the tracking id, and stays put for the same reason: this path is a
+    # published URL, and moving it breaks anyone who linked the advisory.
     path = target / "bom-factory-vex-0001.csaf.json"
     path.write_text(json.dumps(document, indent=2) + "\n")
     return path

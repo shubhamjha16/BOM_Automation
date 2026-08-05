@@ -17,7 +17,7 @@ jobs:
           node-version: 22
           cache: yarn
       - run: yarn install --frozen-lockfile
-      - run: yarn workspace @bom-factory/frontend lint
-      - run: yarn workspace @bom-factory/frontend typecheck
-      - run: yarn workspace @bom-factory/frontend test --run
-      - run: yarn workspace @bom-factory/frontend build
+      - run: yarn workspace @bom-automation/frontend lint
+      - run: yarn workspace @bom-automation/frontend typecheck
+      - run: yarn workspace @bom-automation/frontend test --run
+      - run: yarn workspace @bom-automation/frontend build

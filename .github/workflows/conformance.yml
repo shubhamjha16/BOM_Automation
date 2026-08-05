@@ -38,7 +38,7 @@ jobs:
           ANTHROPIC_API_KEY: ci-placeholder
           JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
         run: |
-          uv run python -m app.services.self.selfScore ../dist/bom-factory.cdx.json \
+          uv run python -m app.services.self.selfScore ../dist/bom-automation.cdx.json \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Assess our own SSDLC maturity, gaps included
@@ -53,5 +53,5 @@ jobs:
         with:
           name: conformance
           path: |
-            dist/bom-factory.cdx.json
+            dist/bom-automation.cdx.json
             dist/maturity-scorecard.json

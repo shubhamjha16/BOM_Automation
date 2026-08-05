@@ -292,4 +292,4 @@ def isolation_report() -> dict[str, object]:
 
 
 def temporary_workspace() -> tempfile.TemporaryDirectory:
-    return tempfile.TemporaryDirectory(prefix="bom-factory-generation-")
+    return tempfile.TemporaryDirectory(prefix="bom-automation-generation-")

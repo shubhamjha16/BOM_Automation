@@ -36,7 +36,7 @@ engine, never by a language model.
 def create_app() -> FastAPI:
     configure_logging()
     app = FastAPI(
-        title="BOM Factory",
+        title="BOM Automation",
         version="0.1.0",
         description=DESCRIPTION,
         openapi_tags=[

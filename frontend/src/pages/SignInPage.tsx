@@ -27,7 +27,7 @@ export function SignInPage() {
 
   return (
     <div className="auth">
-      <h1>BOM Factory</h1>
+      <h1>BOM Automation</h1>
       <p className="auth__lead">
         Conformance assessment against CERT-In Technical Guidelines v2.0.
       </p>

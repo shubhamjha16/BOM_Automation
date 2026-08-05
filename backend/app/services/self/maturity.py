@@ -90,7 +90,7 @@ def main() -> int:
     scorecard = build()
     report = scorecard.as_report()
 
-    print("BOM Factory — SSDLC maturity, self-assessed\n")
+    print("BOM Automation — SSDLC maturity, self-assessed\n")
     print(f"  position: {report['position']}")
     print(f"  {report['evidenced']} evidenced, {report['attested']} attested\n")
 

@@ -1,4 +1,4 @@
-# @bom-factory/api-types
+# @bom-automation/api-types
 
 Generated from the backend's OpenAPI schema, consumed by
 `frontend/src/global/apiClient.ts`.

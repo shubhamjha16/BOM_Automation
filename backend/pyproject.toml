@@ -1,5 +1,5 @@
 [project]
-name = "bom-factory-backend"
+name = "bom-automation-backend"
 version = "0.1.0"
 description = "CERT-In BOM conformance engine — FastAPI + LangGraph"
 requires-python = ">=3.12,<3.13"

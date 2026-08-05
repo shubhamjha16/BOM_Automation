@@ -46,7 +46,7 @@ export const useSessionStore = create<SessionState>()(
           userId: null,
         }),
     }),
-    { name: 'bom-factory-session' },
+    { name: 'bom-automation-session' },
   ),
 );
 

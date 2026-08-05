@@ -3,21 +3,21 @@
   "specVersion": "1.6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-04T18:32:09.673665+00:00",
+    "timestamp": "2026-08-05T05:13:22.495590+00:00",
     "authors": [
       {
-        "name": "BOM Factory"
+        "name": "BOM Automation"
       }
     ],
     "component": {
       "type": "application",
-      "name": "bom-factory",
+      "name": "bom-automation",
       "version": "0.1.0"
     },
     "properties": [
       {
         "name": "certin:9.3(15):intended_usage",
-        "value": "BOM Factory assesses Bill of Materials submissions against the CERT-In Technical Guidelines v2.0 and produces a clause-referenced conformance assessment. Language models are used for three things only: classifying intake, drafting narrative prose about verdicts the deterministic engine already computed, and assembling evidence for a VEX justification that an analyst then determines. Every verdict, score and clause reference is produced by deterministic code and is enforced as such by a blocking gate."
+        "value": "BOM Automation assesses Bill of Materials submissions against the CERT-In Technical Guidelines v2.0 and produces a clause-referenced conformance assessment. Language models are used for three things only: classifying intake, drafting narrative prose about verdicts the deterministic engine already computed, and assembling evidence for a VEX justification that an analyst then determines. Every verdict, score and clause reference is produced by deterministic code and is enforced as such by a blocking gate."
       },
       {
         "name": "certin:9.3(16):out_of_scope_usage",

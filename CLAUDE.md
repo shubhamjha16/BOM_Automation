@@ -1,11 +1,11 @@
-# BOM Factory — working agreement
+# BOM Automation — working agreement
 
 CERT-In conformance and attestation platform. One repository, two apps: `backend/`
 (FastAPI, mirrors `ai-chat-be`) and `frontend/` (Vite + React 19, mirrors
 `etl-student-frontend`). Source of truth for every clause reference is
 *CERT-In Technical Guidelines on SBOM, QBOM & CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 
-The full specification and the 21-sprint plan live in `BOM_FACTORY_SPRINTS.md`.
+The full specification and the 21-sprint plan live in `BOM_AUTOMATION_SPRINTS.md`.
 Read §11 before changing anything in `services/score/`, `services/catalogue/` or
 `validators/` — those rules are the product, not preferences.
 

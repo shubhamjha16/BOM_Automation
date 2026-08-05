@@ -67,7 +67,7 @@
       "label": "Generate an SBOM for each product",
       "verdict": "met",
       "basis": "evidenced",
-      "evidence_ref": ".github/workflows/conformance.yml",
+      "evidence_ref": ".github/workflows/backend.yml",
       "question": null,
       "detail": "SBOM generation is present in the repository"
     },
@@ -97,7 +97,7 @@
       "label": "Integrate SBOM generation into each SSDLC phase",
       "verdict": "met",
       "basis": "evidenced",
-      "evidence_ref": ".github/workflows/conformance.yml",
+      "evidence_ref": ".github/workflows/backend.yml",
       "question": null,
       "detail": "SBOM generation runs in CI, not only locally"
     },

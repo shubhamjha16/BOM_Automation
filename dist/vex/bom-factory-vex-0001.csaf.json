@@ -2,22 +2,22 @@
   "document": {
     "category": "csaf_vex",
     "csaf_version": "2.0",
-    "title": "BOM Factory \u2014 VEX statements for declared dependencies",
+    "title": "BOM Automation \u2014 VEX statements for declared dependencies",
     "publisher": {
       "category": "vendor",
-      "name": "BOM Factory",
+      "name": "BOM Automation",
       "namespace": "https://github.com/shubhamjha16/BOM_Automation"
     },
     "tracking": {
       "id": "BOMFACTORY-VEX-0001",
       "status": "final",
       "version": "1",
-      "initial_release_date": "2026-08-05T02:43:08.232321+00:00",
-      "current_release_date": "2026-08-05T02:43:08.232369+00:00",
+      "initial_release_date": "2026-08-05T05:15:47.257796+00:00",
+      "current_release_date": "2026-08-05T05:15:47.257842+00:00",
       "revision_history": [
         {
           "number": "1",
-          "date": "2026-08-05T02:43:08.232377+00:00",
+          "date": "2026-08-05T05:15:47.257853+00:00",
           "summary": "Initial release"
         }
       ]

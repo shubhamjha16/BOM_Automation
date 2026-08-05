@@ -7,7 +7,7 @@
  * edit the backend schema and regenerate.
  */
 
-import type { components, paths } from '@bom-factory/api-types';
+import type { components, paths } from '@bom-automation/api-types';
 
 export type { components, paths };
 
