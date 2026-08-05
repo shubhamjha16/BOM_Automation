@@ -15,6 +15,7 @@ controller:
 from __future__ import annotations
 
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -47,7 +48,7 @@ async def find_or_create_job(
     submission_id: uuid.UUID,
     engagement_id: uuid.UUID,
     document_checksums: list[str],
-    enabled_lanes: list[str],
+    enabled_lanes: Sequence[str],
     user_id: uuid.UUID | None = None,
     window_seconds: int = DEFAULT_WINDOW_SECONDS,
 ) -> tuple[Job, bool]:
@@ -89,7 +90,7 @@ async def enqueue_assessment(
     submission_id: uuid.UUID,
     engagement_id: uuid.UUID,
     document_checksums: list[str],
-    enabled_lanes: list[str],
+    enabled_lanes: Sequence[str],
     user_id: uuid.UUID | None = None,
     inline: bool | None = None,
 ) -> EnqueueResult:

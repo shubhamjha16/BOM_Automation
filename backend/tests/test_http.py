@@ -438,7 +438,11 @@ async def test_lane_results_and_field_verdicts_are_readable_after_assessment(wir
     rollup = {lane["lane"]: lane for lane in lanes.json()["lanes"]}
     assert set(rollup) == {"sbom", "cbom", "qbom", "aibom", "hbom"}
     assert rollup["sbom"]["score"] is not None
-    assert rollup["cbom"]["is_finding"] is True
+    # The fixture engagement enables sbom and aibom only, so aibom is the lane
+    # that was expected and not supplied — a finding — while cbom was never
+    # asked for and is excluded from the score.
+    assert rollup["aibom"]["is_finding"] is True
+    assert rollup["cbom"]["verdict"] == "lane_not_applicable"
 
     fields = await http.get(
         f"/api/v1/submissions/{submission_id}/lanes/sbom/fields", headers=_headers(org_a)
@@ -526,3 +530,41 @@ async def test_a_submission_with_nothing_to_correlate_reports_no_findings(wired)
     ).json()
     assert body["findings"] == []
     assert body["rules"], "the catalogue should still say what was checked"
+
+
+async def test_the_engagements_enabled_lanes_reach_the_fan_out(wired):
+    """Regression: the engagement's `enabled_lanes` column was set at creation
+    and never read, so every lane ran on every submission and
+    `lane_not_applicable` was unreachable through the real path — the engine
+    supported the distinction and the HTTP flow could not produce it.
+
+    The demo engagement enables sbom and aibom only.
+    """
+    http, org_a, _, engagement = wired
+    created = await http.post(
+        "/api/v1/submissions",
+        json={"engagement_id": str(engagement.id), "documents": [_document("sbom")]},
+        headers=_headers(org_a),
+    )
+    submission_id = created.json()["id"]
+    await http.post(f"/api/v1/submissions/{submission_id}/commit", headers=_headers(org_a))
+
+    lanes = {
+        row["lane"]: row
+        for row in (
+            await http.get(
+                f"/api/v1/submissions/{submission_id}/lanes", headers=_headers(org_a)
+            )
+        ).json()["lanes"]
+    }
+
+    # Enabled and supplied.
+    assert lanes["sbom"]["score"] is not None
+    # Enabled and not supplied: a finding, and it counts.
+    assert lanes["aibom"]["verdict"] == "lane_absent"
+    assert lanes["aibom"]["counts_toward_overall"] is True
+    # Not enabled: excluded from the overall score entirely.
+    for lane in ("cbom", "qbom", "hbom"):
+        assert lanes[lane]["verdict"] == "lane_not_applicable", lane
+        assert lanes[lane]["counts_toward_overall"] is False
+        assert lanes[lane]["is_finding"] is False

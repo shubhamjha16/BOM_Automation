@@ -185,7 +185,9 @@ async def test_the_task_assesses_and_settles_the_job(db, fixture_org):
 
     assert result["status"] == "succeeded"
     assert result["overall_score"] is not None
-    assert result["lanes"]["cbom"] == LaneVerdict.LANE_ABSENT
+    # The fixture engagement enables sbom and aibom, so cbom was never asked
+    # for: not_applicable rather than absent, and excluded from the score.
+    assert result["lanes"]["cbom"] == LaneVerdict.LANE_NOT_APPLICABLE
 
     async with db() as session:
         settled = await JobRepository(session, org_id).get(job_id)

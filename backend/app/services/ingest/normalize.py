@@ -30,6 +30,12 @@ def ingest_document(
     # An asset register is not a BOM format and has no self-identifying field —
     # it is a spreadsheet. The caller declares it, which is why detection is
     # explicit and caller-overridable in the first place.
+    # A text document stored in a JSON payload column arrives wrapped. That is a
+    # storage detail of the interim `bom_documents.payload` column, and it
+    # disappears when documents move to object storage.
+    if isinstance(payload, dict) and set(payload) == {"__text__"}:
+        payload = payload["__text__"]
+
     if lane == "hbom" or (declared_format or "").lower().startswith("assetregister"):
         result = assetRegister.parse(payload, lane=lane)
         logger.info(

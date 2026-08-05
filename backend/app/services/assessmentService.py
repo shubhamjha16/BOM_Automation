@@ -8,10 +8,11 @@ does not change when they do.
 from __future__ import annotations
 
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.configs.envConfig import Lane
+from app.configs.envConfig import ALL_LANES, Lane
 from app.configs.jobTypes import JobStatus, LaneVerdict
 from app.services.graph.builder import compile_assessment_graph
 from app.services.graph.state import (
@@ -93,18 +94,22 @@ async def run_assessment(
     org_id: str,
     submission_id: str,
     documents: list[SubmissionDocument],
-    requested_lanes: list[Lane] | None = None,
+    requested_lanes: Sequence[str] | None = None,
     job_id: str | None = None,
 ) -> AssessmentSummary:
     """Assess one submission across every enabled lane."""
     job_id = job_id or str(uuid.uuid4())
+    # Narrowed here rather than at each call site: lane names arrive as plain
+    # strings from the database and the API, and `resolve_lanes` is the single
+    # place that decides which are real.
+    lanes: list[Lane] = [lane for lane in ALL_LANES if lane in set(requested_lanes or [])]
     initial = GraphState(
         job_id=job_id,
         org_id=org_id,
         submission_id=submission_id,
         status=JobStatus.RUNNING,
         documents=documents,
-        requested_lanes=list(requested_lanes or []),
+        requested_lanes=lanes,
         lane_results=[],
         node_runs=[],
         errors=[],

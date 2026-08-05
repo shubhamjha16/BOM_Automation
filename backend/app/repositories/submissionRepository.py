@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.models.bomDocument import BomDocument
+from app.models.engagement import Engagement
 from app.models.enums import BomFormat, DocumentStatus, SubmissionStatus
 from app.models.submission import Submission
 from app.repositories.base import TenantScopedRepository
@@ -100,6 +101,23 @@ class SubmissionRepository(TenantScopedRepository[Submission]):
             .order_by(BomDocument.created_at)
         )
         return list(result.scalars().all())
+
+    async def enabled_lanes_for(self, submission_id: uuid.UUID) -> list[str] | None:
+        """The engagement's enabled lanes, or None when it names none.
+
+        This is what makes `lane_not_applicable` reachable. Without it the
+        engagement's own column is decoration: every lane runs on every
+        submission and a client with no quantum hardware sees a zero-scoring
+        empty QBOM lane, which §11 is explicit is the wrong answer.
+        """
+        result = await self.session.execute(
+            select(Engagement.enabled_lanes)
+            .join(Submission, Submission.engagement_id == Engagement.id)
+            .where(Submission.id == submission_id)
+            .where(Submission.org_id == self.org_id)
+        )
+        lanes = result.scalar_one_or_none()
+        return list(lanes) if lanes else None
 
     async def find_by_checksum(self, checksum: str) -> BomDocument | None:
         """Backed by `uq_bom_documents_org_id_checksum`.

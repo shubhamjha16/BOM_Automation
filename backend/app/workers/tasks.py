@@ -115,10 +115,14 @@ async def run_assessment_task(
             if document.payload is not None
         ]
 
+        # The engagement's lanes reach the fan-out here. Without this they only
+        # ever reached the idempotency key, and every lane ran on every
+        # submission — making lane_not_applicable unreachable in practice.
         summary = await run_assessment(
             org_id=org_id,
             submission_id=submission_id,
             documents=documents,
+            requested_lanes=await submissions.enabled_lanes_for(submission.id),
             job_id=job_id,
         )
         # Pin this assessment to the catalogue version it was scored under.

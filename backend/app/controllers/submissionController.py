@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -104,7 +105,7 @@ async def commit_submission(
     jobs: JobRepository,
     *,
     submission_id: uuid.UUID,
-    enabled_lanes: list[str] | None = None,
+    enabled_lanes: Sequence[str] | None = None,
     user_id: uuid.UUID | None = None,
     inline: bool = False,
 ) -> CommitResult | None:
@@ -121,7 +122,10 @@ async def commit_submission(
     if submission is None:
         return None
 
-    lanes = enabled_lanes or list(resolve_lanes())
+    # The engagement narrows the deployment default; it never widens it. Reading
+    # it here is what makes lane_not_applicable reachable at all.
+    engagement_lanes = enabled_lanes or await submissions.enabled_lanes_for(submission_id)
+    lanes = list(resolve_lanes(engagement_lanes))
     result = await enqueue_assessment(
         jobs,
         submission_id=submission.id,
