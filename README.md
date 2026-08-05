@@ -1,451 +1,309 @@
 # BOM Factory
 
-CERT-In conformance and attestation platform. Ingests a supplier's Bill of
-Materials submission, scores **all five BOM types in parallel** against the
-CERT-In minimum elements, correlates them against each other, and issues a
-clause-referenced conformance assessment.
+**CERT-In conformance and attestation platform.** It receives a supplier's Bill of
+Materials, scores all five BOM types against the CERT-In minimum elements, correlates them
+against each other, and issues an assessment with a clause reference behind every figure.
 
-Source of truth for every clause reference: *CERT-In Technical Guidelines on
-SBOM, QBOM & CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
+Source of truth for every clause reference: *CERT-In Technical Guidelines on SBOM, QBOM &
+CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 
-## Documentation
-
-| Document | Contents |
+| | |
 |---|---|
-| [Product specification](docs/PRODUCT_SPECIFICATION.md) | What the product does, the verdict model, scoring, roles, workflows, quotas, limitations |
-| [Architecture](docs/ARCHITECTURE.md) | Context, containers, the assessment graph, tenancy, observability — with diagrams |
-| [Data model](docs/DATA_MODEL.md) | 28 tables, entity-relationship diagrams, indexes and the rule each one carries |
-| [Compliance matrix](docs/COMPLIANCE_MATRIX.md) | Every implemented clause, where it lives, and its provenance |
-
-## What this is, and is not
-
-**A conformance engine that is never an LLM.** Field-level scoring is
-deterministic table lookup and coverage arithmetic. The model writes commentary
-about verdicts; it never produces a verdict, a percentage or a clause reference.
-
-**Not a sixth SBOM generator.** Syft, Trivy and cdxgen are mature and free. The
-scarce work is scoring what suppliers actually send you against the 21 fields,
-clause by clause, and saying plainly which gaps are the supplier's and which are
-yours.
-
-## Quick start
+| **Minimum elements encoded** | 82 across five lanes — SBOM 21 · CBOM 20 · AIBOM 16 · HBOM 15 · QBOM 10 |
+| **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
+| **Scale** | 50,000 components in **4.3 s**, 209 MB peak |
+| **Clause provenance** | 26 of 101 references confirmed — the rest labelled provisional |
+| **Our own conformance** | **38.28%, fail** — published anyway |
 
 ```bash
-make install                     # uv sync + yarn install
-cp backend/.env.example backend/.env.local     # fill in the three required keys
-make dev                         # postgres + redis + API + Vite
+make demo     # the whole stack on SQLite. No Docker, no Postgres, no Redis.
 ```
 
-`make dev` needs Docker for Postgres and Redis. Without it, `make dev-api` and
-`make dev-web` run each app on its own — S1 needs no database.
+---
 
-| Command | What it does |
-|---|---|
-| `make test` | pytest + vitest |
-| `make lint` | ruff + eslint |
-| `make self-bom` | CycloneDX SBOM of this repo into `dist/` |
-| `make help` | every target |
+## The problem this is built around
 
-## Current state — S1–S21 complete
+A supplier sends a CycloneDX file. Somebody has to decide whether it meets the guideline.
+By hand, across four hundred components and twenty-one minimum elements, that takes days,
+gives different answers depending on who does it, and cannot be defended in an audit six
+months later when nobody remembers why a field was accepted.
 
-The parallel graph, in the target structure, with all five lanes scoring:
+The failure this whole design is organised against is narrower than "being wrong". It is
+being **wrong in the client's favour** — a green tick on a field nobody checked, a score of
+92% over the eleven components whose licences happened to be readable, a `not_determinable`
+field counted as compliant because it was easier. Each of those produces a client who fails
+a real audit while holding our assessment.
 
+### Three verdicts, not two
+
+Most conformance tools have two states, and that is the root of it.
+
+```mermaid
+flowchart LR
+    E{evaluate} -->|coverage = 1.0| P[present]
+    E -->|coverage below 1.0| A[absent]
+    E -->|the supplier could<br/>not have supplied it| N[not_determinable]
+
+    P --> S[counts toward<br/>the supplier score]
+    A --> S
+    N --> X["EXCLUDED from the score<br/>reported in its own section<br/>with the consumer action"]
+
+    style N fill:#fff8e1,stroke:#f9a825
+    style X fill:#fff8e1,stroke:#f9a825
 ```
-intake → detect → fanout ─┬→ sbomLane  ─┐
-                          ├→ cbomLane  ─┤
-                          ├→ qbomLane  ─┼→ join → enrich → correlate → conformanceGate
-                          ├→ aibomLane ─┤
-                          └→ hbomLane  ─┘
+
+Criticality (s.4.2(12)) is relative to the *consuming deployment*. Usage Restrictions
+(s.4.2(13)) is a legal determination. Intended and Out-of-Scope Usage (s.9.3(15)–(16)) are
+governance declarations. **A supplier could not have supplied any of them.** Scoring them
+as defects produces a report a supplier can discredit; scoring them as compliant puts a
+green tick on a field nobody checked. Seven of the eighty-two elements are excluded from
+the supplier score entirely, and each names the action the consuming organisation must take.
+
+---
+
+## What it does
+
+```mermaid
+graph LR
+    START(( )) --> INTAKE[intake<br/>conserve the entry count]
+    INTAKE --> DETECT[detect]
+    DETECT --> FANOUT{fanout}
+
+    FANOUT --> SBOM[sbomLane<br/>s.4.2]
+    FANOUT --> CBOM[cbomLane<br/>s.8.4]
+    FANOUT --> QBOM[qbomLane<br/>s.8.5]
+    FANOUT --> AIBOM[aibomLane<br/>s.9.3]
+    FANOUT --> HBOM[hbomLane<br/>s.10.2]
+
+    SBOM --> JOIN[join]
+    CBOM --> JOIN
+    QBOM --> JOIN
+    AIBOM --> JOIN
+    HBOM --> JOIN
+
+    JOIN --> ENRICH[enrich<br/>NVD · KEV · EOL]
+    ENRICH --> CORR[correlate<br/>cross-BOM findings]
+    CORR --> GATE[conformanceGate<br/>every citation resolves,<br/>or nothing renders]
+    GATE --> END(( ))
+
+    style GATE fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style FANOUT fill:#e3f2fd,stroke:#1565c0
 ```
 
-- All five catalogues are encoded: **SBOM** s.4.2 (21 elements), **CBOM** s.8.4
-  (20), **QBOM** s.8.5 (10), **AIBOM** s.9.3 (16), **HBOM** s.10.2 (15) — 82 in
-  total. None was ever approximated: each lane stayed empty, and therefore
-  reported `lane_absent`, until its table was actually encoded, because a
-  guessed table produces a score against invented clauses.
-- All five lanes run on every assessment, concurrently, with independent failure
-  and timeout. `GET /api/v1/elements?lane=sbom` returns the encoded catalogue so
-  it can be checked against the published PDF rather than trusted.
-- This repo generates and scores **its own SBOM**: currently **38.28%, fail**,
-  855 components — see below.
+All five lanes run on every assessment, with independent failure and timeout. **A lane that
+is absent, disabled or times out is a reported finding, never a crashed assessment.**
 
-**S2 adds Postgres and Alembic, and there is no `jobs.json`.** A job is a row:
-`orgs`, `users`, `clients`, `engagements`, `jobs`, `node_runs`, with the first
-migration hand-written and hand-reviewed per §5.
+| Lane | Clause | Elements | Accepts |
+|---|---|---:|---|
+| SBOM | s.4.2 | 21 | CycloneDX JSON/XML, SPDX JSON, SPDX tag-value |
+| CBOM | s.8.4 | 20 | CycloneDX 1.6 cryptographic assets — algorithms, keys, protocols, certificates |
+| QBOM | s.8.5 | 10 | CycloneDX 1.6 |
+| AIBOM | s.9.3 | 16 | CycloneDX 1.6 model cards |
+| HBOM | s.10.2 | 15 | CSV/XLSX asset register **or** CycloneDX `type: device` |
 
-- **Terminal finality** is a conditional `UPDATE ... WHERE terminal_at IS NULL`,
-  not a read-then-write. A read-then-write races: a lane finishing as a timeout
-  handler fires gives two writers who both see `None`, and the loser overwrites a
-  terminal verdict. It matters most for `blocked_conformance` — a late write-back
-  flipping it to `succeeded` would make an assessment the gate refused to issue
-  become issuable.
-- **Tenancy is enforced at the repository layer.** A repository cannot be
-  constructed without an org scope and every query it builds carries it. Reads
-  for another tenant return nothing rather than an error, so existence does not
-  leak.
-- **A crash leaves a reconcilable row**, because the row is written before the
-  work starts. Orphans are marked `failed`, never silently requeued — whether a
-  re-run is safe depends on what the job already wrote.
+**None of these tables was ever approximated.** Each lane stayed empty — and therefore
+reported `lane_absent` — until its table was actually encoded, because a guessed table
+produces a confident score against invented clauses.
 
-**S3 adds the layered HTTP surface and generated API types.**
-`routers/` → `controllers/` → `services/` → `repositories/`, enforced by tests:
-route handlers stay under 15 lines and an AST check fails the build if a router
-or controller builds a query. Repositories own SQL, so an endpoint cannot
-accidentally add one that forgets its org scope.
-
-- **A submission with zero documents returns 422**, naming rec. 7.1.2 — never an
-  assessment. Every violation is reported at once rather than one per round trip.
-- **An oversized body is refused at the edge.** Pure-ASGI middleware checks
-  `Content-Length` before touching the body and also counts bytes as they stream,
-  because `Content-Length` is a claim the client can omit or lie about. A 300 MB
-  document returns 413 having been read zero times.
-- **`packages/api-types` is generated from the OpenAPI schema** and consumed by
-  the console. `make api-types-check` regenerates and diffs: a backend schema
-  change without regenerated types exits non-zero in CI.
-
-**S4 puts assessments on a real queue.** arq + Redis, a separate worker process,
-no `threading.Thread` anywhere. `POST /submissions/{id}/commit` returns a job,
-not an assessment — waiting would tie a 50,000-component scoring run to an HTTP
-timeout.
-
-- **Idempotency**: SHA-256 over org id, sorted document checksums and sorted
-  enabled lanes. Order-independent, tenant-separated (two clients submitting the
-  same public SBOM must not collide), and lane-set-aware. The same documents
-  twice returns one `job_id` and executes once.
-- **The whole fan-out is one task**, not five. Five tasks would need a barrier to
-  know when to join, and a barrier over a queue is a distributed lock — the graph
-  already gives an in-process join. The queue provides concurrency across
-  *submissions*, which is where it is actually needed.
-- Redelivery is safe because terminal finality (S2) makes a settled job immutable.
-
-**S5 adds authentication and closes tenancy.** JWT with typed tokens, Argon2id
-passwords, TOTP MFA on by default, and five roles.
-
-- **MFA is a step, not a flag.** A correct password yields only a five-minute
-  `mfa_pending` token that can read nothing; the access token is minted after the
-  code verifies. Token *kind* is checked on every request, so a refresh token
-  cannot be presented as an access token.
-- **Sign-in failures are indistinguishable.** An unknown email is verified
-  against a dummy hash so response time does not reveal which addresses exist.
-- **Tenancy is enforced in the repository layer**, and a test parses the AST to
-  fail the build if any repository does not inherit `TenantScopedRepository`.
-  Cross-tenant reads return **404, byte-identical to a nonexistent id** — proven
-  across all four access paths: read, list, search and download.
-- Route guards in the console hide what a user cannot use. They are **not** access
-  control, and say so: the server enforces the same rules whether or not they ran.
-
-**S6 closes ingestion.** SPDX 2.2/2.3 in both JSON and tag-value, alongside
-CycloneDX 1.4–1.6, all behind one dispatcher.
-
-- **Format detection is explicit and caller-overridable, never guessed.** The
-  caller declares the format and the document must agree; a contradiction raises.
-  A mis-detected document yields zero components, and zero components scores as a
-  clean assessment of a supplier who submitted nothing wrong.
-- **parsed + rejected == received, asserted per document across every fixture.**
-  A silent drop shrinks the denominator and therefore *raises* every coverage
-  percentage — silent drops don't just lose information, they inflate the score.
-- **A truncated tag-value document fails naming the byte offset.** Tag-value has
-  no closing delimiter, so a file cut mid-transfer stays syntactically valid and
-  simply contains fewer packages than were sent.
-- `GET /submissions/{id}/rejected` lists every dropped entry with a reason, plus
-  the counts so a reader can check the arithmetic themselves.
-- `NOASSERTION`/`NONE` are treated as absences, because SPDX mandates them where
-  a producer has no data.
-
-**S7 makes the catalogue versioned data.** `guideline_versions` and
-`minimum_elements` are seeded from the encoded catalogue and checksummed; every
-lane result is pinned to the version it was scored under.
-
-- **Editing a version's elements in place is refused.** A catalogue change means
-  a new version row, because otherwise every assessment already issued under v2.0
-  silently starts reporting against different rules.
-- **Seeding is a deployment step** (`make seed-catalogue`), beside
-  `alembic upgrade head` — never on the assessment path.
-- `tests/vectors/` holds hand-scored BOMs matched **field by field**, not on the
-  total: two compensating errors give the right percentage from the wrong
-  verdicts.
-
-**S8 is the blocking gate, and it has no bypass flag.** Nothing renders unless
-every clause it would cite resolves in the pinned guideline version — field
-verdicts and correlation findings alike. A fabricated reference terminates the
-job as `blocked_conformance` naming the field.
-
-There is no parameter, environment variable or override that skips it. A flag
-would be used, eventually, by someone under deadline, and the assessment it let
-through would carry a citation that resolves to nothing. Two tests enforce this
-structurally: the gate takes `state` and nothing else, and imports no settings.
-
-The determinability rule is enforced at the gate too, not merely in the scorer:
-a `not_determinable` field carrying coverage, a consumer determination given a
-supplier verdict, or one rendered without its consumer action all block.
-
-**S9 correlates across lanes** — the class of finding no single-lane tool can
-produce, because each rule compares one document's declarations against
-another's.
+### Findings no single-lane tool can produce
 
 | Rule | Clause | Finding |
 |---|---|---|
-| `cryptoInSbom` | s.8.4.1.2 | OpenSSL in the SBOM, no cryptographic assets declared anywhere |
-| `modelDepsInSbom` | s.9.3(6) | AIBOM declares `torch`, the SBOM does not carry it — the SBOM is incomplete |
-| `algorithmQuantumExposure` | s.8.5.1 | CBOM declares RSA, no post-quantum migration entry |
-| `firmwareInHbom` | s.10.2.4 | pending the HBOM lane (S16) |
-| `vexCoverage` | rec. 7.1.6 | pending enrichment (S10) and VEX (S12) |
+| `cryptoInSbom` | s.8.4.1.2 | OpenSSL in the SBOM with no CBOM declaring assets |
+| `modelDepsInSbom` | s.9.3(6) | The AIBOM names `torch`; the SBOM does not — the SBOM is incomplete |
+| `algorithmQuantumExposure` | s.8.5.1 | RSA or ECC declared with no PQC migration path |
+| `firmwareInHbom` | s.10.2.4 | Declared firmware with no SBOM coverage |
 
-**A rule whose inputs are absent does not fire.** A submission carrying only an
-SBOM has not failed to declare its cryptography — it was never asked to, and
-firing anyway would manufacture findings about documents nobody submitted. Rules
-that could not run are reported as skipped, because "found nothing" and "did not
-run" are different answers.
+A single-lane submission produces **zero** correlation findings. A client with only an SBOM
+has not failed to declare their cryptography — they were never asked to. A rule whose lanes
+are absent is reported as `skipped` **with the lane that was missing**, because "did not
+run" and "found nothing" are different answers.
 
-**S10 enriches the four fields no generator emits.** NVD, CISA KEV and
-endoflife.date are wired and verified against the live services — Python 3.8 →
-EOL 2024-10-07, Django 3.2 → 2024-04-01, log4shell CVSS 10.0 and KEV-listed.
-
-- **Provenance is recorded on every enriched value.** 4.2(8)–4.2(11) are fields
-  the *supplier* was required to declare; when we fill one from NVD the
-  assessment says so, or a reader concludes the supplier declared it.
-- **A feed that is down is a reported gap**, never an empty vulnerability list —
-  an empty list is the claim "we checked and there is nothing".
-- The bounded agent handles only what the feeds miss: plan → retrieve →
-  sufficiency → re-query, capped at `AGENT_MAX_HOPS`, **batched per distinct
-  product**. An exhausted budget reports unresolved, never a plausible date.
-
-**S11 builds the CERT-In identifier.** Table 3's worked example converts exactly:
-
-```
-pkg:maven/org.apache.tomcat/tomcat-catalina@9.0.71
-  -> pkg:supplier/ApacheSoftwareFoundation/tomcat-catalina@9.0.71
-```
-
-`supplier` is not a registered PURL type, which is why no generator emits it and
-why 4.2(21) is absent on every real BOM until a registry exists. Resolution runs
-a deterministic ladder — curated (1.0) → declared supplier (0.8) → PURL namespace
-(0.5) → unresolved (0.0) — and **an unresolvable component reports absent rather
-than emitting a plausible-looking wrong identifier**.
-
-The sufficiency check is the point: `azer` (a real npm publisher) and
-`com.github.someone` are **refused**, because a username must not become a
-CERT-In supplier identifier. The agent proposes; a human confirms; confirmation
-permanently improves the curated asset.
-
-**S12 is VEX, and the agent never decides.** The four statuses of rec. 7.1.6 are
-exhaustive — `mitigated` is rejected naming all four — and `not_affected` cannot
-be saved without a written justification. The evidence agent drafts justifications
-and **has no code path that sets a status**; where evidence merely *mentions* a
-CVE rather than supporting a determination it proposes `under_investigation`,
-never `not_affected`. CSAF 2.0 export validates.
-
-**S13 is the review gate and self-conformance.** An assessor cannot approve their
-own assessment *however senior* — a partner who wrote it is still the same pair
-of eyes. Unapproved exports carry "AI-assisted draft — not reviewed". Log
-redaction keeps paths, hostnames and BOM payloads out of storage. Resubmission
-diffing is **per field**: two compensating changes give an identical total from
-different verdicts, and a total-only diff would report "no change" for exactly the
-resubmission worth looking at.
-
-Our own AIBOM declares both governance statements, including plainly that this
-product **does not issue legal or regulatory opinions**.
+---
 
 ## Run the demo
 
 ```bash
-make demo      # SQLite, no Docker, no Postgres, no Redis
+make demo      # SQLite, inline jobs, MFA off. No Docker, no Postgres, no Redis.
 ```
 
-Sign in as `assessor@firm-a.example` / `demo-password-1234`, run the assessment
-and drill from the five-lane strip into 4.2(5) and its clause reference. The
-seeded submission carries **real cdxgen output** — 76 components — so the score
-is a real score.
+Console at `http://localhost:5173`. Sign in as `assessor@firm-a.example` /
+`demo-password-1234` — a **manager**, so the review gate is exercisable.
 
-**S14 brings CBOM and QBOM to production.** Four lanes now score. Table 9's four
-asset types — algorithms, keys, protocols, certificates — are scored **per asset
-type**: a classical security level is meaningful for an algorithm and meaningless
-for a certificate, so out-of-scope assets leave the denominator rather than
-counting as absent. Reporting a certificate as missing its cipher mode would be a
-category error, not a gap.
+The seeded engagement enables four lanes and carries real documents: a **76-component
+cdxgen SBOM** of an actual project, an AIBOM with 2 models, a CBOM with 6 cryptographic
+assets, and a 4-row asset register for HBOM. QBOM is left disabled, so it reports
+`lane_not_applicable` rather than `lane_absent` — the distinction that decides whether a
+client is being told "you had nothing to declare" or "you failed to declare it".
 
-Document-level checks catch what coverage cannot: expired certificates, TLS 1.0,
-3DES and SHA-1 signatures. **A severe configuration finding caps the verdict
-below `pass`** — a document can be completely declared and still declare an
-expired certificate, and a lane reporting `pass` there would be arithmetically
-correct and wrong in the client's favour.
+Drill from the five-lane strip into s.4.2(5) and its clause reference. The score is a real
+score over a real document.
 
-**S15 is assessment depth and export breadth.** Nine sections built from what the
-engine computed, every figure passing `figureProvenanceValidator`. Gaps are
-ordered **by tier, not clause number** — clause order would put 4.2(1) Component
-Name above 4.2(21) CERT-In Identifier and invert the priority.
+---
 
-| Export | State |
+## Documentation
+
+| Document | Read it for |
 |---|---|
-| XLSX gap register | one tab per lane, clause column first, tier-ordered, formula injection rendered inert |
-| DOCX | full assessment, watermark banner when unapproved |
-| JSON | carries the provenance chain, not just the prose |
-| PDF | **unverified** — the stack fixes `python-docx → LibreOffice` and LibreOffice is not installed here; the endpoint returns 501 naming the formats that work |
+| [Product specification](docs/PRODUCT_SPECIFICATION.md) | The verdict model, scoring, roles, workflows, quotas, API surface, limitations |
+| [Architecture](docs/ARCHITECTURE.md) | Context, containers, the graph, tenancy, observability — 15 diagrams |
+| [Data model](docs/DATA_MODEL.md) | 28 tables, ER diagrams, every index and the rule it carries |
+| [Compliance matrix](docs/COMPLIANCE_MATRIX.md) | Every implemented clause, where it lives, and its provenance |
+| [SECURITY.md](SECURITY.md) | Disclosure route, the four VEX statuses, our dependency-adoption policy |
 
-**S16 completes the five lanes and adds the estate view.** HBOM scores Table 11
-from CSV/XLSX asset registers — ServiceNow, SAP or a spreadsheet — because its
-data is procurement data and there is no scanner to run. Every HBOM result
-carries a note saying so, since a reader must be able to tell a missing purchase
-record from a missing scan. `firmwareInHbom`, declared-but-pending since S9, is
-now live.
+---
 
-The estate rolls up worst-first, and **drift is per field**: three releases
-produce a trend where every movement traces to a clause, and a release that drops
-a previously-present field raises a drift finding — which is the only thing that
-makes s.2.3 re-assessment worth doing.
+## The rules that are not preferences
 
-**S17 derives SBOMs from repositories.** cdxgen is orchestrated rather than
-reimplemented; the CERT-In work happens on top. **Design and Runtime cannot be
-set from a repo** — neither is derivable from static source, and claiming
-otherwise misrepresents coverage.
+Read §11 of the specification before changing `services/score/`, `services/catalogue/` or
+`validators/`. These are enforced in code and asserted by tests, not stated as guidance.
 
-The real output is the diff: a repo-derived SBOM against the supplier's for the
-same release, listed component by component. Run against this repository, a
-supplier declaring a third of what it contains produced **54 undeclared
-components by name** — the finding a procurement team cannot obtain any other
-way.
+- **The LLM never produces a verdict, a figure or a clause reference.** Those come from the
+  scoring engine and the catalogue. A citation that does not resolve to the pinned guideline
+  version stops the render — and there is **no bypass flag**, because a flag would
+  eventually be used by someone under deadline.
+- **`not_determinable` is never `compliant`.** Excluded from the supplier score, reported
+  separately, paired with the consumer action.
+- **Partial coverage is not a pass.** Licences on 12 of 400 components has not met s.4.2(5).
+- **Nothing is dropped silently.** parsed + rejected equals the input entry count, asserted
+  per document, with every rejection carrying an actionable reason.
+- **An unrecognised format raises.** It never returns an empty component list, because an
+  empty list renders a green assessment of a supplier who submitted something unreadable.
+- **`lane_not_applicable` ≠ `lane_absent`.** The first is excluded from the overall score;
+  the second is a finding.
+- **A critical gap fails at any score.** A BOM with no versions can score respectably on
+  descriptive fields while being useless for every purpose the guideline exists to serve.
+- **Agents research; they never decide.** Every agentic output is a proposal carrying
+  evidence, confidence and hop count, queued for human confirmation.
+- **Tenancy is enforced at the repository layer, never the router.** A new endpoint is one
+  forgotten `WHERE` clause away from leaking, and the omission looks like nothing at review.
 
-**The sandbox refuses rather than degrades.** Dependency resolution executes code
-from the repository under assessment. Real isolation needs a container runtime,
-Docker is not installed here, and the sandbox therefore **refuses untrusted
-generation** rather than running it unprotected. The isolation actually enforced
-is reported in every generation, because "generated in a sandbox" means different
-things on different machines.
+---
 
-**S18 puts the conformance check on the pull request, in warn mode.** A gate that
-blocks builds on day one is disabled by the platform team on day two, and a
-disabled gate reports nothing — so blocking is a per-engagement decision taken
-after an org has seen its own scores. The check names the failing clause and the
-offending component inline, because a developer who has to open another tool to
-find out why their build is unhappy will not open it.
+## We ship what we ask for
 
-Outbound webhooks are HMAC-SHA256 over the **raw body with the timestamp inside
-the signed payload** — a signature over the body alone is replayable forever. A
-one-character tamper and a ten-minute-old replay are both rejected, and the
-verification snippet we publish is the one our own tests run.
-
-Per-lane SSE means a five-lane assessment reads as five tracks, so a hung CBOM
-lane is visible while SBOM is still counting.
-
-**S19 assesses SSDLC maturity from evidence, and the rule is: attested is never
-evidenced.** Eleven of the fourteen s.3.3 activities are observable from a
-repository; three are not — governance (5.1(d)), procurement clauses (3.3.1.4)
-and training (7.2.15) — and those are *asked*, recorded with the question, and
-never rendered as evidence. An evidenced verdict without an artifact cannot be
-constructed.
-
-**We assess ourselves and publish the gaps:**
-
-```
-BOM Factory — SSDLC maturity, self-assessed
-  position: below start
-  11 evidenced, 3 attested
-
-  what we do not do:
-    [attested ] 5.1(d)    Establish an accountable governance body
-    [evidenced] 3.3.3.2   no SECURITY.md or published disclosure route
-    [evidenced] 2.3       no releases recorded
-```
-
-A maturity tool that reports only its own strengths is not evidence of anything.
-
-**Not yet built:** the artifact pack, org RAG and security review (S20);
-observability, quotas and load (S21).
-
-**Exit proofs that need a human, and have not happened:** a cryptography
-practitioner signing the CBOM/QBOM checklist (S14), and a practitioner signing a
-full assessment plus a procurement reader stating the top three gaps unaided
-(S15). The checklist is generated so that review has something to run against. BOM payloads are held in a
-`bom_documents.payload` column until object storage lands in S13; that column is
-the wrong blast radius for an architecture disclosure and is marked interim in
-the model. Google OAuth has a controller path but no live token exchange.
-
-### Testing the database layer without a database
-
-The models are deliberately dialect-portable, so repository logic runs on SQLite
-via `aiosqlite` and the guards are exercised on every push. The migration is
-validated by rendering it through Alembic's **offline mode** and diffing the
-result against the model metadata — schema drift is caught in CI with no Postgres
-at all.
-
-What that cannot cover is stated at the foot of `tests/test_repositories.py`:
-real `text[]`/`JSONB`/native enums, the genuinely partial index, and concurrent
-writers actually racing the guard. `alembic upgrade head`, `downgrade -1` and the
-round-trip need a live Postgres and are the deferred exit proofs.
-
-### On parallelism, measured rather than assumed
-
-The five lanes genuinely overlap in wall-clock time, and `AssessmentSummary.
-parallelism_proven` asserts it from the `node_runs` intervals. But scoring is
-pure Python and holds the GIL, so **concurrency here buys isolation, not
-throughput** — 4,000 components + 3,000 models took 173 ms and 124 ms alone,
-263 ms back to back, 281 ms through the fan-out.
-
-That is the right trade and it is recorded in `graph/laneRunner.py` rather than
-left to be discovered under load at S21. What the fan-out is actually for is that
-a hung or crashed lane cannot take the others with it. Throughput arrives when
-lanes stop being pure CPU: S10's enrichment is network-bound and releases the
-GIL. If CPU-bound scoring later needs real parallelism, the change is one call
-site — the lane bodies are already pure and synchronous.
-
-### We ship what we ask for
-
-`make self-bom` runs cdxgen over this repository and `app.services.self.selfScore`
-scores the result with this repository's engine:
+This repository publishes its own SBOM, AIBOM, CBOM, VEX advisories, maturity scorecard and
+catalogue audit per release, scored by its own engine — whatever the numbers say.
 
 ```
 self-conformance: 38.28% (fail) over 855 components
   fails on critical gap(s): 4.2(4) Supplier Name, 4.2(21) CERT-In Unique Identifier
 ```
 
-That number is low and it is published anyway. 4.2(21) cannot pass before S11
-builds the supplier registry, and the enrichment fields cannot pass before S10.
-S13 turns this into a CI gate at `SELF_CONFORMANCE_MIN`; gating now would only
-prove that unimplemented sprints score badly.
+| Published to `dist/` | Contents |
+|---|---|
+| `bom-factory.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
+| `bom-factory.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
+| `maturity-scorecard.json` | Our s.3.3 position: **below start** |
+| `catalogue-audit.md` | All 101 clause references with provenance: **26 confirmed** |
+| `scale-report.md` | Measured performance, per lane |
+| `vex/` | A real CSAF advisory for a real CVE in one of our dependencies |
 
-## The rules that are not preferences
+A firm that assessed clients while hiding its own scorecard would deserve the obvious
+question. s.4.2(4) and s.4.2(21) fail because the supplier registry holds no curated entry
+for most of our dependencies — an honest gap, published rather than suppressed.
 
-Read §11 of the specification before changing `services/score/`,
-`services/catalogue/` or `validators/`.
+---
 
-- **`not_determinable` is never `compliant`.** Criticality (4.2(12)), Usage
-  Restrictions (4.2(13)) and AIBOM's Intended and Out-of-Scope Usage
-  (9.3(15)–(16)) cannot be established from a BOM artifact. They leave the
-  supplier score entirely and render in their own section with the consumer
-  action required.
-- **Partial coverage is not a pass.** Licences on 12 of 400 components scores 3%
-  on 4.2(5).
-- **Nothing is dropped silently.** parsed + rejected equals the input entry count,
-  asserted per document.
-- **An unrecognised format raises.** It never returns an empty component list,
-  because an empty list renders a green assessment.
-- **`lane_not_applicable` ≠ `lane_absent`.** The first is excluded from the
-  overall score; the second is a finding.
-- **A critical gap fails regardless of score.** A BOM with no versions can score
-  respectably on descriptive fields while being useless.
+## Quick start
+
+```bash
+make install                                   # uv sync + yarn install
+cp backend/.env.example backend/.env.local     # three required keys
+make dev                                       # postgres + redis + API + Vite
+```
+
+`make dev` needs Docker for Postgres and Redis. Without it, `make demo` runs the whole stack
+on SQLite, and `make dev-api` / `make dev-web` run each app alone.
+
+| Command | What it does |
+|---|---|
+| `make test` | pytest + vitest |
+| `make lint` · `make typecheck` | ruff + eslint · mypy + tsc |
+| `make self-bom` | CycloneDX SBOM of this repository into `dist/` |
+| `make scale` | The 50,000-component budget and per-lane p95 |
+| `make catalogue-audit` | Every clause reference with its provenance |
+| `make help` | every target |
+
+---
+
+## Engineering notes
+
+### Parallelism, measured rather than assumed
+
+The five lanes genuinely overlap in wall-clock time, and
+`AssessmentSummary.parallelism_proven` asserts it from the `node_runs` intervals. But
+scoring is pure Python and holds the GIL, so **concurrency here buys isolation, not
+throughput** — 4,000 components + 3,000 models took 173 ms and 124 ms alone, 263 ms back to
+back, 281 ms through the fan-out.
+
+That is the right trade, and it is recorded in `graph/laneRunner.py` rather than left to be
+discovered under load. What the fan-out is actually for is that a hung or crashed lane
+cannot take the other four with it. Reporting the overlap as a performance win would be
+exactly the kind of unfounded figure the first rule above exists to prevent.
+
+At scale: 50,000 components in **4.3 s** and 209 MB, against a stated budget of 30 s and
+1 GB. The budget is loose on purpose — one set *at* the measurement fails on a slow CI
+runner, gets called flaky, and gets deleted. What the tests actually guard is **linearity**,
+because a wall-clock budget catches a slow machine and not an accidental O(n²).
+
+### Testing the database layer without a database
+
+The models are deliberately dialect-portable, so repository logic runs on SQLite via
+`aiosqlite` and the tenancy guards are exercised on every push. The migration is validated
+by rendering it through Alembic's **offline mode** and diffing against the model metadata —
+schema drift is caught in CI with no Postgres at all.
+
+What that cannot cover is stated at the foot of `tests/test_repositories.py`: real
+`text[]`/`JSONB`/native enums, the genuinely partial index, and concurrent writers actually
+racing the guard.
+
+### Reconstructing an assessment from logs alone
+
+One `submission_id` rebuilds all five lane lifecycles — including the lanes that did
+nothing, which are precisely the lanes a client later asks about and precisely the ones that
+would otherwise never appear in the logs. Correlation is bound once per assessment and
+inherited by the lane threads, because threading identifiers through call signatures works
+until the first place somebody forgets.
+
+---
 
 ## Layout
 
 ```
 backend/          FastAPI + LangGraph      mirrors ai-chat-be
 frontend/         Vite + React 19 + TS     mirrors etl-student-frontend
-packages/         generated API types (S3)
+packages/         generated API types
 docs/             specification, architecture, data model, compliance matrix
-dist/             our own SBOM/AIBOM/CBOM, VEX, scorecards and audits per release
+dist/             our own BOMs, VEX, scorecards and audits per release
 ```
 
-## Provenance of the encoded catalogue
+`backend/app` carries the nine house directories plus `workers/`. Route handlers stay under
+15 lines and contain no SQL; an AST test fails the build otherwise. No module in
+`services/graph/` exceeds 200 lines, and `builder.py` contains zero prompt text.
 
-**26 of 101 clause references are anchored** — confirmed against the published
-guideline and asserted in `tests/test_catalogue.py`. The remaining 75 are encoded
-from the tables and marked **provisional** until an assessor re-derives them from
-the published PDF. That number is published as it stands, in
-[`dist/catalogue-audit.md`](dist/catalogue-audit.md) and regenerated by
-`make catalogue-audit`, because one wrong clause discredits every assessment
-issued.
+---
 
-The audit instrument enumerates every reference and runs the mechanical checks —
-stale anchors, duplicated ordinals, ordering, notation collisions — and states
-plainly that it **cannot perform the audit itself**: re-deriving a clause from a
-PDF is a person reading a PDF, and code claiming otherwise would manufacture the
-assurance it exists to measure.
+## Known limitations
+
+Stated plainly. A conformance tool that overstates its own scope is the first thing a real
+auditor tests.
+
+- **Catalogue provenance is 25.7% confirmed.** 75 of 101 clause references are provisional.
+  The audit that resolves them is a person reading the published PDF; the instrument
+  produces the worksheet and states plainly that it **cannot perform the audit itself**.
+- **`vexCoverage` correlation is not live** — reported as pending with its reason, never
+  silently absent.
+- **No Playwright end-to-end suite.** The critical path is covered by API-level and
+  component tests.
+- **Rate limiting is per process**, so two API instances allow twice the configured rate.
+  The limit exists to stop a runaway client script, and per-process is enough for that.
+- **Repository generation needs a container runtime.** Without network isolation it refuses
+  rather than degrading — dependency resolution executes the repository's own build scripts.
+- **No language model is wired in.** The verdict path never needed one. Where a model would
+  legitimately help — messy field mapping, web research, narrative wording — the slots exist
+  and are unfilled.
+- **Human gates remain open**: counsel has not signed off the generated procurement clause,
+  a cryptography practitioner has not reviewed a full CBOM assessment, the catalogue
+  re-derivation is outstanding, and no pilot cohort has run. Each is a gate the
+  specification places on the work, and none can be satisfied by code.
