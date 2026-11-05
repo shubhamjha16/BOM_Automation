@@ -32,6 +32,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import signal
 import subprocess
 from pathlib import Path
 
@@ -108,6 +109,7 @@ try {
   const child = spawn('sleep', ['300'], { detached: true, stdio: 'ignore' });
   child.unref();
   report.spawned = true;
+  report.spawned_pid = child.pid;
 } catch (error) { /* blocked */ }
 
 fs.writeFileSync('escape-report.json', JSON.stringify(report));
@@ -130,6 +132,12 @@ def _hostile_repository(root: Path) -> Path:
         + "\n"
     )
     (root / "postinstall.js").write_text(HOSTILE_POSTINSTALL)
+    # The sandbox runs as uid 10001. The deployed app runs as that same uid
+    # (backend/Dockerfile), so its workspaces are reachable; pytest's tmp
+    # dirs belong to whoever runs the suite and are 0700, so on Linux the
+    # container could not even read the payload. Bind mounts ignore the
+    # parent directories, so opening this one directory is enough.
+    root.chmod(0o777)
     return root
 
 
@@ -179,9 +187,17 @@ def test_the_fixture_succeeds_when_nothing_contains_it(tmp_path):
         "the fixture is broken, not the sandbox"
     )
 
-    # Clean up anything the control case actually planted.
+    # Clean up anything the control case actually planted, including the
+    # detached `sleep 300`: left running, it is found on the host by
+    # test_a_spawned_process_does_not_outlive_the_container and blamed on
+    # the sandbox.
     for planted in report["wrote_outside"]:
         Path(planted).unlink(missing_ok=True)
+    if report.get("spawned_pid"):
+        try:
+            os.killpg(report["spawned_pid"], signal.SIGKILL)
+        except ProcessLookupError:
+            pass
 
 
 # --- containment, where a container runtime exists ---------------------------

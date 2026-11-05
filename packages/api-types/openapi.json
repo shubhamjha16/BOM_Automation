@@ -512,6 +512,15 @@
         "title": "NodeRunOut",
         "type": "object"
       },
+      "Phase": {
+        "enum": [
+          "start",
+          "progress",
+          "advance"
+        ],
+        "title": "Phase",
+        "type": "string"
+      },
       "SignInIn": {
         "properties": {
           "email": {
@@ -957,6 +966,66 @@
           }
         ],
         "summary": "Export",
+        "tags": [
+          "assessments"
+        ]
+      }
+    },
+    "/api/v1/assessments/{submission_id}/narrative/{section}": {
+      "get": {
+        "description": "Draft one section, and return the house wording it drew on.",
+        "operationId": "narrative_api_v1_assessments__submission_id__narrative__section__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "submission_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Submission Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "section",
+            "required": true,
+            "schema": {
+              "title": "Section",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Narrative Api V1 Assessments  Submission Id  Narrative  Section  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Narrative",
         "tags": [
           "assessments"
         ]
@@ -1437,6 +1506,129 @@
         ]
       }
     },
+    "/api/v1/jobs/{job_id}/events": {
+      "get": {
+        "description": "Per-lane progress as SSE. Five tracks, not one spinner.",
+        "operationId": "job_events_api_v1_jobs__job_id__events_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Job Events",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/v1/maturity/activities": {
+      "get": {
+        "description": "The s.3.3 roadmap, inspectable \u2014 as the minimum elements are.",
+        "operationId": "activities_api_v1_maturity_activities_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "phase",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Phase"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Phase"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Activities Api V1 Maturity Activities Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Activities",
+        "tags": [
+          "maturity"
+        ]
+      }
+    },
+    "/api/v1/maturity/self": {
+      "get": {
+        "description": "Our own SSDLC maturity, gaps included.\n\nPublished because a maturity tool that reports only its own strengths is not\nevidence of anything.",
+        "operationId": "self_scorecard_api_v1_maturity_self_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Self Scorecard Api V1 Maturity Self Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Self Scorecard",
+        "tags": [
+          "maturity"
+        ]
+      }
+    },
     "/api/v1/submissions": {
       "get": {
         "description": "Every submission in this tenant, newest first.",
@@ -1539,6 +1731,35 @@
           }
         ],
         "summary": "Create",
+        "tags": [
+          "submissions"
+        ]
+      }
+    },
+    "/api/v1/submissions/usage": {
+      "get": {
+        "description": "What this tenant has consumed and what remains.\n\nExists so the console can show a quota approaching rather than only a quota\nexhausted. A limit a client discovers by hitting it is a support ticket.",
+        "operationId": "usage_api_v1_submissions_usage_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Usage Api V1 Submissions Usage Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Usage",
         "tags": [
           "submissions"
         ]
