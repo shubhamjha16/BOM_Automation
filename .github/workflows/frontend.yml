@@ -10,6 +10,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # src/global/env.ts refuses to load without it, and the tests import the
+    # API client. Public by definition (see frontend/.env.example), never a secret.
+    env:
+      VITE_API_BASE_URL: http://localhost:8005/api/v1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

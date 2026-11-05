@@ -30,7 +30,7 @@ jobs:
         env:
           GROQ_API_KEY: ci-placeholder
           ANTHROPIC_API_KEY: ci-placeholder
-          JWT_SECRET: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
       - name: lockfile drift
         run: uv lock --check
 
@@ -49,14 +49,14 @@ jobs:
         env:
           GROQ_API_KEY: ci-placeholder
           ANTHROPIC_API_KEY: ci-placeholder
-          JWT_SECRET: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
 
       - name: migration renders and matches the models
         run: uv run pytest tests/test_migrations.py tests/test_models.py -q
         env:
           GROQ_API_KEY: ci-placeholder
           ANTHROPIC_API_KEY: ci-placeholder
-          JWT_SECRET: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
 
   # Blocking, because the failure it catches is algorithmic. A per-component cost
   # that quietly became quadratic passes every functional test and turns a client's
@@ -70,7 +70,7 @@ jobs:
     env:
       GROQ_API_KEY: ci-placeholder
       ANTHROPIC_API_KEY: ci-placeholder
-      JWT_SECRET: ci-placeholder
+      JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
       ENRICHMENT_ONLINE: 'false'
     steps:
       - uses: actions/checkout@v4
@@ -98,4 +98,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --all-extras
-      - run: uv run --with pip-audit pip-audit --strict
+      # Audits the locked dependencies, not the project itself: --strict treats
+      # "bom-automation-backend is not on PyPI" as a failure, so auditing the
+      # installed environment could never pass.
+      - run: uv export --frozen --all-extras --no-emit-project --format requirements-txt -o audit-requirements.txt
+      - run: uv run --with pip-audit pip-audit --strict --disable-pip -r audit-requirements.txt

@@ -28,7 +28,7 @@ jobs:
         env:
           GROQ_API_KEY: ci-placeholder
           ANTHROPIC_API_KEY: ci-placeholder
-          JWT_SECRET: ci-placeholder
+          JWT_SECRET: ci-placeholder-that-is-at-least-32-bytes
         # S13 turns this into a gate: a PR dropping our score below
         # SELF_CONFORMANCE_MIN fails CI. Reported, not enforced, until the
         # enrichment (S10) and identifier (S11) lanes can actually populate the
