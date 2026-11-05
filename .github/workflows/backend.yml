@@ -44,7 +44,7 @@ jobs:
           node-version: 22
           cache: yarn
       - name: generated API types are current
-        run: yarn install --frozen-lockfile && cd .. && make api-types-check
+        run: yarn install --frozen-lockfile && make api-types-check
         working-directory: .
         env:
           GROQ_API_KEY: ci-placeholder
