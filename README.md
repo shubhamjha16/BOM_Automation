@@ -9,10 +9,10 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 
 | | |
 |---|---|
-| **Minimum elements encoded** | 85 across five lanes — SBOM 21 · CBOM 20 · AIBOM 19 · HBOM 15 · QBOM 10 |
+| **Minimum elements encoded** | 90 across five lanes — SBOM 21 · CBOM 20 · AIBOM 19 · HBOM 20 · QBOM 10 |
 | **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
 | **Scale** | 50,000 components in **~5 s**, ~210 MB peak — `make scale` |
-| **Clause provenance** | 55 of 104 references confirmed — the rest labelled provisional |
+| **Clause provenance** | 74 of 109 references confirmed — the rest labelled provisional |
 | **Our own conformance** | **38.21%, fail** — published anyway |
 
 ```bash
@@ -66,7 +66,7 @@ Criticality (s.4.2(12)) is relative to the *consuming deployment*. Usage Restric
 (s.4.2(13)) is a legal determination. Intended and Out of Scope Usage (s.9.3, Table 10) are
 governance declarations. **A supplier could not have supplied any of them.** Scoring them
 as defects produces a report a supplier can discredit; scoring them as compliant puts a
-green tick on a field nobody checked. Seven of the eighty-five elements are excluded from
+green tick on a field nobody checked. Six of the ninety elements are excluded from
 the supplier score entirely, and each names the action the consuming organisation must take.
 
 ---
@@ -83,7 +83,7 @@ graph LR
     FANOUT --> CBOM[cbomLane<br/>s.8.4]
     FANOUT --> QBOM[qbomLane<br/>s.8.5]
     FANOUT --> AIBOM[aibomLane<br/>s.9.3]
-    FANOUT --> HBOM[hbomLane<br/>s.10.2]
+    FANOUT --> HBOM[hbomLane<br/>s.10.3]
 
     SBOM --> JOIN[join]
     CBOM --> JOIN
@@ -109,7 +109,7 @@ is absent, disabled or times out is a reported finding, never a crashed assessme
 | CBOM | s.8.4 | 20 | CycloneDX 1.6 cryptographic assets — algorithms, keys, protocols, certificates |
 | QBOM | s.8.5 | 10 | CycloneDX 1.6 |
 | AIBOM | s.9.3 | 19 | CycloneDX 1.6 model cards |
-| HBOM | s.10.2 | 15 | CSV/XLSX asset register **or** CycloneDX `type: device` |
+| HBOM | s.10.3 | 20 | CSV/XLSX asset register **or** CycloneDX `type: device` |
 
 **None of these tables was ever approximated.** Each lane stayed empty — and therefore
 reported `lane_absent` — until its table was actually encoded, because a guessed table
@@ -206,7 +206,7 @@ self-conformance: 38.21% (fail) over 906 components
 | `bom-automation.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
 | `bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
 | `maturity-scorecard.json` | Our s.3.3 position: **below start** |
-| `catalogue-audit.md` | All 104 clause references with provenance: **55 confirmed** |
+| `catalogue-audit.md` | All 109 clause references with provenance: **74 confirmed** |
 | `scale-report.md` | Measured performance, per lane |
 | `vex/` | A real CSAF advisory for a real CVE in one of our dependencies |
 
@@ -301,7 +301,7 @@ dist/             our own BOMs, VEX, scorecards and audits per release
 Stated plainly. A conformance tool that overstates its own scope is the first thing a real
 auditor tests.
 
-- **Catalogue provenance is 52.9% confirmed.** 49 of 104 clause references are provisional.
+- **Catalogue provenance is 67.9% confirmed.** 35 of 109 clause references are provisional.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
 - **Narrative drafting is off by default** (`NARRATIVE_ENABLED=false`). With it off,

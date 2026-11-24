@@ -234,19 +234,15 @@ def test_the_ordering_check_is_not_applied_to_the_curated_lists():
 # --- discrepancy 2: 10.2(4) and 10.2.4 in the same lane ---------------------
 
 
-def test_the_hbom_notation_near_collision_is_still_present_and_still_flagged():
-    """**Found by the audit.** HBOM cites both 10.2(4) — Manufacturer, a row of
-    the Table 11 ordinal list — and s.10.2.4, the section making the HBOM-with-SBOM
-    pairing explicit, which `firmware_version` rests on. Both are correct. They
-    differ by one character.
-
-    This is not fixed by renumbering: the guideline says what it says. It is fixed
-    at the point of rendering, and the finding stays visible so nobody later
-    "corrects" one of the two into the other.
-    """
+def test_no_lane_holds_two_references_that_differ_only_in_notation():
+    """**Found by the audit, now resolved at the source.** HBOM used to cite both
+    10.2(4), an ordinal the guideline does not contain, and s.10.2.4, the section that
+    makes the HBOM-with-SBOM pairing explicit. Table 11 is unnumbered and lives in s.10.3,
+    so the lane now cites its elements by section, table and name, and the near
+    collision is gone. The pairing rule still cites s.10.2.4, which is a real section."""
     from app.services.catalogue.audit import near_collisions
 
-    assert near_collisions() == {"hbom": ["10.2(4)", "10.2.4"]}
+    assert near_collisions() == {}
 
 
 def test_a_section_reference_renders_distinguishably_from_a_table_ordinal():
@@ -259,6 +255,7 @@ def test_a_section_reference_renders_distinguishably_from_a_table_ordinal():
     assert cite("10.2(4)") == "10.2(4)"
     assert cite("4.2(5)") == "4.2(5)"
     assert cite("8.4.1.2") == "s.8.4.1.2"
+    assert cite("10.3 Table 11: Model Number") == "s.10.3 Table 11: Model Number"
 
 
 def test_the_rendered_report_uses_the_unambiguous_form():

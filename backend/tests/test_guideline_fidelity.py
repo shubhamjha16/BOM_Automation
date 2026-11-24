@@ -20,7 +20,7 @@ from app.services.catalogue.loader import get_catalogue
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "certin_v2_elements.json").read_text())
 
 #: Lanes whose catalogue has been brought into line with the guideline.
-ALIGNED = {"sbom", "aibom"}
+ALIGNED = {"sbom", "aibom", "hbom"}
 
 #: The guideline's name for each s.4.2 field -> the catalogue key that encodes it.
 SBOM_KEY_FOR_NAME = {
@@ -70,6 +70,31 @@ AIBOM_KEY_FOR_NAME = {
     "Attestations": "attestations",
 }
 
+#: Table 11's rows in order -> the catalogue key that encodes each. "Supplier Information"
+#: and "Supplier Location" occur twice (product, then component), so they are keyed by group.
+HBOM_KEYS_IN_ORDER = [
+    "product_name",
+    "product_version",
+    "product_details",
+    "warranty_ref",
+    "manufacturer",
+    "manufacturing_location",
+    "manufacturing_date",
+    "supplier_name",
+    "supplier_location",
+    "model_number",
+    "serial_number",
+    "technical_specification",
+    "component_supplier",
+    "component_supplier_location",
+    "technology_node",
+    "compliance_declarations",
+    "power_supply",
+    "license_info",
+    "test_results",
+    "subcomponents",
+]
+
 
 def test_the_fixture_holds_the_guidelines_101_rows():
     counts = {lane: len(data["elements"]) for lane, data in FIXTURE["lanes"].items()}
@@ -97,6 +122,24 @@ def test_aibom_matches_table_10_in_order_and_cites_by_name():
     assert catalogue.clause_root == FIXTURE["lanes"]["aibom"]["section"]
 
 
+def test_hbom_matches_table_11_in_order_and_cites_by_name():
+    rows = FIXTURE["lanes"]["hbom"]["elements"]
+    catalogue = get_catalogue("hbom")
+    assert [element.key for element in catalogue.elements] == HBOM_KEYS_IN_ORDER
+    # Table 11 numbers nothing, so each element is cited by section, table and name; the two
+    # names the table uses twice carry the group that tells them apart.
+    names = [row["name"] for row in rows]
+    expected = [
+        f"10.3 Table 11: {row['group']} - {row['name']}"
+        if names.count(row["name"]) > 1
+        else f"10.3 Table 11: {row['name']}"
+        for row in rows
+    ]
+    assert [element.clause for element in catalogue.elements] == expected
+    assert len(set(expected)) == len(expected)
+    assert catalogue.clause_root == FIXTURE["lanes"]["hbom"]["section"]
+
+
 @pytest.mark.parametrize(
     "lane",
     [
@@ -106,7 +149,7 @@ def test_aibom_matches_table_10_in_order_and_cites_by_name():
                 strict=True, reason=f"{lane} catalogue not yet aligned with the guideline"
             ),
         )
-        for lane in ("qbom", "cbom", "hbom")
+        for lane in ("qbom", "cbom")
     ],
 )
 def test_other_lanes_have_as_many_elements_as_the_guideline(lane):
@@ -114,4 +157,4 @@ def test_other_lanes_have_as_many_elements_as_the_guideline(lane):
 
 
 def test_every_lane_is_either_aligned_or_tracked():
-    assert ALIGNED | {"qbom", "cbom", "hbom"} == set(FIXTURE["lanes"])
+    assert ALIGNED | {"qbom", "cbom"} == set(FIXTURE["lanes"])

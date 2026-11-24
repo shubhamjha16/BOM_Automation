@@ -205,7 +205,7 @@ erDiagram
         string lane
         string key "unique per lane per version"
         string label "the guideline's own field name"
-        string clause "4.2(5), 8.4.1.2, 10.2(4)"
+        string clause "4.2(5), 8.4.1.2, 10.3 Table 11: Model Number"
         enum tier "critical|standard|contextual"
         enum determinability "auto|enrich|human"
         string scope "entity|document"
@@ -269,8 +269,8 @@ erDiagram
 | CBOM | s.8.4 | 20 | 11 / 6 / 3 | 19 / 0 / 1 |
 | QBOM | s.8.5 | 10 | 3 / 5 / 2 | 9 / 0 / 1 |
 | AIBOM | s.9.3 | 19 | 6 / 9 / 4 | 17 / 0 / 2 |
-| HBOM | s.10.2 | 15 | 8 / 5 / 2 | 14 / 0 / 1 |
-| **Total** | | **85** | **35 / 33 / 17** | **74 / 4 / 7** |
+| HBOM | s.10.3 | 20 | 7 / 7 / 6 | 20 / 0 / 0 |
+| **Total** | | **90** | **34 / 35 / 21** | **80 / 4 / 6** |
 
 **`determinability` decides who is accountable for an absence.**
 

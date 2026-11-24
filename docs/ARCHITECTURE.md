@@ -94,7 +94,7 @@ graph TB
     end
 
     subgraph services["services/ — the product"]
-        CAT["catalogue/<br/>85 minimum elements, 5 tables"]
+        CAT["catalogue/<br/>90 minimum elements, 5 tables"]
         SCORE["score/<br/>coverage · weighting · verdict"]
         GRAPH["graph/<br/>LangGraph, no module over 200 lines"]
         INGEST["ingest/<br/>CycloneDX · SPDX · asset register"]
@@ -167,7 +167,7 @@ graph LR
     FANOUT --> CBOM[cbomLane<br/>s.8.4 · 20 elements]
     FANOUT --> QBOM[qbomLane<br/>s.8.5 · 10 elements]
     FANOUT --> AIBOM[aibomLane<br/>s.9.3 · 16 elements]
-    FANOUT --> HBOM[hbomLane<br/>s.10.2 · 15 elements]
+    FANOUT --> HBOM[hbomLane<br/>s.10.3 · 20 elements]
 
     SBOM --> JOIN[join]
     CBOM --> JOIN
@@ -248,7 +248,7 @@ flowchart LR
     end
 
     subgraph elements["catalogue/"]
-        E1["85 minimum elements"]
+        E1["90 minimum elements"]
         E2["tier: critical 3.0<br/>standard 2.0<br/>contextual 1.0"]
         E3["determinability:<br/>auto · enrich · human"]
         E4["scope: entity · document"]

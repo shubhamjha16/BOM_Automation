@@ -66,9 +66,11 @@ def test_the_hbom_catalogue_encodes_table_11():
     catalogue = get_catalogue("hbom")
     clauses = {element.clause for element in catalogue.elements}
 
-    assert len(catalogue.elements) >= 12
-    assert "10.2.4" in clauses, "the firmware clause the S9 pairing rule cites"
-    assert all(element.clause.startswith("10.2") for element in catalogue.elements)
+    assert len(catalogue.elements) == 20
+    # Table 11 is in s.10.3 (s.10.2 is "Benefits of HBOM"). Firmware version is not one of its
+    # rows; the S9 pairing rule still cites s.10.2.4 and reads firmware from the register.
+    assert "10.2.4" not in clauses
+    assert all(element.clause.startswith("10.3 Table 11: ") for element in catalogue.elements)
 
 
 def test_the_source_note_distinguishes_a_purchase_order_from_a_scan():

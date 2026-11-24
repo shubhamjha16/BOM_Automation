@@ -2,14 +2,14 @@
 
 Every clause reference this product can place in front of a client, with its provenance. **Anchored** means the ordinal has been confirmed against the published CERT-In guideline v2.0 (09.07.2025). **Provisional** means it was encoded from the table and has not been.
 
-**55 of 104 clause references confirmed (52.88%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
+**74 of 109 clause references confirmed (67.89%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
 
 | Source | Confirmed | Total | % |
 | --- | ---: | ---: | ---: |
 | aibom | 19 | 19 | 100.0% |
 | cbom | 1 | 20 | 5.0% |
 | correlation | 5 | 5 | 100.0% |
-| hbom | 1 | 15 | 6.67% |
+| hbom | 20 | 20 | 100.0% |
 | qbom | 1 | 10 | 10.0% |
 | roadmap | 7 | 14 | 50.0% |
 | sbom | 21 | 21 | 100.0% |
@@ -46,20 +46,6 @@ Every clause reference this product can place in front of a client, with its pro
 | qbom | environmental_impact | Environmental Impact | s.8.5.8 |
 | qbom | attestations | Attestations and Certifications | s.8.5.9 |
 | qbom | deployment_exposure | Quantum Exposure of the Consuming Deployment | s.8.5.10 |
-| hbom | product_name | Product Name | 10.2(1) |
-| hbom | model_number | Model Number | 10.2(2) |
-| hbom | serial_number | Serial Number | 10.2(3) |
-| hbom | manufacturer | Manufacturer | 10.2(4) |
-| hbom | manufacturing_location | Manufacturing Location | 10.2(5) |
-| hbom | manufacturing_date | Manufacturing Date | 10.2(6) |
-| hbom | supplier_name | Supplier Name | 10.2(7) |
-| hbom | supplier_location | Supplier Location | 10.2(8) |
-| hbom | technology_node | Technology Node | 10.2(9) |
-| hbom | warranty_ref | Warranty / AMC Reference | 10.2(10) |
-| hbom | test_results | Test Results | 10.2(11) |
-| hbom | compliance_declarations | Compliance Declarations | 10.2(12) |
-| hbom | subcomponents | Subcomponents | 10.2(13) |
-| hbom | deployment_criticality | Deployment Criticality and Siting | 10.2(14) |
 | roadmap | pin_dependencies | Pin dependencies to exact versions | s.3.3.1.2 |
 | roadmap | generate_sbom | Generate an SBOM for each product | s.3.3.1.3 |
 | roadmap | vulnerability_scanning | Scan dependencies for known vulnerabilities | s.3.3.2.2 |
@@ -70,7 +56,7 @@ Every clause reference this product can place in front of a client, with its pro
 
 ## Instrument findings
 
-- **near collision** in hbom: 10.2(4) and s.10.2.4 differ only in notation
+No stale anchors and no duplicated ordinals within a source. These are mechanical checks only — they do not substitute for the re-derivation.
 
 ## What this document is not
 
