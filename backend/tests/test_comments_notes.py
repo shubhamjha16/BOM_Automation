@@ -59,7 +59,8 @@ def test_spdx_tag_value_package_comment_becomes_the_comment():
         "SPDXVersion: SPDX-2.3\nDataLicense: CC0-1.0\nSPDXID: SPDXRef-DOCUMENT\n"
         "DocumentName: doc\nDocumentNamespace: https://example.test/doc\n"
         "Creator: Tool: t\nCreated: 2026-01-15T09:00:00Z\n\n"
-        "PackageName: a\nSPDXID: SPDXRef-a\nPackageVersion: 1\nPackageDownloadLocation: NOASSERTION\n"
+        "PackageName: a\nSPDXID: SPDXRef-a\nPackageVersion: 1\n"
+        "PackageDownloadLocation: NOASSERTION\n"
         "PackageComment: <text>Vendored copy.</text>\n"
     )
     entities = spdxTagValue.parse(text).entities

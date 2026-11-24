@@ -496,7 +496,8 @@ def test_our_own_aibom_declares_every_model_we_use():
 
 
 def test_our_own_aibom_carries_the_two_governance_declarations():
-    """AIBOM Intended and Out of Scope Usage score not_determinable for every supplier because they are
+    """AIBOM Intended and Out of Scope Usage score not_determinable for every supplier because they
+    are
     governance statements. We can supply ours; we are the deployer."""
     from app.services.self import aibom
 

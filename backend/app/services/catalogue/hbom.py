@@ -140,7 +140,8 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("mfg_location", "manufacturing_location", "country_of_origin"),
         rationale=(
-            'A supply-chain provenance question rather than a technical one, and the reason HBOM matters to a government procurement reader.'
+            'A supply-chain provenance question rather than a technical one, and the reason HBOM '
+            'matters to a government procurement reader.'
         ),
     ),
     MinimumElement(
@@ -186,7 +187,8 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("serial_number", "serial"),
         rationale=(
-            'The only field that identifies a specific unit rather than a model. Recall and warranty both operate on it.'
+            'The only field that identifies a specific unit rather than a model. Recall and '
+            'warranty both operate on it.'
         ),
     ),
     MinimumElement(
@@ -197,7 +199,8 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("technical_specification", "specification"),
         rationale=(
-            'Detailed technical characteristics and performance parameters of the component (for example voltage, frequency, capacity).'
+            'Detailed technical characteristics and performance parameters of the component (for '
+            'example voltage, frequency, capacity).'
         ),
     ),
     MinimumElement(
@@ -208,7 +211,8 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("component_supplier"),
         rationale=(
-            "The company that supplied the component to the manufacturer of the larger product, which can differ from the product's own supplier."
+            "The company that supplied the component to the manufacturer of the larger product, "
+            "which can differ from the product's own supplier."
         ),
     ),
     MinimumElement(
@@ -263,7 +267,8 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("license_info", "license"),
         rationale=(
-            'Intellectual property licences or usage terms, particularly for firmware or embedded software within the component.'
+            'Intellectual property licences or usage terms, particularly for firmware or embedded '
+            'software within the component.'
         ),
     ),
     MinimumElement(
@@ -282,7 +287,9 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         determinability=Determinability.AUTO,
         probe=present("subcomponents", "parent_item_id", "children"),
         rationale=(
-            "Table 11's final row: a server contains boards contain chips. Recursion is modelled by hardware_items.parent_item_id."
+            "Table 11's final row: a server contains boards contain chips. Recursion is modelled "
+            "by"
+            "hardware_items.parent_item_id."
         ),
     ),
 )

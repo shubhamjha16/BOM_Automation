@@ -13,14 +13,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from app.services.catalogue.loader import get_catalogue
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "certin_v2_elements.json").read_text())
 
 #: Lanes whose catalogue has been brought into line with the guideline.
-ALIGNED = {"sbom", "aibom", "hbom"}
+ALIGNED = {"sbom", "aibom", "hbom", "qbom", "cbom"}
 
 #: The guideline's name for each s.4.2 field -> the catalogue key that encodes it.
 SBOM_KEY_FOR_NAME = {
@@ -69,6 +67,55 @@ AIBOM_KEY_FOR_NAME = {
     "Vulnerabilities": "vulnerabilities",
     "Attestations": "attestations",
 }
+
+#: Table 8's rows in order -> the catalogue key that encodes each.
+QBOM_KEYS_IN_ORDER = [
+    "model_name",
+    "version",
+    "vendor_origin",
+    "license_info",
+    "cryptographic_asset",
+    "communication_protocol",
+    "hardware",
+    "software_dependencies",
+    "environmental_impact",
+    "vulnerabilities",
+    "attestations",
+]
+
+#: Table 9's rows in order, grouped by asset type -> the catalogue key that encodes each.
+CBOM_KEYS_IN_ORDER = [
+    "algorithm_name",
+    "algorithm_asset_type",
+    "primitive",
+    "mode",
+    "crypto_functions",
+    "classical_security_level",
+    "oid",
+    "algorithm_list",
+    "key_name",
+    "key_asset_type",
+    "key_id",
+    "key_state",
+    "key_size",
+    "key_creation_date",
+    "key_activation_date",
+    "protocol_name",
+    "protocol_asset_type",
+    "protocol_version",
+    "cipher_suites",
+    "protocol_oid",
+    "certificate_name",
+    "certificate_asset_type",
+    "cert_subject",
+    "cert_issuer",
+    "cert_not_valid_before",
+    "cert_not_valid_after",
+    "cert_signature_algorithm",
+    "cert_subject_public_key",
+    "cert_format",
+    "cert_extension",
+]
 
 #: Table 11's rows in order -> the catalogue key that encodes each. "Supplier Information"
 #: and "Supplier Location" occur twice (product, then component), so they are keyed by group.
@@ -140,21 +187,26 @@ def test_hbom_matches_table_11_in_order_and_cites_by_name():
     assert catalogue.clause_root == FIXTURE["lanes"]["hbom"]["section"]
 
 
-@pytest.mark.parametrize(
-    "lane",
-    [
-        pytest.param(
-            lane,
-            marks=pytest.mark.xfail(
-                strict=True, reason=f"{lane} catalogue not yet aligned with the guideline"
-            ),
-        )
-        for lane in ("qbom", "cbom")
-    ],
-)
-def test_other_lanes_have_as_many_elements_as_the_guideline(lane):
-    assert len(get_catalogue(lane).elements) == len(FIXTURE["lanes"][lane]["elements"])
+def test_qbom_matches_table_8_in_order_and_cites_by_name():
+    rows = FIXTURE["lanes"]["qbom"]["elements"]
+    catalogue = get_catalogue("qbom")
+    assert [element.key for element in catalogue.elements] == QBOM_KEYS_IN_ORDER
+    assert [element.clause for element in catalogue.elements] == [
+        f"8.3 Table 8: {row['name']}" for row in rows
+    ]
+    assert catalogue.clause_root == FIXTURE["lanes"]["qbom"]["section"]
 
 
-def test_every_lane_is_either_aligned_or_tracked():
-    assert ALIGNED | {"qbom", "cbom"} == set(FIXTURE["lanes"])
+def test_cbom_matches_table_9_in_order_and_cites_by_group_and_name():
+    rows = FIXTURE["lanes"]["cbom"]["elements"]
+    catalogue = get_catalogue("cbom")
+    assert [element.key for element in catalogue.elements] == CBOM_KEYS_IN_ORDER
+    # Name, Asset Type and OID recur in several groups, so every citation carries its group.
+    expected = [f"8.3 Table 9: {row['group']} - {row['name']}" for row in rows]
+    assert [element.clause for element in catalogue.elements] == expected
+    assert len(set(expected)) == len(expected)
+    assert catalogue.clause_root == FIXTURE["lanes"]["cbom"]["section"]
+
+
+def test_every_lane_in_the_fixture_is_aligned():
+    assert ALIGNED == set(FIXTURE["lanes"])

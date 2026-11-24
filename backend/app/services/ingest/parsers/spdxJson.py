@@ -107,7 +107,9 @@ def _annotation_index(document: dict[str, Any]) -> dict[str, list[str]]:
     return index
 
 
-def _comment(package: dict[str, Any], spdx_id: str, annotations: dict[str, list[str]]) -> str | None:
+def _comment(
+    package: dict[str, Any], spdx_id: str, annotations: dict[str, list[str]]
+) -> str | None:
     """The package's own comment, its annotations, and annotations made about it."""
     parts: list[str] = []
     if text := _clean(package.get("comment")):

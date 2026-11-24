@@ -206,7 +206,8 @@ in the deployed cryptography; it is an absence of a stated plan, and the \
 distinction matters to how the consuming organisation should respond.
 
 Two certificates were past their Not Valid After date as of 2025-07-09, flagged \
-under 8.4.3.3. Declaration completeness and configuration acceptability are \
+under Table 9 (Certificates - Not Valid After). Declaration completeness \
+and configuration acceptability are \
 different measurements: the supplier declared these assets correctly and what \
 they declared is not acceptable. We report both and cap the lane verdict rather \
 than reconciling them into one number.""",

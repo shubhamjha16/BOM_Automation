@@ -58,7 +58,8 @@ MODELS: tuple[dict[str, Any], ...] = (
     },
 )
 
-#: Intended Usage (s.9.3, Table 10). Authored by us, because only the deploying organisation can state it.
+#: Intended Usage (s.9.3, Table 10). Authored by us, because only the deploying organisation can
+#: state it.
 INTENDED_USAGE = (
     "BOM Automation assesses Bill of Materials submissions against the CERT-In "
     "Technical Guidelines v2.0 and produces a clause-referenced conformance "

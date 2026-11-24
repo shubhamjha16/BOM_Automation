@@ -170,7 +170,7 @@ def _installation_checklist(organisation: str) -> str:
       Usage Restrictions (4.2(13)) — neither can be supplied by the vendor.
 - [ ] Confirm no component is past its declared end-of-life (4.2(11)).
 - [ ] Confirm cryptographic configuration: no deprecated protocol versions or
-      cipher suites (s.8.4.2.2), no expired certificates.
+      cipher suites (Table 9, Protocols - Cipher Suites), no expired certificates.
 - [ ] Apply least-privilege service accounts.
 - [ ] Register the deployment for re-assessment on every release (s.2.3).
 """

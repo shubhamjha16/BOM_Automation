@@ -107,9 +107,12 @@ def test_the_cbom_catalogue_covers_all_four_table_9_asset_types():
     assert scopes & {"key", "related-crypto-material"}
 
 
-def test_the_qbom_catalogue_anchors_the_migration_clause():
-    """s.8.5.1 is what the S9 quantum-exposure rule cites."""
-    assert get_catalogue("qbom").by_key("migration_strategy").clause == "8.5.1"
+def test_the_qbom_catalogue_is_table_8_and_the_migration_check_is_not_an_element():
+    """Table 8 has no migration-strategy row. The S9 quantum-exposure rule still cites s.8.5.1,
+    the section that names RSA, ECC, Diffie-Hellman and DSA, and reads the entity itself."""
+    keys = {element.key for element in get_catalogue("qbom").elements}
+    assert len(keys) == 11
+    assert not keys & {"migration_strategy", "deployment_exposure"}
 
 
 def test_both_lanes_are_now_implemented():
@@ -120,7 +123,7 @@ def test_both_lanes_are_now_implemented():
 
 
 def test_each_lane_clause_sits_under_its_root():
-    for lane, root in (("cbom", "8.4"), ("qbom", "8.5")):
+    for lane, root in (("cbom", "8.3"), ("qbom", "8.3")):
         for element in get_catalogue(lane).elements:
             assert element.clause.startswith(root)
 
@@ -152,12 +155,19 @@ def test_out_of_scope_assets_leave_the_denominator_rather_than_counting_as_popul
     assert primitive.coverage.ratio == 0.0
 
 
-def test_an_element_with_no_scope_applies_to_every_asset():
+def test_an_asset_declaring_no_type_is_counted_once_under_the_algorithms_asset_type_row():
+    """No Table 9 row applies to every asset, so an untyped asset would otherwise drop out of
+    every row and its missing type would be invisible. Algorithms - Asset Type counts it."""
     assets = [
         {"name": "a", "asset_type": "algorithm"},
         {"name": "b", "asset_type": "certificate"},
+        {"name": "c"},
     ]
-    assert check(get_catalogue("cbom").by_key("asset_name"), assets).coverage.total == 2
+    algorithms = check(get_catalogue("cbom").by_key("algorithm_asset_type"), assets)
+    certificates = check(get_catalogue("cbom").by_key("certificate_asset_type"), assets)
+
+    assert (algorithms.coverage.populated, algorithms.coverage.total) == (1, 2)
+    assert (certificates.coverage.populated, certificates.coverage.total) == (1, 1)
 
 
 # --- document-level checks ---------------------------------------------------
@@ -176,7 +186,7 @@ def test_an_expired_certificate_is_flagged_citing_its_clause():
         today=date(2026, 8, 5),
     )
     assert len(findings) == 1
-    assert findings[0].clause == "8.4.3.3"
+    assert findings[0].clause == get_catalogue("cbom").by_key("cert_not_valid_after").clause
     assert "expired on 2024-01-15" in findings[0].detail
 
 
@@ -204,7 +214,8 @@ def test_a_deprecated_cipher_suite_is_flagged_citing_s8422(suite):
     findings = deprecated_cipher_suites(
         [{"name": "tls", "asset_type": "protocol", "version": "TLS 1.2", "cipher_suites": [suite]}]
     )
-    assert any(item.clause == "8.4.2.2" for item in findings)
+    cipher_suites = get_catalogue("cbom").by_key("cipher_suites").clause
+    assert any(item.clause == cipher_suites for item in findings)
 
 
 @pytest.mark.parametrize("version", ["TLS 1.0", "TLSv1.1", "SSLv3"])
@@ -241,7 +252,7 @@ def test_a_weak_certificate_signature_is_flagged(algorithm):
         [{"name": "c", "asset_type": "certificate", "signature_algorithm": algorithm}]
     )
     assert len(findings) == 1
-    assert findings[0].clause == "8.4.3.4"
+    assert findings[0].clause == get_catalogue("cbom").by_key("cert_signature_algorithm").clause
 
 
 @pytest.mark.parametrize("algorithm", ["sha256WithRSAEncryption", "sha384", "ecdsa-with-SHA256"])
@@ -398,6 +409,6 @@ def test_the_review_checklist_is_generatable():
                 f"{element.tier:<11} {sorted(scope) if scope else 'all assets'}"
             )
 
-    assert len(lines) >= 30
-    assert any("8.4.1.2" in line for line in lines)
-    assert any("8.5.1" in line for line in lines)
+    assert len(lines) >= 43  # 30 Table 9 rows, 11 Table 8 rows and the two lane headings
+    assert any("8.3 Table 9: Certificates - Not Valid After" in line for line in lines)
+    assert any("8.3 Table 8: Model Name" in line for line in lines)

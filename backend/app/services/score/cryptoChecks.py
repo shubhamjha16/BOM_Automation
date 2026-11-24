@@ -4,7 +4,8 @@
 this field?". These answer "is what they declared *wrong*?" — and the difference
 matters because a fully-declared expired certificate scores 100% on every field
 while being a finding. A supplier who declares a deprecated cipher suite has met
-8.4.2.2's declaration requirement and failed its substance.
+the cipher-suite declaration requirement (Table 9, Protocols - Cipher Suites) and failed its
+substance.
 
 So each check produces a finding with its own clause, alongside the field
 verdicts rather than inside them.
@@ -17,6 +18,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
+
+from app.services.catalogue import cbom
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,7 +117,7 @@ def expired_certificates(
             findings.append(
                 CryptoFinding(
                     check_key="certificateExpired",
-                    clause="8.4.3.3",
+                    clause=cbom.ANCHORED_CLAUSES["cert_not_valid_after"],
                     severity="high",
                     detail=(
                         f"certificate {_ref(asset)!r} expired on {expiry.isoformat()} "
@@ -130,8 +133,8 @@ def expired_certificates(
 def deprecated_cipher_suites(assets: Sequence[dict[str, Any]]) -> list[CryptoFinding]:
     """Protocol configurations declaring a deprecated suite or version.
 
-    Cited to s.8.4.2.2 — the clause that requires cipher suites to be declared —
-    because the declaration is what makes the weakness assessable.
+    Cited to Table 9's Protocols - Cipher Suites row, the one that requires cipher suites
+    to be declared, because the declaration is what makes the weakness assessable.
     """
     findings: list[CryptoFinding] = []
 
@@ -145,7 +148,7 @@ def deprecated_cipher_suites(assets: Sequence[dict[str, Any]]) -> list[CryptoFin
                 findings.append(
                     CryptoFinding(
                         check_key="deprecatedProtocolVersion",
-                        clause="8.4.2.1",
+                        clause=cbom.ANCHORED_CLAUSES["protocol_version"],
                         severity="high",
                         detail=f"{_ref(asset)!r} declares {asset.get('version')!r}: {reason}",
                         asset_ref=_ref(asset),
@@ -161,7 +164,7 @@ def deprecated_cipher_suites(assets: Sequence[dict[str, Any]]) -> list[CryptoFin
                     findings.append(
                         CryptoFinding(
                             check_key="deprecatedCipherSuite",
-                            clause="8.4.2.2",
+                            clause=cbom.ANCHORED_CLAUSES["cipher_suites"],
                             severity="high",
                             detail=f"{_ref(asset)!r} declares {suite!r}: {reason}",
                             asset_ref=_ref(asset),
@@ -182,7 +185,7 @@ def weak_certificate_signatures(assets: Sequence[dict[str, Any]]) -> list[Crypto
             findings.append(
                 CryptoFinding(
                     check_key="weakCertificateSignature",
-                    clause="8.4.3.4",
+                    clause=cbom.ANCHORED_CLAUSES["cert_signature_algorithm"],
                     severity="high",
                     detail=(
                         f"certificate {_ref(asset)!r} is signed with {algorithm!r}; "

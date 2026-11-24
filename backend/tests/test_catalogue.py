@@ -70,7 +70,8 @@ def test_human_elements_are_excluded_from_the_supplier_score():
 
 
 def test_the_four_known_consumer_determinations():
-    """4.2(12), 4.2(13), and AIBOM Intended Usage and Out of Scope Usage — named in the specification."""
+    """4.2(12), 4.2(13), and AIBOM Intended Usage and Out of Scope Usage — named in the
+    specification."""
     assert {element.clause for element in get_catalogue("sbom").consumer_determined} == {
         "4.2(12)",
         "4.2(13)",
@@ -188,9 +189,12 @@ def test_the_audit_reports_the_unconfirmed_fraction_rather_than_rounding_it_up()
     assert summary["sbom"]["anchored"] == 21
     assert summary["sbom"]["provisional"] == 0
     # The correlation rules cite sections the specification names in prose, so
-    # all five are anchored; the lane tables are largely not.
+    # all five are anchored. Every lane table has now been checked against the guideline.
     assert summary["correlation"]["percent_confirmed"] == 100.0
-    assert summary["cbom"]["percent_confirmed"] < 100.0
+    for lane in ("sbom", "aibom", "hbom", "cbom", "qbom"):
+        assert summary[lane]["percent_confirmed"] == 100.0, lane
+    # The roadmap (s.3.3) has not been re-derived, and the audit still says so.
+    assert summary["roadmap"]["percent_confirmed"] < 100.0
 
 
 # --- discrepancy 1: QBOM declared s.8.5.1 out of sequence --------------------
@@ -211,10 +215,11 @@ def test_every_lane_declares_its_clauses_in_guideline_order():
     assert ordering_findings() == {}
 
 
-def test_qbom_begins_at_the_migration_strategy_clause():
-    """The specific case, pinned so the reordering cannot be undone."""
-    assert get_catalogue("qbom").elements[0].clause == "8.5.1"
-    assert get_catalogue("qbom").elements[0].key == "migration_strategy"
+def test_qbom_begins_at_table_8_model_name():
+    """Table 8's first row, pinned. (The old catalogue began at an invented migration-strategy
+    element cited s.8.5.1; Table 8 has no such row.)"""
+    assert get_catalogue("qbom").elements[0].clause == "8.3 Table 8: Model Name"
+    assert get_catalogue("qbom").elements[0].key == "model_name"
 
 
 def test_the_ordering_check_is_not_applied_to_the_curated_lists():

@@ -1,6 +1,7 @@
 """AIBOM software dependencies that are absent from the SBOM.
 
-s.9.3 Table 10 (Software Dependencies) requires an AIBOM to declare the model's software dependencies. If a
+s.9.3 Table 10 (Software Dependencies) requires an AIBOM to declare the model's software
+dependencies. If a
 dependency is declared there and does not appear in the SBOM, **the SBOM is
 incomplete** — and that is a finding about the SBOM which no amount of SBOM
 scoring could produce, because the SBOM is internally consistent. Only the other

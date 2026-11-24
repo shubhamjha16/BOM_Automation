@@ -18,6 +18,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
+from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
 from app.services.correlate import (
     cryptoInSbom,
     firmwareInHbom,
@@ -25,7 +26,6 @@ from app.services.correlate import (
     quantumExposure,
     vexCoverage,
 )
-from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
 from app.services.correlate.rules import Finding, Rule, Severity
 from app.utils.logger import get_logger
 

@@ -44,7 +44,8 @@ async def score_self(payload: dict, name: str) -> int:
 def emit_self_boms(destination: Path) -> dict[str, Path]:
     """Write our own AIBOM and CBOM beside the generated SBOM.
 
-    Written rather than generated: AIBOM Intended Usage and Out of Scope Usage are governance declarations and
+    Written rather than generated: AIBOM Intended Usage and Out of Scope Usage are governance
+    declarations and
     a CBOM is not derivable from a dependency scan. Both are the honest form of
     "we ship what we ask for".
     """

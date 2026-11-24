@@ -9,8 +9,6 @@ it reads as absent.
 
 from __future__ import annotations
 
-import copy
-
 import pytest
 
 from app.configs.jobTypes import Determinability
@@ -87,7 +85,8 @@ def test_each_new_element_reads_absent_when_the_model_does_not_declare_it(key, s
 
 def test_vulnerabilities_are_read_only_for_the_model_they_affect():
     model = _documented_model()
-    other = _parse(model, vulnerabilities=[{"id": "CVE-2026-0002", "affects": [{"ref": "other@1"}]}])
+    elsewhere = [{"id": "CVE-2026-0002", "affects": [{"ref": "other@1"}]}]
+    other = _parse(model, vulnerabilities=elsewhere)
     assert not get_catalogue("aibom").by_key("vulnerabilities").probe(other)
     own = _parse(model)
     assert own["vulnerabilities"] == ["CVE-2026-0001"]

@@ -121,12 +121,23 @@ def _normalise_component(
     }
 
 
-def _normalise_crypto(component: dict[str, Any]) -> dict[str, Any]:
+def _normalise_crypto(
+    component: dict[str, Any],
+    vulnerabilities: dict[str, list[str]] | None = None,
+    document_signature: Any = None,
+) -> dict[str, Any]:
     """A CycloneDX 1.6 ``cryptographic-asset`` flattened to Table 9's shape.
 
     CycloneDX nests the interesting fields three deep and differently per asset
     type; Table 9 is flat. Flattening here keeps the catalogue probes readable
     and means a future CycloneDX layout change touches one function.
+
+    The same flattening feeds the QBOM lane, whose Table 8 rows are properties of the
+    quantum system as a whole: its version, vendor, licence, vulnerabilities and signature
+    come from the component's standard fields, and the rows CycloneDX has no field for
+    (origin, hardware, communication protocol, software dependencies, environmental impact,
+    attestations) are read from ``certin:<field>`` properties, the repo's convention for
+    fields the format lacks.
     """
     crypto = component.get("cryptoProperties") or {}
     algorithm = crypto.get("algorithmProperties") or {}
@@ -135,7 +146,9 @@ def _normalise_crypto(component: dict[str, Any]) -> dict[str, Any]:
     material = crypto.get("relatedCryptoMaterialProperties") or {}
 
     cipher_suites = protocol.get("cipherSuites") or []
-    return {
+    supplier = component.get("supplier")
+    bom_ref = component.get("bom-ref") or component.get("purl")
+    entity = {
         "name": component.get("name"),
         "bom_ref": component.get("bom-ref"),
         "asset_type": crypto.get("assetType"),
@@ -164,8 +177,23 @@ def _normalise_crypto(component: dict[str, Any]) -> dict[str, Any]:
         "not_valid_before": certificate.get("notValidBefore"),
         "not_valid_after": certificate.get("notValidAfter"),
         "signature_algorithm": certificate.get("signatureAlgorithmRef"),
+        "subject_public_key": certificate.get("subjectPublicKeyRef"),
         "format": certificate.get("certificateFormat"),
+        "certificate_extension": certificate.get("certificateFileExtension")
+        or certificate.get("certificateExtensions"),
+        # QBOM Table 8: properties of the system the asset belongs to.
+        "system_version": component.get("version"),
+        "vendor": supplier.get("name") if isinstance(supplier, dict) else None,
+        "publisher": component.get("publisher"),
+        "license_expr": _licence_expression(component),
+        "vulnerabilities": (vulnerabilities or {}).get(str(bom_ref)) or None,
+        "signature": component.get("signature") or document_signature,
     }
+    for prop in component.get("properties", []) or []:
+        name = str(prop.get("name") or "") if isinstance(prop, dict) else ""
+        if name.startswith("certin:") and (field := name[len("certin:") :]):
+            entity.setdefault(field, prop.get("value"))
+    return entity
 
 
 def _vulnerability_index(document: dict[str, Any]) -> dict[str, list[str]]:
@@ -304,7 +332,9 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
             )
             continue
         if wanted is CRYPTO_TYPES:
-            result.entities.append(_normalise_crypto(component))
+            result.entities.append(
+                _normalise_crypto(component, vulnerabilities, payload.get("signature"))
+            )
         elif wanted is MODEL_TYPES:
             result.entities.append(
                 _normalise_model(component, vulnerabilities, payload.get("signature"))

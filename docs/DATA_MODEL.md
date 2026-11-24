@@ -266,11 +266,11 @@ erDiagram
 | Lane | Clause root | Elements | critical / standard / contextual | auto / enrich / human |
 |---|---|---:|---|---|
 | SBOM | s.4.2 | 21 | 7 / 8 / 6 | 15 / 4 / 2 |
-| CBOM | s.8.4 | 20 | 11 / 6 / 3 | 19 / 0 / 1 |
-| QBOM | s.8.5 | 10 | 3 / 5 / 2 | 9 / 0 / 1 |
+| CBOM | s.8.3 | 30 | 11 / 12 / 7 | 30 / 0 / 0 |
+| QBOM | s.8.3 | 11 | 3 / 7 / 1 | 11 / 0 / 0 |
 | AIBOM | s.9.3 | 19 | 6 / 9 / 4 | 17 / 0 / 2 |
 | HBOM | s.10.3 | 20 | 7 / 7 / 6 | 20 / 0 / 0 |
-| **Total** | | **90** | **34 / 35 / 21** | **80 / 4 / 6** |
+| **Total** | | **101** | **34 / 43 / 24** | **93 / 4 / 4** |
 
 **`determinability` decides who is accountable for an absence.**
 

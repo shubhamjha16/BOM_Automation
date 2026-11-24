@@ -2,15 +2,15 @@
 
 Every clause reference this product can place in front of a client, with its provenance. **Anchored** means the ordinal has been confirmed against the published CERT-In guideline v2.0 (09.07.2025). **Provisional** means it was encoded from the table and has not been.
 
-**74 of 109 clause references confirmed (67.89%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
+**113 of 120 clause references confirmed (94.17%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
 
 | Source | Confirmed | Total | % |
 | --- | ---: | ---: | ---: |
 | aibom | 19 | 19 | 100.0% |
-| cbom | 1 | 20 | 5.0% |
+| cbom | 30 | 30 | 100.0% |
 | correlation | 5 | 5 | 100.0% |
 | hbom | 20 | 20 | 100.0% |
-| qbom | 1 | 10 | 10.0% |
+| qbom | 11 | 11 | 100.0% |
 | roadmap | 7 | 14 | 50.0% |
 | sbom | 21 | 21 | 100.0% |
 
@@ -18,34 +18,6 @@ Every clause reference this product can place in front of a client, with its pro
 
 | Source | Key | Element | Clause |
 | --- | --- | --- | --- |
-| cbom | asset_type | Asset Type (algorithm | key | protocol | certificate) | s.8.4.1.3 |
-| cbom | primitive | Cryptographic Primitive | s.8.4.1.4 |
-| cbom | mode | Mode of Operation | s.8.4.1.5 |
-| cbom | crypto_functions | Cryptographic Functions | s.8.4.1.6 |
-| cbom | classical_security_level | Classical Security Level | s.8.4.1.7 |
-| cbom | oid | Object Identifier (OID) | s.8.4.1.8 |
-| cbom | key_id | Key Identifier | s.8.4.1.9 |
-| cbom | key_state | Key State | s.8.4.1.10 |
-| cbom | key_size | Key Size | s.8.4.1.11 |
-| cbom | key_creation_date | Key Creation Date | s.8.4.1.12 |
-| cbom | key_activation_date | Key Activation Date | s.8.4.1.13 |
-| cbom | protocol_version | Protocol Version | s.8.4.2.1 |
-| cbom | cipher_suites | Cipher Suites | s.8.4.2.2 |
-| cbom | cert_subject | Certificate Subject | s.8.4.3.1 |
-| cbom | cert_issuer | Certificate Issuer | s.8.4.3.2 |
-| cbom | cert_validity | Certificate Validity Window | s.8.4.3.3 |
-| cbom | cert_signature_algorithm | Certificate Signature Algorithm | s.8.4.3.4 |
-| cbom | cert_format | Certificate Format | s.8.4.3.5 |
-| cbom | deployment_context | Deployment Context | s.8.4.4.1 |
-| qbom | model_name | Quantum System / Model Name | s.8.5.2 |
-| qbom | vendor | Vendor | s.8.5.3 |
-| qbom | origin | Country of Origin | s.8.5.4 |
-| qbom | communication_protocol | Communication Protocol | s.8.5.5 |
-| qbom | hardware | Hardware | s.8.5.6 |
-| qbom | software_dependencies | Software Dependencies | s.8.5.7 |
-| qbom | environmental_impact | Environmental Impact | s.8.5.8 |
-| qbom | attestations | Attestations and Certifications | s.8.5.9 |
-| qbom | deployment_exposure | Quantum Exposure of the Consuming Deployment | s.8.5.10 |
 | roadmap | pin_dependencies | Pin dependencies to exact versions | s.3.3.1.2 |
 | roadmap | generate_sbom | Generate an SBOM for each product | s.3.3.1.3 |
 | roadmap | vulnerability_scanning | Scan dependencies for known vulnerabilities | s.3.3.2.2 |

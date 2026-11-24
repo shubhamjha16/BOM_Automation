@@ -136,7 +136,8 @@ def _lane_rows(lane: Lane) -> list[AuditRow]:
 
 
 def _correlation_rows() -> list[AuditRow]:
-    """Correlation rules cite s.8.4.1.2, s.9.3 Table 10 (Software Dependencies) and s.8.5.1 — sections about
+    """Correlation rules cite s.8.4.1.2, s.9.3 Table 10 (Software Dependencies) and s.8.5.1 —
+    sections about
     the *presence* of a declaration rather than a field inside one.
 
     All three are anchored: the specification names these section numbers in
