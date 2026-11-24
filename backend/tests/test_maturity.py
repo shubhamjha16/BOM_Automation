@@ -46,8 +46,10 @@ def test_every_activity_carries_its_clause():
     discredits it exactly as a wrong minimum-element clause does."""
     assert len(ACTIVITIES) >= 12
     for activity in ACTIVITIES:
-        assert activity.clause
         assert activity.phase in set(Phase)
+        # A clause is a claim that the guideline says this, so an activity the guideline
+        # does not list must carry none.
+        assert bool(activity.clause) is activity.guideline, activity.key
 
 
 def test_an_observable_activity_must_name_its_signal():
@@ -62,12 +64,18 @@ def test_an_attestable_activity_must_carry_its_question():
         Activity(key="x", phase=Phase.START, label="X", clause="3.3.1.1", observable=False)
 
 
-def test_the_three_unobservable_activities_are_the_expected_ones():
-    """Governance, procurement clauses and training: none is derivable from a
-    repository, and pretending otherwise is what makes a scorecard a
-    questionnaire in disguise."""
+def test_the_unobservable_activities_are_the_expected_ones():
+    """Plans, policies, contracts, training and governance: none is derivable from a
+    repository, and pretending otherwise is what makes a scorecard a questionnaire in
+    disguise. Nine of the guideline's activities can only be asked."""
     assert {activity.clause for activity in attestable()} == {
+        "3.3.1.1",
+        "3.3.1.2",
+        "3.3.1.3",
         "3.3.1.4",
+        "3.3.2.2",
+        "3.3.2.3",
+        "3.3.3.4",
         "7.2.15",
         "5.1(d)",
     }
@@ -201,9 +209,13 @@ def _complete_start() -> Scorecard:
         sbom_steps=(".github/workflows/self-bom.yml",),
     )
     scorecard = Scorecard(verdicts=derive(signals, PlatformSignals()))
-    scorecard.verdicts.append(
-        attested(by_key("procurement_clauses"), Verdict.MET, answer="clause 7.2 of our MSA")
-    )
+    for key in (
+        "critical_assets_plan",
+        "sbom_format_requirements",
+        "secure_storage_tooling",
+        "procurement_clauses",
+    ):
+        scorecard.verdicts.append(attested(by_key(key), Verdict.MET, answer="documented"))
     return scorecard
 
 
@@ -260,7 +272,10 @@ def test_our_own_attestations_are_marked_attested_not_evidenced():
     report = build_self_scorecard().as_report()
     attestations = [row for row in report["activities"] if row["basis"] == "attested"]
 
-    assert len(attestations) == 3
+    # Nine questions the platform cannot observe. We answer three; the other six are left
+    # unanswered for the project owner rather than answered on their behalf.
+    assert len(attestations) == 9
+    assert sum(1 for row in attestations if row["verdict"] == "unknown") == 6
     for row in attestations:
         assert row["question"], "an attestation must show what was asked"
         assert row["evidence_ref"] is None

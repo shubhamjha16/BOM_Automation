@@ -68,7 +68,13 @@ class Scorecard:
         return {verdict.activity_key: verdict for verdict in self.verdicts}
 
     def phase(self, phase: Phase) -> PhaseResult:
-        keys = {activity.key for activity in ACTIVITIES if activity.phase is phase}
+        # Only the activities the guideline lists count toward a phase. The product's own
+        # practices are reported but cannot stop a phase being complete.
+        keys = {
+            activity.key
+            for activity in ACTIVITIES
+            if activity.phase is phase and activity.guideline
+        }
         rows = [verdict for verdict in self.verdicts if verdict.activity_key in keys]
         counts = {outcome: 0 for outcome in Verdict}
         for row in rows:

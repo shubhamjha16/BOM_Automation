@@ -561,5 +561,99 @@
         }
       ]
     }
+  },
+  "roadmap": {
+    "section": "3.3",
+    "note": "s.3.3 Roadmap for Organizations to develop and adopt SBOM: 14 numbered activities in three phases, read from the PDF text. other_clauses are the four guideline clauses outside s.3.3 that the maturity roadmap also cites; each was read from the PDF text.",
+    "activities": [
+      {
+        "clause": "3.3.1.1",
+        "phase": "start",
+        "title": "Identify Critical Assets and Develop a Project Plan"
+      },
+      {
+        "clause": "3.3.1.2",
+        "phase": "start",
+        "title": "Determine the SBOM format and minimum requirement"
+      },
+      {
+        "clause": "3.3.1.3",
+        "phase": "start",
+        "title": "Identify security requirements, secure storage and tooling"
+      },
+      {
+        "clause": "3.3.1.4",
+        "phase": "start",
+        "title": "Acquire SBOM as a part of procurement process"
+      },
+      {
+        "clause": "3.3.2.1",
+        "phase": "progress",
+        "title": "Secure Installation and Operation Guidance Development"
+      },
+      {
+        "clause": "3.3.2.2",
+        "phase": "progress",
+        "title": "Assign unique identifiers to each component"
+      },
+      {
+        "clause": "3.3.2.3",
+        "phase": "progress",
+        "title": "Mapping of supplier's SBOM with consumer's internal SBOM"
+      },
+      {
+        "clause": "3.3.2.4",
+        "phase": "progress",
+        "title": "Preparation of SBOM"
+      },
+      {
+        "clause": "3.3.2.5",
+        "phase": "progress",
+        "title": "Integrate SBOM in each phase of Secure Software Development Lifecycle (SSDLC)"
+      },
+      {
+        "clause": "3.3.2.6",
+        "phase": "progress",
+        "title": "Establish secure configuration management"
+      },
+      {
+        "clause": "3.3.3.1",
+        "phase": "advance",
+        "title": "Enhance vulnerability tracking processes"
+      },
+      {
+        "clause": "3.3.3.2",
+        "phase": "advance",
+        "title": "Enhance Incident response process"
+      },
+      {
+        "clause": "3.3.3.3",
+        "phase": "advance",
+        "title": "Periodic Analysis and Review for Updating Existing SBOM"
+      },
+      {
+        "clause": "3.3.3.4",
+        "phase": "advance",
+        "title": "Maintain awareness of emerging software components and industry advancements"
+      }
+    ],
+    "other_clauses": [
+      {
+        "clause": "2.3",
+        "title": "SBOM Implementation (update the SBOM for every release, update, upgrade and patch)"
+      },
+      {
+        "clause": "5.1(d)",
+        "title": "Establish Governance"
+      },
+      {
+        "clause": "7.1.6",
+        "title": "Design a VEX after a vulnerability is discovered"
+      },
+      {
+        "clause": "7.2.15",
+        "title": "Provide training and awareness programs"
+      }
+    ]
   }
 }

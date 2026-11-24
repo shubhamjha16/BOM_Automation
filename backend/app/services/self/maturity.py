@@ -24,7 +24,7 @@ from app.services.maturity.evidence import (
 from app.services.maturity.roadmap import attestable
 from app.services.maturity.scorecard import Scorecard
 
-#: Our own answers to the three questions the platform cannot observe. Recorded
+#: Our own answers to the questions the platform cannot observe. Recorded
 #: as attestations and rendered as attestations — never as evidence.
 OUR_ATTESTATIONS: dict[str, tuple[Verdict, str]] = {
     "procurement_clauses": (
@@ -49,6 +49,15 @@ OUR_ATTESTATIONS: dict[str, tuple[Verdict, str]] = {
         "No accountable governance body exists. There is no board, no chair and no "
         "terms of reference.",
     ),
+    # The six guideline activities that a repository scan cannot see and that earlier versions of
+    # this table did not ask. They are left unanswered rather than answered on the owner's behalf:
+    # each describes how the project is run, which only its owner can state.
+    "critical_assets_plan": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
+    "sbom_format_requirements": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
+    "secure_storage_tooling": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
+    "unique_identifiers": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
+    "supplier_sbom_mapping": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
+    "emerging_awareness": (Verdict.UNKNOWN, "Not yet answered by the project owner."),
 }
 
 

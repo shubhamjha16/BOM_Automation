@@ -148,7 +148,8 @@ def test_every_clause_reference_in_the_product_is_enumerated():
     expected = (
         sum(len(get_catalogue(lane).elements) for lane in ALL_LANES)
         + len(RULES)
-        + len(ACTIVITIES)
+        # Only the activities the guideline lists carry a clause to audit.
+        + sum(1 for activity in ACTIVITIES if activity.guideline)
     )
     assert len(rows) == expected
     assert all(row.clause and row.label and row.key for row in rows)
@@ -193,8 +194,10 @@ def test_the_audit_reports_the_unconfirmed_fraction_rather_than_rounding_it_up()
     assert summary["correlation"]["percent_confirmed"] == 100.0
     for lane in ("sbom", "aibom", "hbom", "cbom", "qbom"):
         assert summary[lane]["percent_confirmed"] == 100.0, lane
-    # The roadmap (s.3.3) has not been re-derived, and the audit still says so.
-    assert summary["roadmap"]["percent_confirmed"] < 100.0
+    # The roadmap's guideline activities were checked against s.3.3, s.2.3, s.5.1(d), s.7.1.6
+    # and s.7.2.15. The product's own two extra practices carry no clause and are not audited.
+    assert summary["roadmap"]["percent_confirmed"] == 100.0
+    assert summary["roadmap"]["total"] == 18
 
 
 # --- discrepancy 1: QBOM declared s.8.5.1 out of sequence --------------------

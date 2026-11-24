@@ -37,6 +37,7 @@ from app.services.catalogue import aibom, cbom, hbom, qbom, sbom
 from app.services.catalogue.loader import get_catalogue
 from app.services.correlate.engine import RULES
 from app.services.maturity.roadmap import ACTIVITIES
+from app.services.maturity.roadmap import ANCHORED_CLAUSES as ROADMAP_CLAUSES
 
 
 class Provenance(StrEnum):
@@ -90,13 +91,12 @@ ANCHOR_MAPS: dict[str, dict[str, str]] = {
     "hbom": hbom.ANCHORED_CLAUSES,
 }
 
-#: Roadmap activities whose clause numbers are confirmed against s.3.3. The
-#: maturity table is audited on the same terms as the five BOM tables: §S19's
-#: scorecard cites these clauses to a client, so an unconfirmed ordinal there is
-#: exactly as damaging as an unconfirmed one in the SBOM table.
-ROADMAP_ANCHORED: frozenset[str] = frozenset(
-    {"3.3.1.1", "3.3.1.4", "3.3.2.1", "3.3.2.5", "3.3.3.2", "2.3", "5.1(d)"}
-)
+#: Roadmap clauses confirmed against the guideline. Held beside the roadmap itself rather than
+#: copied
+#: here, for the same reason as the lane anchor maps: a second list would drift from the first. The
+#: maturity table is audited on the same terms as the five BOM tables: the scorecard cites these
+#: clauses to a client, so an unconfirmed one there is exactly as damaging as in the SBOM table.
+ROADMAP_ANCHORED: frozenset[str] = ROADMAP_CLAUSES
 
 
 @dataclass(frozen=True, slots=True)
@@ -170,6 +170,7 @@ def _roadmap_rows() -> list[AuditRow]:
             ),
         )
         for activity in ACTIVITIES
+        if activity.guideline
     ]
 
 

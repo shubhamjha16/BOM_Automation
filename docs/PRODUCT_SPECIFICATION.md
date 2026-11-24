@@ -556,17 +556,17 @@ Three presentation rules:
 
 ## 17. SSDLC maturity
 
-Fourteen activities across three phases from s.3.3, scored on **evidence** where an artifact
+The fourteen activities of s.3.3 (and four more from elsewhere in the guideline), scored on **evidence** where an artifact
 can prove them and **attestation** where none can.
 
 | Phase | Activities | Unobservable |
 |---|---:|---|
-| START | 4 | s.3.3.1.4 — contractual SBOM requirement |
-| PROGRESS | 5 | s.7.2.15 — supplier remediation SLAs |
-| ADVANCE | 5 | s.5.1(d) — a named accountable body |
+| START | 4 | all four: s.3.3.1.1 to 3.3.1.4 (plan, format, storage, procurement) |
+| PROGRESS | 7 | s.3.3.2.2, s.3.3.2.3, s.7.2.15 |
+| ADVANCE | 7 | s.3.3.3.4, s.5.1(d) |
 
 An evidenced verdict must name the artifact that proves it. Without one it is an assertion,
-and asserting is what attestation is for. The three unobservable activities each carry the
+and asserting is what attestation is for. The nine unobservable activities each carry the
 question to ask instead.
 
 **The generated artifact pack closes the gaps the scorecard finds** — an SBOM policy,
@@ -593,7 +593,7 @@ numbers say.
 | `dist/bom-automation.cdx.json` | Our own SBOM | Regenerated per release, s.2.3 |
 | `dist/bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM | |
 | `dist/maturity-scorecard.json` | Our s.3.3 position | **below start** |
-| `dist/catalogue-audit.md` | 120 clause references with provenance | **113 confirmed (94.2%)** |
+| `dist/catalogue-audit.md` | 124 clause references with provenance | **124 confirmed (100%)** |
 | `dist/scale-report.md` | Measured performance | 50,000 components in ~5 s |
 | `dist/vex/` | CSAF advisories for our own dependencies | One published, `not_affected` with written justification |
 | `SECURITY.md` | Disclosure route, four VEX statuses, dependency-adoption policy per s.3.3.1.4 | |
@@ -639,7 +639,7 @@ auditor tests.
 
 | Limitation | Detail |
 |---|---|
-| **Catalogue provenance is 94.2% confirmed** | 7 of 120 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
+| **Catalogue provenance is checked, not reviewed** | All 124 clause references were checked against the published text of the guideline. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
 | **Narrative drafting is off by default** | `NARRATIVE_ENABLED=false`. Sections fall back to `NullGenerator`, which restates the engine's findings and marks the section undrafted. Enabling it needs a real key — recognised by its `sk-ant-` prefix, so a placeholder cannot produce a live call from a test run. |
 | **Retrieval ranks in Python, not in the database** | The embedding column is a real `vector(384)` on Postgres, but nearest-neighbour work happens in the application over org-scoped candidates. Exact search is correct at every corpus size and only slow at large ones; an `ivfflat` index is the stated follow-up, and it wants a populated table to choose its list count sensibly. |
 | **Five sandbox containment tests skip without a container runtime** | Skipped with a stated reason rather than passed — a containment assertion that quietly no-ops turns an unproven property into a green suite. The argv guard runs everywhere and fails if any isolation flag is dropped. |

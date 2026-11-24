@@ -210,3 +210,44 @@ def test_cbom_matches_table_9_in_order_and_cites_by_group_and_name():
 
 def test_every_lane_in_the_fixture_is_aligned():
     assert ALIGNED == set(FIXTURE["lanes"])
+
+
+# --- the s.3.3 maturity roadmap -------------------------------------------------------------
+
+
+def test_the_roadmap_encodes_every_s_3_3_activity_exactly_once_in_its_own_phase():
+    from app.services.maturity.roadmap import ACTIVITIES
+
+    roadmap = FIXTURE["roadmap"]
+    guideline = [activity for activity in ACTIVITIES if activity.guideline]
+    by_clause = {}
+    for activity in guideline:
+        assert activity.clause not in by_clause, f"{activity.clause} is cited twice"
+        by_clause[activity.clause] = activity
+
+    assert len(roadmap["activities"]) == 14
+    for row in roadmap["activities"]:
+        activity = by_clause.get(row["clause"])
+        assert activity is not None, f"s.{row['clause']} ({row['title']}) is not encoded"
+        assert str(activity.phase) == row["phase"], row["clause"]
+
+
+def test_every_other_guideline_clause_the_roadmap_cites_is_one_the_guideline_has():
+    from app.services.maturity.roadmap import ACTIVITIES
+
+    roadmap = FIXTURE["roadmap"]
+    known = {row["clause"] for row in roadmap["activities"] + roadmap["other_clauses"]}
+    cited = {activity.clause for activity in ACTIVITIES if activity.guideline}
+    assert cited == known
+
+
+def test_an_activity_the_guideline_does_not_list_carries_no_clause_and_does_not_count():
+    from app.services.maturity.roadmap import ACTIVITIES, Phase
+    from app.services.maturity.scorecard import Scorecard
+
+    own = {activity.key for activity in ACTIVITIES if not activity.guideline}
+    assert own == {"inventory_dependencies", "pin_dependencies"}
+    assert all(activity.clause == "" for activity in ACTIVITIES if not activity.guideline)
+    # Phase totals count guideline activities only.
+    counted = sum(Scorecard().phase(phase).total for phase in Phase)
+    assert counted == sum(1 for activity in ACTIVITIES if activity.guideline)

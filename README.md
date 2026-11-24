@@ -12,7 +12,7 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 | **Minimum elements encoded** | 101 across five lanes — SBOM 21 · CBOM 30 · AIBOM 19 · HBOM 20 · QBOM 11 |
 | **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
 | **Scale** | 50,000 components in **~5 s**, ~210 MB peak — `make scale` |
-| **Clause provenance** | 113 of 120 references confirmed — the rest labelled provisional |
+| **Clause provenance** | 124 of 124 references confirmed — the rest labelled provisional |
 | **Our own conformance** | **38.21%, fail** — published anyway |
 
 ```bash
@@ -24,7 +24,7 @@ make demo     # the whole stack on SQLite. No Docker, no Postgres, no Redis.
 [![The console, running](docs/screenshots/08-maturity-scorecard.png)](docs/SCREENSHOTS.md)
 
 **BOM Automation assessing itself** against CERT-In s.3.3 — *below start*, 11
-evidenced, 3 attested, published whatever it says. Nine annotated screens in
+evidenced, 9 attested, published whatever it says. Nine annotated screens in
 [docs/SCREENSHOTS.md](docs/SCREENSHOTS.md): the five encoded catalogues, the
 submission list, and the attested-versus-evidenced distinction that the whole
 maturity page is built on.
@@ -206,7 +206,7 @@ self-conformance: 38.21% (fail) over 906 components
 | `bom-automation.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
 | `bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
 | `maturity-scorecard.json` | Our s.3.3 position: **below start** |
-| `catalogue-audit.md` | All 120 clause references with provenance: **113 confirmed** |
+| `catalogue-audit.md` | All 124 clause references with provenance: **124 confirmed** |
 | `scale-report.md` | Measured performance, per lane |
 | `vex/` | A real CSAF advisory for a real CVE in one of our dependencies |
 
@@ -301,7 +301,7 @@ dist/             our own BOMs, VEX, scorecards and audits per release
 Stated plainly. A conformance tool that overstates its own scope is the first thing a real
 auditor tests.
 
-- **Catalogue provenance is 94.2% confirmed.** 7 of 120 clause references are provisional (the s.3.3 roadmap).
+- **Catalogue provenance is 100% checked, not reviewed.** All 124 clause references were checked against the published text of the guideline; the counsel and cryptography reviews listed in the specification have not happened.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
 - **Narrative drafting is off by default** (`NARRATIVE_ENABLED=false`). With it off,
