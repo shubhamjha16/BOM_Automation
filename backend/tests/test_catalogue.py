@@ -179,8 +179,9 @@ def test_the_audit_reports_the_unconfirmed_fraction_rather_than_rounding_it_up()
     from app.services.catalogue.audit import coverage
 
     summary = coverage()
-    assert summary["sbom"]["anchored"] == 8
-    assert summary["sbom"]["provisional"] == 13
+    # All 21 s.4.2 fields were checked against the published PDF (v2.0, 09.07.2025).
+    assert summary["sbom"]["anchored"] == 21
+    assert summary["sbom"]["provisional"] == 0
     # The correlation rules cite sections the specification names in prose, so
     # all five are anchored; the lane tables are largely not.
     assert summary["correlation"]["percent_confirmed"] == 100.0

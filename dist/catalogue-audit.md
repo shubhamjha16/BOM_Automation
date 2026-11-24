@@ -2,7 +2,7 @@
 
 Every clause reference this product can place in front of a client, with its provenance. **Anchored** means the ordinal has been confirmed against the published CERT-In guideline v2.0 (09.07.2025). **Provisional** means it was encoded from the table and has not been.
 
-**26 of 101 clause references confirmed (25.74%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
+**39 of 101 clause references confirmed (38.61%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
 
 | Source | Confirmed | Total | % |
 | --- | ---: | ---: | ---: |
@@ -12,25 +12,12 @@ Every clause reference this product can place in front of a client, with its pro
 | hbom | 1 | 15 | 6.67% |
 | qbom | 1 | 10 | 10.0% |
 | roadmap | 7 | 14 | 50.0% |
-| sbom | 8 | 21 | 38.1% |
+| sbom | 21 | 21 | 100.0% |
 
 ## Rows awaiting confirmation
 
 | Source | Key | Element | Clause |
 | --- | --- | --- | --- |
-| sbom | component_name | Component Name | 4.2(1) |
-| sbom | version | Version of the Component | 4.2(2) |
-| sbom | description | Component Description | 4.2(3) |
-| sbom | supplier_name | Supplier Name | 4.2(4) |
-| sbom | origin | Origin / Source Repository | 4.2(6) |
-| sbom | dependencies | Dependencies | 4.2(7) |
-| sbom | checksums | Cryptographic Hash of the Component | 4.2(14) |
-| sbom | executable_property | Executable Property | 4.2(15) |
-| sbom | archive_property | Archive Property | 4.2(16) |
-| sbom | structured_property | Structured Property | 4.2(17) |
-| sbom | component_identifier | Unique Identifier of the Component | 4.2(18) |
-| sbom | author_name | Author / Originator Name | 4.2(19) |
-| sbom | timestamp | Timestamp | 4.2(20) |
 | cbom | asset_type | Asset Type (algorithm | key | protocol | certificate) | s.8.4.1.3 |
 | cbom | primitive | Cryptographic Primitive | s.8.4.1.4 |
 | cbom | mode | Mode of Operation | s.8.4.1.5 |

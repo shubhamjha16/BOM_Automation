@@ -29,8 +29,7 @@
   },
   "expected": {
     "fields": {
-      "certin_identifier": "absent",
-      "component_identifier": "present"
+      "certin_identifier": "absent"
     }
   }
 }

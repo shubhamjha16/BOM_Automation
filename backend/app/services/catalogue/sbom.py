@@ -1,16 +1,13 @@
 """SBOM minimum elements — CERT-In s.4.2, guideline v2.0 (09.07.2025).
 
-**Clause provenance.** Eight positions are anchored directly by the specification
-in ``BOM_AUTOMATION_SPRINTS.md``: 4.2(5) Licence, 4.2(8) Vulnerabilities, 4.2(9)
-Patch Status, 4.2(10) Release Date, 4.2(11) End-of-Life, 4.2(12) Criticality,
-4.2(13) Usage Restrictions and 4.2(21) CERT-In Unique Identifier. The remaining
-thirteen ordinals are encoded from the s.4.2 table and carry
-``audit=Audit.PROVISIONAL`` until an assessor re-derives them from the published
-PDF clause by clause — that is the S20 catalogue audit, and it is a gate, not a
-formality. One wrong clause discredits every assessment issued (§11).
+**Clause provenance.** s.4.2 of the guideline numbers its 21 data fields 1 to 21, so
+every clause here is the guideline's own number. All 21 were checked against the
+published PDF (v2.0, 09.07.2025, s.4.2 and Table 5) and are anchored. The earlier
+catalogue had 15 to 20 in the wrong order, no "Comments or Notes" (4.2(15)), and an
+extra "Unique Identifier of the Component" that the guideline does not list.
 
-``tests/test_catalogue.py`` asserts the eight anchors so a careless edit to this
-file fails the build.
+``tests/test_catalogue.py`` asserts every anchor, and ``tests/test_guideline_fidelity.py``
+compares the whole catalogue with the guideline's list, so a careless edit fails the build.
 """
 
 from __future__ import annotations
@@ -33,13 +30,26 @@ class Audit(StrEnum):
 #: Keys whose clause numbers are confirmed. Kept beside the catalogue so the test
 #: and the S20 audit read the same list.
 ANCHORED_CLAUSES: dict[str, str] = {
+    "component_name": "4.2(1)",
+    "version": "4.2(2)",
+    "description": "4.2(3)",
+    "supplier_name": "4.2(4)",
     "license": "4.2(5)",
+    "origin": "4.2(6)",
+    "dependencies": "4.2(7)",
     "vulnerabilities": "4.2(8)",
     "patch_status": "4.2(9)",
     "release_date": "4.2(10)",
     "end_of_life": "4.2(11)",
     "criticality": "4.2(12)",
     "usage_restrictions": "4.2(13)",
+    "checksums": "4.2(14)",
+    "comments_notes": "4.2(15)",
+    "author_name": "4.2(16)",
+    "timestamp": "4.2(17)",
+    "executable_property": "4.2(18)",
+    "archive_property": "4.2(19)",
+    "structured_property": "4.2(20)",
     "certin_identifier": "4.2(21)",
 }
 
@@ -196,41 +206,22 @@ ELEMENTS: tuple[MinimumElement, ...] = (
         probe=present("checksums", "hashes"),
     ),
     MinimumElement(
-        key="executable_property",
-        label="Executable Property",
+        key="comments_notes",
+        label="Comments or Notes",
         clause="4.2(15)",
         tier=Tier.CONTEXTUAL,
         determinability=Determinability.AUTO,
-        probe=present("executable", "properties.executable"),
-    ),
-    MinimumElement(
-        key="archive_property",
-        label="Archive Property",
-        clause="4.2(16)",
-        tier=Tier.CONTEXTUAL,
-        determinability=Determinability.AUTO,
-        probe=present("archive", "properties.archive"),
-    ),
-    MinimumElement(
-        key="structured_property",
-        label="Structured Property",
-        clause="4.2(17)",
-        tier=Tier.CONTEXTUAL,
-        determinability=Determinability.AUTO,
-        probe=present("structured", "properties.structured"),
-    ),
-    MinimumElement(
-        key="component_identifier",
-        label="Unique Identifier of the Component",
-        clause="4.2(18)",
-        tier=Tier.CRITICAL,
-        determinability=Determinability.AUTO,
-        probe=present("purl", "cpe", "bom_ref"),
+        probe=present("comment"),
+        rationale=(
+            "Notes or annotations about the component or its inclusion in the SBOM: "
+            "CycloneDX `annotations` about the component, SPDX `comment` or "
+            "`annotations`, or tag-value `PackageComment`."
+        ),
     ),
     MinimumElement(
         key="author_name",
         label="Author / Originator Name",
-        clause="4.2(19)",
+        clause="4.2(16)",
         tier=Tier.STANDARD,
         determinability=Determinability.AUTO,
         probe=present("author", "originator", "doc_author"),
@@ -244,12 +235,36 @@ ELEMENTS: tuple[MinimumElement, ...] = (
     MinimumElement(
         key="timestamp",
         label="Timestamp",
-        clause="4.2(20)",
+        clause="4.2(17)",
         tier=Tier.STANDARD,
         determinability=Determinability.AUTO,
         probe=present("timestamp", "doc_timestamp"),
         scope=Scope.DOCUMENT,
         rationale="When the SBOM was generated — a property of the document.",
+    ),
+    MinimumElement(
+        key="executable_property",
+        label="Executable Property",
+        clause="4.2(18)",
+        tier=Tier.CONTEXTUAL,
+        determinability=Determinability.AUTO,
+        probe=present("executable", "properties.executable"),
+    ),
+    MinimumElement(
+        key="archive_property",
+        label="Archive Property",
+        clause="4.2(19)",
+        tier=Tier.CONTEXTUAL,
+        determinability=Determinability.AUTO,
+        probe=present("archive", "properties.archive"),
+    ),
+    MinimumElement(
+        key="structured_property",
+        label="Structured Property",
+        clause="4.2(20)",
+        tier=Tier.CONTEXTUAL,
+        determinability=Determinability.AUTO,
+        probe=present("structured", "properties.structured"),
     ),
     MinimumElement(
         key="certin_identifier",

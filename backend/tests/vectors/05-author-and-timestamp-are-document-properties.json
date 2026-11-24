@@ -1,6 +1,6 @@
 {
   "name": "author and timestamp are document properties",
-  "rationale": "4.2(19) and 4.2(20) belong to the document, not to each component. Probing per component reports them absent across every entity and tells a supplier they failed two clauses they demonstrably met.",
+  "rationale": "4.2(16) and 4.2(17) belong to the document, not to each component. Probing per component reports them absent across every entity and tells a supplier they failed two clauses they demonstrably met.",
   "lane": "sbom",
   "document": {
     "bomFormat": "CycloneDX",

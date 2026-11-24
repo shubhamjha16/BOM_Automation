@@ -195,6 +195,7 @@ def _normalise(package: _Package, dependencies: dict[str, list[str]]) -> dict[st
         "version": _clean(_first(fields.get("PackageVersion"))),
         "description": _clean(_first(fields.get("PackageDescription")))
         or _clean(_first(fields.get("PackageSummary"))),
+        "comment": _clean(_first(fields.get("PackageComment"))),
         "supplier_raw": _clean(_first(fields.get("PackageSupplier"))),
         "publisher": _clean(_first(fields.get("PackageOriginator"))),
         "author": _clean(_first(fields.get("PackageOriginator"))),

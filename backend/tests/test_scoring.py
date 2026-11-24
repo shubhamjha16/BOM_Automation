@@ -180,7 +180,7 @@ def test_tier_weights_are_ordered():
 
 # --- document-scoped elements ----------------------------------------------
 #
-# Regression: 4.2(19) and 4.2(20) were modelled as per-component fields and
+# Regression: 4.2(16) and 4.2(17) were modelled as per-component fields and
 # scored 0/855 against a real cdxgen SBOM that carried both. A false negative
 # against the supplier is as damaging as one in their favour, and the weighted
 # score hides it completely — 0/855 looks exactly like a genuine gap.

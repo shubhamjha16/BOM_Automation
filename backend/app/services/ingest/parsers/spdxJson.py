@@ -98,13 +98,39 @@ def _checksums(package: dict[str, Any]) -> list[str]:
     ]
 
 
-def _normalise(package: dict[str, Any], dependencies: dict[str, list[str]]) -> dict[str, Any]:
+def _annotation_index(document: dict[str, Any]) -> dict[str, list[str]]:
+    """Document-level annotation comments by the element they are about."""
+    index: dict[str, list[str]] = {}
+    for entry in document.get("annotations", []) or []:
+        if isinstance(entry, dict) and (text := _clean(entry.get("comment"))):
+            index.setdefault(str(entry.get("spdxElementId") or ""), []).append(str(text))
+    return index
+
+
+def _comment(package: dict[str, Any], spdx_id: str, annotations: dict[str, list[str]]) -> str | None:
+    """The package's own comment, its annotations, and annotations made about it."""
+    parts: list[str] = []
+    if text := _clean(package.get("comment")):
+        parts.append(str(text))
+    for entry in package.get("annotations", []) or []:
+        if isinstance(entry, dict) and (text := _clean(entry.get("comment"))):
+            parts.append(str(text))
+    parts.extend(annotations.get(spdx_id, []))
+    return " ".join(parts) or None
+
+
+def _normalise(
+    package: dict[str, Any],
+    dependencies: dict[str, list[str]],
+    annotations: dict[str, list[str]] | None = None,
+) -> dict[str, Any]:
     spdx_id = str(package.get("SPDXID") or "")
     purl, cpe = _external_refs(package)
     return {
         "name": _clean(package.get("name")),
         "version": _clean(package.get("versionInfo")),
         "description": _clean(package.get("description")) or _clean(package.get("summary")),
+        "comment": _comment(package, spdx_id, annotations or {}),
         "supplier_raw": _clean(package.get("supplier")),
         "publisher": _clean(package.get("originator")),
         "author": _clean(package.get("originator")),
@@ -169,6 +195,7 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         return result
 
     dependencies = _dependency_index(payload)
+    annotations = _annotation_index(payload)
 
     for ordinal, package in enumerate(packages):
         if not isinstance(package, dict):
@@ -190,7 +217,7 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
                 ref=str(package.get("name")),
             )
             continue
-        result.entities.append(_normalise(package, dependencies))
+        result.entities.append(_normalise(package, dependencies, annotations))
 
     result.assert_conserved()
     return result

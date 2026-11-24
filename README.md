@@ -12,7 +12,7 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 | **Minimum elements encoded** | 82 across five lanes — SBOM 21 · CBOM 20 · AIBOM 16 · HBOM 15 · QBOM 10 |
 | **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
 | **Scale** | 50,000 components in **~5 s**, ~210 MB peak — `make scale` |
-| **Clause provenance** | 26 of 101 references confirmed — the rest labelled provisional |
+| **Clause provenance** | 39 of 101 references confirmed — the rest labelled provisional |
 | **Our own conformance** | **38.21%, fail** — published anyway |
 
 ```bash
@@ -301,7 +301,7 @@ dist/             our own BOMs, VEX, scorecards and audits per release
 Stated plainly. A conformance tool that overstates its own scope is the first thing a real
 auditor tests.
 
-- **Catalogue provenance is 25.7% confirmed.** 75 of 101 clause references are provisional.
+- **Catalogue provenance is 38.6% confirmed.** 62 of 101 clause references are provisional.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
 - **Narrative drafting is off by default** (`NARRATIVE_ENABLED=false`). With it off,

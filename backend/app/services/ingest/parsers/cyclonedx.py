@@ -62,8 +62,28 @@ def _dependency_index(document: dict[str, Any]) -> dict[str, list[str]]:
     return index
 
 
+def _annotation_index(document: dict[str, Any]) -> dict[str, list[str]]:
+    """Annotation text by the ``bom-ref`` it is about (CycloneDX 1.4+ ``annotations``).
+
+    Feeds the Comments or Notes field (s.4.2(15)): notes "relevant to the software
+    component or its inclusion in the SBOM".
+    """
+    index: dict[str, list[str]] = {}
+    for entry in document.get("annotations", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        text = str(entry.get("text") or "").strip()
+        if not text:
+            continue
+        for subject in entry.get("subjects", []) or []:
+            index.setdefault(str(subject), []).append(text)
+    return index
+
+
 def _normalise_component(
-    component: dict[str, Any], dependencies: dict[str, list[str]]
+    component: dict[str, Any],
+    dependencies: dict[str, list[str]],
+    annotations: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     bom_ref = component.get("bom-ref") or component.get("purl")
     supplier = component.get("supplier")
@@ -71,6 +91,7 @@ def _normalise_component(
         "name": component.get("name"),
         "version": component.get("version"),
         "description": component.get("description"),
+        "comment": " ".join((annotations or {}).get(str(bom_ref), [])) or None,
         "supplier_raw": supplier.get("name") if isinstance(supplier, dict) else None,
         "publisher": component.get("publisher"),
         "author": component.get("author"),
@@ -216,6 +237,7 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         declared_entries=len(components) if isinstance(components, list) else 0,
     )
     dependencies = _dependency_index(payload)
+    annotations = _annotation_index(payload)
     # A lane scores exactly one component type. `sbom` takes everything else,
     # which is why it is expressed as the complement rather than a set.
     wanted = LANE_TYPES.get(lane)
@@ -252,7 +274,7 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         elif wanted is MODEL_TYPES:
             result.entities.append(_normalise_model(component))
         else:
-            result.entities.append(_normalise_component(component, dependencies))
+            result.entities.append(_normalise_component(component, dependencies, annotations))
 
     result.assert_conserved()
     return result

@@ -1,0 +1,565 @@
+{
+  "source": "CERT-In Technical Guidelines on SBOM, QBOM & CBOM, AIBOM and HBOM, Version 2.0, 09.07.2025",
+  "url": "https://www.cert-in.org.in/PDF/TechnicalGuidelines-on-SBOM,QBOM&CBOM,AIBOM_and_HBOM_ver2.0.pdf",
+  "note": "Elements are listed in the order the PDF lists them. Only SBOM s.4.2 is numbered in the PDF; Tables 8-11 are not. pdf_pages are 1-based PDF page indexes (the printed page number is one lower). Tables read from page images and the extracted text. The 'Cryptographic Asset' row of Table 8 is a pointer to Table 9. HBOM 'Product' vs 'Component' group follows the table's own order: the first 11 rows describe the product, then the component rows begin at Technical Specification (a second Supplier Information / Supplier Location pair appears there).",
+  "lanes": {
+    "sbom": {
+      "section": "4.2",
+      "table": "Table 5 / s.4.2 (numbered 1-21)",
+      "pdf_pages": [
+        22,
+        23,
+        24
+      ],
+      "elements": [
+        {
+          "position": 1,
+          "group": null,
+          "name": "Component Name"
+        },
+        {
+          "position": 2,
+          "group": null,
+          "name": "Component Version"
+        },
+        {
+          "position": 3,
+          "group": null,
+          "name": "Component Description"
+        },
+        {
+          "position": 4,
+          "group": null,
+          "name": "Component Supplier"
+        },
+        {
+          "position": 5,
+          "group": null,
+          "name": "Component License"
+        },
+        {
+          "position": 6,
+          "group": null,
+          "name": "Component Origin"
+        },
+        {
+          "position": 7,
+          "group": null,
+          "name": "Component Dependencies"
+        },
+        {
+          "position": 8,
+          "group": null,
+          "name": "Vulnerabilities"
+        },
+        {
+          "position": 9,
+          "group": null,
+          "name": "Patch Status"
+        },
+        {
+          "position": 10,
+          "group": null,
+          "name": "Release Date"
+        },
+        {
+          "position": 11,
+          "group": null,
+          "name": "End-of-Life (EOL) Date"
+        },
+        {
+          "position": 12,
+          "group": null,
+          "name": "Criticality"
+        },
+        {
+          "position": 13,
+          "group": null,
+          "name": "Usage Restrictions"
+        },
+        {
+          "position": 14,
+          "group": null,
+          "name": "Checksums or Hashes"
+        },
+        {
+          "position": 15,
+          "group": null,
+          "name": "Comments or Notes"
+        },
+        {
+          "position": 16,
+          "group": null,
+          "name": "Author of SBOM Data"
+        },
+        {
+          "position": 17,
+          "group": null,
+          "name": "Timestamp"
+        },
+        {
+          "position": 18,
+          "group": null,
+          "name": "Executable Property"
+        },
+        {
+          "position": 19,
+          "group": null,
+          "name": "Archive Property"
+        },
+        {
+          "position": 20,
+          "group": null,
+          "name": "Structured Property"
+        },
+        {
+          "position": 21,
+          "group": null,
+          "name": "Unique Identifier"
+        }
+      ]
+    },
+    "qbom": {
+      "section": "8.3",
+      "table": "Table 8",
+      "pdf_pages": [
+        45,
+        46
+      ],
+      "elements": [
+        {
+          "position": 1,
+          "group": null,
+          "name": "Model Name"
+        },
+        {
+          "position": 2,
+          "group": null,
+          "name": "Version"
+        },
+        {
+          "position": 3,
+          "group": null,
+          "name": "Vendor & Origin Information"
+        },
+        {
+          "position": 4,
+          "group": null,
+          "name": "License Information"
+        },
+        {
+          "position": 5,
+          "group": null,
+          "name": "Cryptographic Asset"
+        },
+        {
+          "position": 6,
+          "group": null,
+          "name": "Communication Protocol"
+        },
+        {
+          "position": 7,
+          "group": null,
+          "name": "Hardware"
+        },
+        {
+          "position": 8,
+          "group": null,
+          "name": "Software Dependencies"
+        },
+        {
+          "position": 9,
+          "group": null,
+          "name": "Environmental Impact"
+        },
+        {
+          "position": 10,
+          "group": null,
+          "name": "Vulnerabilities"
+        },
+        {
+          "position": 11,
+          "group": null,
+          "name": "Attestations"
+        }
+      ]
+    },
+    "cbom": {
+      "section": "8.3",
+      "table": "Table 9",
+      "pdf_pages": [
+        46,
+        47,
+        48,
+        49
+      ],
+      "elements": [
+        {
+          "position": 1,
+          "group": "Algorithms",
+          "name": "Name"
+        },
+        {
+          "position": 2,
+          "group": "Algorithms",
+          "name": "Asset Type"
+        },
+        {
+          "position": 3,
+          "group": "Algorithms",
+          "name": "Primitive"
+        },
+        {
+          "position": 4,
+          "group": "Algorithms",
+          "name": "Mode"
+        },
+        {
+          "position": 5,
+          "group": "Algorithms",
+          "name": "Crypto Functions"
+        },
+        {
+          "position": 6,
+          "group": "Algorithms",
+          "name": "Classical security level"
+        },
+        {
+          "position": 7,
+          "group": "Algorithms",
+          "name": "OID"
+        },
+        {
+          "position": 8,
+          "group": "Algorithms",
+          "name": "List"
+        },
+        {
+          "position": 9,
+          "group": "Keys",
+          "name": "Name"
+        },
+        {
+          "position": 10,
+          "group": "Keys",
+          "name": "Asset Type"
+        },
+        {
+          "position": 11,
+          "group": "Keys",
+          "name": "id"
+        },
+        {
+          "position": 12,
+          "group": "Keys",
+          "name": "state"
+        },
+        {
+          "position": 13,
+          "group": "Keys",
+          "name": "size"
+        },
+        {
+          "position": 14,
+          "group": "Keys",
+          "name": "Creation Date"
+        },
+        {
+          "position": 15,
+          "group": "Keys",
+          "name": "Activation Date"
+        },
+        {
+          "position": 16,
+          "group": "Protocols",
+          "name": "Name"
+        },
+        {
+          "position": 17,
+          "group": "Protocols",
+          "name": "Asset Type"
+        },
+        {
+          "position": 18,
+          "group": "Protocols",
+          "name": "Version"
+        },
+        {
+          "position": 19,
+          "group": "Protocols",
+          "name": "Cipher Suites"
+        },
+        {
+          "position": 20,
+          "group": "Protocols",
+          "name": "OID"
+        },
+        {
+          "position": 21,
+          "group": "Certificates",
+          "name": "Name"
+        },
+        {
+          "position": 22,
+          "group": "Certificates",
+          "name": "Asset Type"
+        },
+        {
+          "position": 23,
+          "group": "Certificates",
+          "name": "Subject Name"
+        },
+        {
+          "position": 24,
+          "group": "Certificates",
+          "name": "Issuer Name"
+        },
+        {
+          "position": 25,
+          "group": "Certificates",
+          "name": "Not Valid Before"
+        },
+        {
+          "position": 26,
+          "group": "Certificates",
+          "name": "Not Valid After"
+        },
+        {
+          "position": 27,
+          "group": "Certificates",
+          "name": "Signature Algorithm Reference"
+        },
+        {
+          "position": 28,
+          "group": "Certificates",
+          "name": "Subject Public Key Reference"
+        },
+        {
+          "position": 29,
+          "group": "Certificates",
+          "name": "Certificate Format"
+        },
+        {
+          "position": 30,
+          "group": "Certificates",
+          "name": "Certificate Extension"
+        }
+      ]
+    },
+    "aibom": {
+      "section": "9.3",
+      "table": "Table 10",
+      "pdf_pages": [
+        55,
+        56
+      ],
+      "elements": [
+        {
+          "position": 1,
+          "group": null,
+          "name": "Model Name"
+        },
+        {
+          "position": 2,
+          "group": null,
+          "name": "Model Version"
+        },
+        {
+          "position": 3,
+          "group": null,
+          "name": "Model Type"
+        },
+        {
+          "position": 4,
+          "group": null,
+          "name": "Model Developer"
+        },
+        {
+          "position": 5,
+          "group": null,
+          "name": "Model Licensing Information"
+        },
+        {
+          "position": 6,
+          "group": null,
+          "name": "Software Dependencies"
+        },
+        {
+          "position": 7,
+          "group": null,
+          "name": "ML Models and Algorithms"
+        },
+        {
+          "position": 8,
+          "group": null,
+          "name": "Model Performance Metrics"
+        },
+        {
+          "position": 9,
+          "group": null,
+          "name": "Data Source"
+        },
+        {
+          "position": 10,
+          "group": null,
+          "name": "Data Sets"
+        },
+        {
+          "position": 11,
+          "group": null,
+          "name": "Hardware"
+        },
+        {
+          "position": 12,
+          "group": null,
+          "name": "Security Requirements"
+        },
+        {
+          "position": 13,
+          "group": null,
+          "name": "Input"
+        },
+        {
+          "position": 14,
+          "group": null,
+          "name": "Output"
+        },
+        {
+          "position": 15,
+          "group": null,
+          "name": "Intended Usage"
+        },
+        {
+          "position": 16,
+          "group": null,
+          "name": "Out of Scope Usage"
+        },
+        {
+          "position": 17,
+          "group": null,
+          "name": "Environmental Impact"
+        },
+        {
+          "position": 18,
+          "group": null,
+          "name": "Vulnerabilities"
+        },
+        {
+          "position": 19,
+          "group": null,
+          "name": "Attestations"
+        }
+      ]
+    },
+    "hbom": {
+      "section": "10.3",
+      "table": "Table 11",
+      "pdf_pages": [
+        61,
+        62
+      ],
+      "elements": [
+        {
+          "position": 1,
+          "group": "Product",
+          "name": "Product Name"
+        },
+        {
+          "position": 2,
+          "group": "Product",
+          "name": "Product Version"
+        },
+        {
+          "position": 3,
+          "group": "Product",
+          "name": "Product Details"
+        },
+        {
+          "position": 4,
+          "group": "Product",
+          "name": "Warranty/AMC"
+        },
+        {
+          "position": 5,
+          "group": "Product",
+          "name": "Manufacturer Name"
+        },
+        {
+          "position": 6,
+          "group": "Product",
+          "name": "Manufacturer Location"
+        },
+        {
+          "position": 7,
+          "group": "Product",
+          "name": "Manufacturing Date"
+        },
+        {
+          "position": 8,
+          "group": "Product",
+          "name": "Supplier Information"
+        },
+        {
+          "position": 9,
+          "group": "Product",
+          "name": "Supplier Location"
+        },
+        {
+          "position": 10,
+          "group": "Product",
+          "name": "Model Number"
+        },
+        {
+          "position": 11,
+          "group": "Product",
+          "name": "Serial Number"
+        },
+        {
+          "position": 12,
+          "group": "Component",
+          "name": "Technical Specification"
+        },
+        {
+          "position": 13,
+          "group": "Component",
+          "name": "Supplier Information"
+        },
+        {
+          "position": 14,
+          "group": "Component",
+          "name": "Supplier Location"
+        },
+        {
+          "position": 15,
+          "group": "Component",
+          "name": "Technology Node"
+        },
+        {
+          "position": 16,
+          "group": "Component",
+          "name": "Compliance"
+        },
+        {
+          "position": 17,
+          "group": "Component",
+          "name": "Power supply"
+        },
+        {
+          "position": 18,
+          "group": "Component",
+          "name": "License Information"
+        },
+        {
+          "position": 19,
+          "group": "Component",
+          "name": "Test Result"
+        },
+        {
+          "position": 20,
+          "group": "Component",
+          "name": "Sub-component"
+        }
+      ]
+    }
+  }
+}

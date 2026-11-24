@@ -594,7 +594,7 @@ numbers say.
 | `dist/bom-automation.cdx.json` | Our own SBOM | Regenerated per release, s.2.3 |
 | `dist/bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM | |
 | `dist/maturity-scorecard.json` | Our s.3.3 position | **below start** |
-| `dist/catalogue-audit.md` | 101 clause references with provenance | **26 confirmed (25.7%)** |
+| `dist/catalogue-audit.md` | 101 clause references with provenance | **39 confirmed (38.6%)** |
 | `dist/scale-report.md` | Measured performance | 50,000 components in ~5 s |
 | `dist/vex/` | CSAF advisories for our own dependencies | One published, `not_affected` with written justification |
 | `SECURITY.md` | Disclosure route, four VEX statuses, dependency-adoption policy per s.3.3.1.4 | |
@@ -640,7 +640,7 @@ auditor tests.
 
 | Limitation | Detail |
 |---|---|
-| **Catalogue provenance is 25.7% confirmed** | 75 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
+| **Catalogue provenance is 38.6% confirmed** | 62 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
 | **Narrative drafting is off by default** | `NARRATIVE_ENABLED=false`. Sections fall back to `NullGenerator`, which restates the engine's findings and marks the section undrafted. Enabling it needs a real key — recognised by its `sk-ant-` prefix, so a placeholder cannot produce a live call from a test run. |
 | **Retrieval ranks in Python, not in the database** | The embedding column is a real `vector(384)` on Postgres, but nearest-neighbour work happens in the application over org-scoped candidates. Exact search is correct at every corpus size and only slow at large ones; an `ivfflat` index is the stated follow-up, and it wants a populated table to choose its list count sensibly. |
 | **Five sandbox containment tests skip without a container runtime** | Skipped with a stated reason rather than passed — a containment assertion that quietly no-ops turns an unproven property into a green suite. The argv guard runs everywhere and fails if any isolation flag is dropped. |

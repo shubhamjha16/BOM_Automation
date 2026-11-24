@@ -141,8 +141,8 @@ erDiagram
         int entry_count "parsed + rejected must equal this"
         int parsed_count
         int rejected_count
-        string doc_author "document-scoped 4.2(19)"
-        timestamptz doc_timestamp "document-scoped 4.2(20)"
+        string doc_author "document-scoped 4.2(16)"
+        timestamptz doc_timestamp "document-scoped 4.2(17)"
         enum status "received|parsed|unreadable"
         timestamptz created_at
     }
