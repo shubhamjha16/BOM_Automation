@@ -81,7 +81,14 @@ async def test_human_elements_are_seeded_with_their_consumer_action(session):
 
     # SBOM criticality and usage restrictions, AIBOM intended and out-of-scope
     # usage, plus the deployment-context determinations the S14 crypto lanes add.
-    assert {"4.2(12)", "4.2(13)", "9.3(15)", "9.3(16)"} <= {row.clause for row in rows}
+    from app.services.catalogue.aibom import ANCHORED_CLAUSES as AIBOM
+
+    assert {
+        "4.2(12)",
+        "4.2(13)",
+        AIBOM["intended_usage"],
+        AIBOM["out_of_scope_usage"],
+    } <= {row.clause for row in rows}
     for row in rows:
         assert row.consumer_action, f"{row.key} has no consumer action"
 

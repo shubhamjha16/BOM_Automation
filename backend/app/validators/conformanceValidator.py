@@ -8,7 +8,7 @@ nothing. One fabricated citation reaching a client discredits every assessment
 the firm has issued, so this refuses to render rather than degrading gracefully.
 
 Correlation findings are checked here too. They cite the guideline exactly as
-field verdicts do (s.8.4.1.2, s.9.3(6), s.8.5.1), so they pass the same gate —
+field verdicts do (s.8.4.1.2, s.9.3 Table 10, s.8.5.1), so they pass the same gate —
 otherwise the one class of finding no single-lane tool can produce would be the
 one class nobody verified.
 """

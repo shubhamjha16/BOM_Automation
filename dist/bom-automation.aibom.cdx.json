@@ -3,7 +3,7 @@
   "specVersion": "1.6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-05T05:13:22.495590+00:00",
+    "timestamp": "2026-11-24T13:52:30.635324+00:00",
     "authors": [
       {
         "name": "BOM Automation"
@@ -16,11 +16,11 @@
     },
     "properties": [
       {
-        "name": "certin:9.3(15):intended_usage",
+        "name": "certin:aibom:intended_usage",
         "value": "BOM Automation assesses Bill of Materials submissions against the CERT-In Technical Guidelines v2.0 and produces a clause-referenced conformance assessment. Language models are used for three things only: classifying intake, drafting narrative prose about verdicts the deterministic engine already computed, and assembling evidence for a VEX justification that an analyst then determines. Every verdict, score and clause reference is produced by deterministic code and is enforced as such by a blocking gate."
       },
       {
-        "name": "certin:9.3(16):out_of_scope_usage",
+        "name": "certin:aibom:out_of_scope_usage",
         "value": "This product does not issue legal or regulatory opinions. A conformance assessment states whether a submission meets the minimum elements of a published technical guideline; it does not establish legal compliance, contractual adequacy or regulatory standing, and it must not be relied upon as advice on any of those. It does not determine VEX status: the four statuses of recommendation 7.1.6 are an analyst's professional judgement and the API refuses an agent-set status. It does not certify a supplier, and a passing score is not an assurance that software is secure \u2014 it states that the declaration is complete, not that what was declared is safe. It is not a vulnerability scanner and does not test running systems."
       }
     ]

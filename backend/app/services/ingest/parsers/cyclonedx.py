@@ -168,13 +168,31 @@ def _normalise_crypto(component: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _normalise_model(component: dict[str, Any]) -> dict[str, Any]:
+def _vulnerability_index(document: dict[str, Any]) -> dict[str, list[str]]:
+    """Vulnerability ids by the ``bom-ref`` they affect (CycloneDX ``vulnerabilities``)."""
+    index: dict[str, list[str]] = {}
+    for entry in document.get("vulnerabilities", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        for affected in entry.get("affects", []) or []:
+            if isinstance(affected, dict) and (ref := affected.get("ref")):
+                index.setdefault(str(ref), []).append(str(entry.get("id") or "vulnerability"))
+    return index
+
+
+def _normalise_model(
+    component: dict[str, Any],
+    vulnerabilities: dict[str, list[str]] | None = None,
+    document_signature: Any = None,
+) -> dict[str, Any]:
     """A CycloneDX ``machine-learning-model`` component plus its modelCard."""
     card = component.get("modelCard") or {}
     parameters = card.get("modelParameters") or {}
     considerations = card.get("considerations") or {}
     supplier = component.get("supplier")
     datasets = parameters.get("datasets") or []
+    approach = parameters.get("approach") or {}
+    bom_ref = component.get("bom-ref") or component.get("purl")
     return {
         "model_name": component.get("name"),
         "model_version": component.get("version"),
@@ -184,19 +202,34 @@ def _normalise_model(component: dict[str, Any]) -> dict[str, Any]:
         or component.get("author"),
         "license_expr": _licence_expression(component),
         "software_dependencies": component.get("dependencies"),
+        "ml_algorithm": parameters.get("architectureFamily")
+        or parameters.get("modelArchitecture")
+        or (approach.get("type") if isinstance(approach, dict) else None),
         "training_data": [
             entry.get("name") if isinstance(entry, dict) else entry for entry in datasets
         ]
         or None,
-        "preprocessing": parameters.get("dataPreprocessing"),
+        "datasets": [entry for entry in datasets if entry] or None,
         "inputs": parameters.get("inputs"),
         "outputs": parameters.get("outputs"),
         "metrics": (card.get("quantitativeAnalysis") or {}).get("performanceMetrics"),
-        "evaluation": card.get("quantitativeAnalysis"),
-        "limitations": considerations.get("ethicalConsiderations")
-        or considerations.get("technicalLimitations"),
         "hardware": parameters.get("computeRequirements"),
-        # 9.3(15)–(16) are governance declarations; no artifact carries them.
+        "environmental": considerations.get("environmentalConsiderations"),
+        # CycloneDX has no field for the model's security requirements; the repo's
+        # convention for such fields is a `certin:` property.
+        "security_requirements": next(
+            (
+                prop.get("value")
+                for prop in component.get("properties", []) or []
+                if isinstance(prop, dict) and prop.get("name") == "certin:security_requirements"
+            ),
+            None,
+        ),
+        "vulnerabilities": (vulnerabilities or {}).get(str(bom_ref)) or None,
+        # A signature on the model itself, else the one on the whole document.
+        "signature": component.get("signature") or document_signature,
+        # Intended Usage and Out of Scope Usage are governance declarations; no artifact
+        # carries them, so they are consumer-determined and never read from the BOM.
         "intended_usage": None,
         "out_of_scope_usage": None,
     }
@@ -238,6 +271,7 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
     )
     dependencies = _dependency_index(payload)
     annotations = _annotation_index(payload)
+    vulnerabilities = _vulnerability_index(payload)
     # A lane scores exactly one component type. `sbom` takes everything else,
     # which is why it is expressed as the complement rather than a set.
     wanted = LANE_TYPES.get(lane)
@@ -272,7 +306,9 @@ def parse(payload: dict[str, Any], *, lane: str = "sbom") -> ParseResult:
         if wanted is CRYPTO_TYPES:
             result.entities.append(_normalise_crypto(component))
         elif wanted is MODEL_TYPES:
-            result.entities.append(_normalise_model(component))
+            result.entities.append(
+                _normalise_model(component, vulnerabilities, payload.get("signature"))
+            )
         else:
             result.entities.append(_normalise_component(component, dependencies, annotations))
 

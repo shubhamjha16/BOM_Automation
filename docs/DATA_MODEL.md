@@ -268,9 +268,9 @@ erDiagram
 | SBOM | s.4.2 | 21 | 7 / 8 / 6 | 15 / 4 / 2 |
 | CBOM | s.8.4 | 20 | 11 / 6 / 3 | 19 / 0 / 1 |
 | QBOM | s.8.5 | 10 | 3 / 5 / 2 | 9 / 0 / 1 |
-| AIBOM | s.9.3 | 16 | 6 / 7 / 3 | 14 / 0 / 2 |
+| AIBOM | s.9.3 | 19 | 6 / 9 / 4 | 17 / 0 / 2 |
 | HBOM | s.10.2 | 15 | 8 / 5 / 2 | 14 / 0 / 1 |
-| **Total** | | **82** | **35 / 31 / 16** | **71 / 4 / 7** |
+| **Total** | | **85** | **35 / 33 / 17** | **74 / 4 / 7** |
 
 **`determinability` decides who is accountable for an absence.**
 
@@ -279,7 +279,7 @@ erDiagram
   enrichment is still a supplier gap, but the feed outage is reported distinctly.
 - `human` — **the supplier could not have supplied it.** Criticality, s.4.2(12), is
   relative to the consuming deployment. Usage Restrictions, s.4.2(13), is a legal
-  determination. Intended and Out-of-Scope Usage, s.9.3(15)–(16), are governance
+  determination. Intended and Out of Scope Usage (s.9.3, Table 10) are governance
   declarations. Scoring these as defects produces a report that is wrong in the client's
   favour; scoring them as compliant puts a green tick on a field nobody checked. Both end
   with a client failing a real audit while holding our assessment. So they leave the

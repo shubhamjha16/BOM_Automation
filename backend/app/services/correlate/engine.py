@@ -25,6 +25,7 @@ from app.services.correlate import (
     quantumExposure,
     vexCoverage,
 )
+from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
 from app.services.correlate.rules import Finding, Rule, Severity
 from app.utils.logger import get_logger
 
@@ -46,7 +47,7 @@ RULES: tuple[Rule, ...] = (
     Rule(
         key="modelDepsInSbom",
         label="AIBOM dependencies absent from the SBOM",
-        clause="9.3(6)",
+        clause=SOFTWARE_DEPENDENCIES_CLAUSE,
         severity=Severity.HIGH,
         requires=("aibom", "sbom"),
         body=modelDepsInSbom.check,

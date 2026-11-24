@@ -203,7 +203,7 @@ async def test_a_real_assessment_carries_only_traceable_clauses():
 
 
 async def test_the_four_consumer_determinations_render_in_their_own_section():
-    """4.2(12), 4.2(13) for SBOM and 9.3(15)-(16) for AIBOM, with rationale."""
+    """4.2(12), 4.2(13) for SBOM and Intended / Out of Scope Usage for AIBOM, with rationale."""
     from app.services.catalogue.loader import get_catalogue
 
     sbom = {
@@ -214,7 +214,12 @@ async def test_the_four_consumer_determinations_render_in_their_own_section():
     }
 
     assert set(sbom) == {"4.2(12)", "4.2(13)"}
-    assert set(aibom) == {"9.3(15)", "9.3(16)"}
+    from app.services.catalogue import aibom as aibom_catalogue
+
+    assert set(aibom) == {
+        aibom_catalogue.ANCHORED_CLAUSES["intended_usage"],
+        aibom_catalogue.ANCHORED_CLAUSES["out_of_scope_usage"],
+    }
     for element in list(sbom.values()) + list(aibom.values()):
         assert element.rationale, f"{element.key} renders with no rationale"
         assert element.consumer_action, f"{element.key} renders with no action"
@@ -289,15 +294,23 @@ def test_the_gate_runs_before_anything_renders():
 def test_known_clauses_covers_every_lane():
     clauses = known_clauses()
     assert "4.2(21)" in clauses
-    assert "9.3(16)" in clauses
+    from app.services.catalogue.aibom import ANCHORED_CLAUSES
+
+    assert ANCHORED_CLAUSES["out_of_scope_usage"] in clauses
 
 
 def test_correlation_clauses_come_from_the_rules_themselves():
     """Held beside the rules, not hardcoded in the validator."""
-    assert {"8.4.1.2", "9.3(6)", "8.5.1"} <= correlation_clauses()
+    from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
+
+    assert {"8.4.1.2", SOFTWARE_DEPENDENCIES_CLAUSE, "8.5.1"} <= correlation_clauses()
 
 
 def test_a_lane_clause_used_by_the_wrong_lane_is_refused():
-    """9.3(6) is an AIBOM clause; an SBOM field verdict citing it is a bug."""
+    """Software Dependencies is an AIBOM clause; an SBOM field verdict citing it is a bug."""
+    from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
+
     with pytest.raises(ClauseNotTraceable):
-        assert_all_traceable([Citation(clause="9.3(6)", lane="sbom", source="sbom.x")])
+        assert_all_traceable(
+            [Citation(clause=SOFTWARE_DEPENDENCIES_CLAUSE, lane="sbom", source="sbom.x")]
+        )

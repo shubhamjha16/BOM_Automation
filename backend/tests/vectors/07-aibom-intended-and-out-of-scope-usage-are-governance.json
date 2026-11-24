@@ -1,6 +1,6 @@
 {
   "name": "AIBOM intended and out-of-scope usage are governance declarations",
-  "rationale": "9.3(15)-(16) describe the deploying organisation's own use. The model's developer states what it was built for; only the deployer can state what it is being used for and what has been ruled out.",
+  "rationale": "Table 10's Intended Usage and Out of Scope Usage describe the deploying organisation's own use. The model's developer states what it was built for; only the deployer can state what it is being used for and what has been ruled out.",
   "lane": "aibom",
   "document": {
     "bomFormat": "CycloneDX",

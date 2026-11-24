@@ -10,6 +10,7 @@ from __future__ import annotations
 import pytest
 
 from app.services.assessmentService import run_assessment
+from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
 from app.services.correlate.engine import RULES, correlate, rule_catalogue
 from app.services.correlate.rules import Severity
 from app.services.graph.state import SubmissionDocument
@@ -129,7 +130,7 @@ async def test_crypto_in_sbom_appears_in_a_real_assessment():
 
 
 def test_aibom_dependencies_absent_from_the_sbom_raise_a_finding():
-    """The §S9 exit proof, citing s.9.3(6): the SBOM is incomplete."""
+    """The §S9 exit proof, citing s.9.3 Table 10 (Software Dependencies): the SBOM is incomplete."""
     report = correlate(
         {
             "sbom": _sbom("numpy", "requests"),
@@ -144,7 +145,7 @@ def test_aibom_dependencies_absent_from_the_sbom_raise_a_finding():
     findings = {finding.rule_key: finding for finding in report.findings}
 
     assert "modelDepsInSbom" in findings
-    assert findings["modelDepsInSbom"].clause == "9.3(6)"
+    assert findings["modelDepsInSbom"].clause == SOFTWARE_DEPENDENCIES_CLAUSE
     assert "torch" in findings["modelDepsInSbom"].detail
     assert "transformers" in findings["modelDepsInSbom"].detail
     # numpy is present in the SBOM, so it is not reported.
@@ -183,7 +184,7 @@ def test_a_purl_named_component_counts_as_present():
 
 
 def test_an_aibom_declaring_no_dependencies_raises_nothing_here():
-    """That is a 9.3(6) field verdict, not a correlation finding."""
+    """That is a Software Dependencies field verdict, not a correlation finding."""
     report = correlate({"sbom": _sbom("numpy"), "aibom": [{"model_name": "m"}]})
     assert "modelDepsInSbom" not in [finding.rule_key for finding in report.findings]
 
@@ -296,7 +297,7 @@ def test_the_rule_catalogue_is_inspectable():
 
     by_key = {rule["key"]: rule for rule in catalogue}
     assert by_key["cryptoInSbom"]["clause"] == "8.4.1.2"
-    assert by_key["modelDepsInSbom"]["clause"] == "9.3(6)"
+    assert by_key["modelDepsInSbom"]["clause"] == SOFTWARE_DEPENDENCIES_CLAUSE
     assert by_key["algorithmQuantumExposure"]["clause"] == "8.5.1"
     assert by_key["firmwareInHbom"]["implemented"] is True
     assert by_key["vexCoverage"]["implemented"] is False

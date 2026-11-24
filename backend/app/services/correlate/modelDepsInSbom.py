@@ -1,6 +1,6 @@
 """AIBOM software dependencies that are absent from the SBOM.
 
-s.9.3(6) requires an AIBOM to declare the model's software dependencies. If a
+s.9.3 Table 10 (Software Dependencies) requires an AIBOM to declare the model's software dependencies. If a
 dependency is declared there and does not appear in the SBOM, **the SBOM is
 incomplete** — and that is a finding about the SBOM which no amount of SBOM
 scoring could produce, because the SBOM is internally consistent. Only the other
@@ -12,6 +12,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from app.services.catalogue.aibom import SOFTWARE_DEPENDENCIES_CLAUSE
 from app.services.correlate.rules import Finding, Severity
 
 
@@ -66,7 +67,7 @@ def check(lanes: Mapping[str, Sequence[dict[str, Any]]]) -> list[Finding]:
         Finding(
             rule_key="modelDepsInSbom",
             severity=Severity.HIGH,
-            clause="9.3(6)",
+            clause=SOFTWARE_DEPENDENCIES_CLAUSE,
             detail=(
                 f"the AIBOM declares {len(missing)} software dependenc"
                 f"{'y' if len(missing) == 1 else 'ies'} absent from the SBOM "

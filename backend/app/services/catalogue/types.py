@@ -38,6 +38,20 @@ class Scope(StrEnum):
     DOCUMENT = "document"
 
 
+def table_clause(section: str, table: int, name: str, group: str | None = None) -> str:
+    """The citation for an element of one of the guideline's *unnumbered* tables.
+
+    Tables 8 to 11 (QBOM and CBOM, AIBOM, HBOM) list elements by name and give them
+    no clause numbers, so the only faithful reference is where the element sits and
+    what the guideline calls it: ``"9.3 Table 10: Software Dependencies"``. A table
+    that groups its rows (Table 9's Algorithms, Keys, Protocols, Certificates;
+    Table 11's product and component rows) puts the group before the name, because
+    the same name can occur in two groups: ``"8.3 Table 9: Keys - Name"``.
+    """
+    label = f"{group} - {name}" if group else name
+    return f"{section} Table {table}: {label}"
+
+
 @dataclass(frozen=True, slots=True)
 class MinimumElement:
     """One row of a CERT-In minimum-element table."""

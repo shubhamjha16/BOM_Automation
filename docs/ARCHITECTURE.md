@@ -94,7 +94,7 @@ graph TB
     end
 
     subgraph services["services/ — the product"]
-        CAT["catalogue/<br/>82 minimum elements, 5 tables"]
+        CAT["catalogue/<br/>85 minimum elements, 5 tables"]
         SCORE["score/<br/>coverage · weighting · verdict"]
         GRAPH["graph/<br/>LangGraph, no module over 200 lines"]
         INGEST["ingest/<br/>CycloneDX · SPDX · asset register"]
@@ -248,7 +248,7 @@ flowchart LR
     end
 
     subgraph elements["catalogue/"]
-        E1["82 minimum elements"]
+        E1["85 minimum elements"]
         E2["tier: critical 3.0<br/>standard 2.0<br/>contextual 1.0"]
         E3["determinability:<br/>auto · enrich · human"]
         E4["scope: entity · document"]
@@ -331,7 +331,7 @@ graph TB
 
     subgraph rules["correlate/rules.py"]
         R1["cryptoInSbom · s.8.4.1.2 · high<br/>OpenSSL in the SBOM, no CBOM"]
-        R2["modelDepsInSbom · s.9.3(6) · high<br/>AIBOM names torch, SBOM does not"]
+        R2["modelDepsInSbom · s.9.3 Table 10: Software Dependencies · high<br/>AIBOM names torch, SBOM does not"]
         R3["algorithmQuantumExposure · s.8.5.1 · high<br/>RSA declared, no PQC migration path"]
         R4["firmwareInHbom · s.10.2.4 · medium<br/>declared firmware with no SBOM coverage"]
         R5["vexCoverage · rec. 7.1.6 · critical<br/>pending: needs the VEX store populated"]

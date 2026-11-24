@@ -55,7 +55,7 @@ class MinimumElement(UuidPrimaryKey, Timestamped, Base):
     key: Mapped[str] = mapped_column(String(64), nullable=False)
     label: Mapped[str] = mapped_column(String(255), nullable=False)
     #: The clause every verdict citing this element resolves through (S8).
-    clause: Mapped[str] = mapped_column(String(32), nullable=False)
+    clause: Mapped[str] = mapped_column(String(96), nullable=False)
     tier: Mapped[Tier] = mapped_column(
         Enum(Tier, name="element_tier", values_callable=lambda e: [i.value for i in e]),
         nullable=False,

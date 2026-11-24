@@ -89,7 +89,7 @@ class FieldVerdictRow(UuidPrimaryKey, Timestamped, Base):
     #: Denormalised so a verdict remains readable if the catalogue row is ever
     #: superseded. The clause gate (S8) still resolves through the FK.
     element_key: Mapped[str] = mapped_column(String(64), nullable=False)
-    clause: Mapped[str] = mapped_column(String(32), nullable=False)
+    clause: Mapped[str] = mapped_column(String(96), nullable=False)
     verdict: Mapped[FieldVerdict] = mapped_column(
         Enum(FieldVerdict, name="field_verdict", values_callable=lambda e: [i.value for i in e]),
         nullable=False,

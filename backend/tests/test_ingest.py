@@ -96,7 +96,7 @@ def test_model_components_normalise_to_the_aibom_shape():
     assert entity["model_name"] == "claude-sonnet-4-5"
     assert entity["developer"] == "Anthropic"
     assert entity["model_type"] == "transformer"
-    # 9.3(15)-(16) are governance declarations; no artifact carries them.
+    # Intended and Out of Scope Usage are governance declarations; no artifact carries them.
     assert entity["intended_usage"] is None
     assert entity["out_of_scope_usage"] is None
 

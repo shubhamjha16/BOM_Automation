@@ -34,7 +34,7 @@ class CorrelationFindingRow(UuidPrimaryKey, Timestamped, Base):
     rule_key: Mapped[str] = mapped_column(String(64), nullable=False)
     severity: Mapped[str] = mapped_column(String(10), nullable=False)
     #: Cited exactly as a field verdict cites one, and gated the same way.
-    clause: Mapped[str] = mapped_column(String(32), nullable=False)
+    clause: Mapped[str] = mapped_column(String(96), nullable=False)
     detail: Mapped[str] = mapped_column(Text, nullable=False)
     left_ref: Mapped[str | None] = mapped_column(String(255))
     right_ref: Mapped[str | None] = mapped_column(String(255))

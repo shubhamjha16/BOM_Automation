@@ -9,10 +9,10 @@ CBOM, AIBOM and HBOM*, **v2.0, 09.07.2025**.
 
 | | |
 |---|---|
-| **Minimum elements encoded** | 82 across five lanes — SBOM 21 · CBOM 20 · AIBOM 16 · HBOM 15 · QBOM 10 |
+| **Minimum elements encoded** | 85 across five lanes — SBOM 21 · CBOM 20 · AIBOM 19 · HBOM 15 · QBOM 10 |
 | **Tests** | 806 backend · 36 frontend · ruff, mypy and `tsc` clean |
 | **Scale** | 50,000 components in **~5 s**, ~210 MB peak — `make scale` |
-| **Clause provenance** | 39 of 101 references confirmed — the rest labelled provisional |
+| **Clause provenance** | 55 of 104 references confirmed — the rest labelled provisional |
 | **Our own conformance** | **38.21%, fail** — published anyway |
 
 ```bash
@@ -63,10 +63,10 @@ flowchart LR
 ```
 
 Criticality (s.4.2(12)) is relative to the *consuming deployment*. Usage Restrictions
-(s.4.2(13)) is a legal determination. Intended and Out-of-Scope Usage (s.9.3(15)–(16)) are
+(s.4.2(13)) is a legal determination. Intended and Out of Scope Usage (s.9.3, Table 10) are
 governance declarations. **A supplier could not have supplied any of them.** Scoring them
 as defects produces a report a supplier can discredit; scoring them as compliant puts a
-green tick on a field nobody checked. Seven of the eighty-two elements are excluded from
+green tick on a field nobody checked. Seven of the eighty-five elements are excluded from
 the supplier score entirely, and each names the action the consuming organisation must take.
 
 ---
@@ -108,7 +108,7 @@ is absent, disabled or times out is a reported finding, never a crashed assessme
 | SBOM | s.4.2 | 21 | CycloneDX JSON/XML, SPDX JSON, SPDX tag-value |
 | CBOM | s.8.4 | 20 | CycloneDX 1.6 cryptographic assets — algorithms, keys, protocols, certificates |
 | QBOM | s.8.5 | 10 | CycloneDX 1.6 |
-| AIBOM | s.9.3 | 16 | CycloneDX 1.6 model cards |
+| AIBOM | s.9.3 | 19 | CycloneDX 1.6 model cards |
 | HBOM | s.10.2 | 15 | CSV/XLSX asset register **or** CycloneDX `type: device` |
 
 **None of these tables was ever approximated.** Each lane stayed empty — and therefore
@@ -120,7 +120,7 @@ produces a confident score against invented clauses.
 | Rule | Clause | Finding |
 |---|---|---|
 | `cryptoInSbom` | s.8.4.1.2 | OpenSSL in the SBOM with no CBOM declaring assets |
-| `modelDepsInSbom` | s.9.3(6) | The AIBOM names `torch`; the SBOM does not — the SBOM is incomplete |
+| `modelDepsInSbom` | s.9.3 Table 10: Software Dependencies | The AIBOM names `torch`; the SBOM does not — the SBOM is incomplete |
 | `algorithmQuantumExposure` | s.8.5.1 | RSA or ECC declared with no PQC migration path |
 | `firmwareInHbom` | s.10.2.4 | Declared firmware with no SBOM coverage |
 
@@ -206,7 +206,7 @@ self-conformance: 38.21% (fail) over 906 components
 | `bom-automation.cdx.json` | Our own SBOM, regenerated per release per s.2.3 |
 | `bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM |
 | `maturity-scorecard.json` | Our s.3.3 position: **below start** |
-| `catalogue-audit.md` | All 101 clause references with provenance: **26 confirmed** |
+| `catalogue-audit.md` | All 104 clause references with provenance: **55 confirmed** |
 | `scale-report.md` | Measured performance, per lane |
 | `vex/` | A real CSAF advisory for a real CVE in one of our dependencies |
 
@@ -301,7 +301,7 @@ dist/             our own BOMs, VEX, scorecards and audits per release
 Stated plainly. A conformance tool that overstates its own scope is the first thing a real
 auditor tests.
 
-- **Catalogue provenance is 38.6% confirmed.** 62 of 101 clause references are provisional.
+- **Catalogue provenance is 52.9% confirmed.** 49 of 104 clause references are provisional.
   The audit that resolves them is a person reading the published PDF; the instrument
   produces the worksheet and states plainly that it **cannot perform the audit itself**.
 - **Narrative drafting is off by default** (`NARRATIVE_ENABLED=false`). With it off,

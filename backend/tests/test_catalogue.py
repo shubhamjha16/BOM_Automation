@@ -40,7 +40,10 @@ def test_every_clause_sits_under_its_lane_root():
 
 
 def test_clause_ordinals_are_unique_and_contiguous_within_a_lane():
-    for lane in ("sbom", "aibom"):
+    # Only SBOM s.4.2 is numbered by the guideline. The other lanes cite elements of
+    # unnumbered tables by section, table and name; their order is checked against the
+    # guideline's list in tests/test_guideline_fidelity.py.
+    for lane in ("sbom",):
         ordinals = [
             int(element.clause.split("(")[1].rstrip(")"))
             for element in get_catalogue(lane).elements
@@ -67,14 +70,16 @@ def test_human_elements_are_excluded_from_the_supplier_score():
 
 
 def test_the_four_known_consumer_determinations():
-    """4.2(12), 4.2(13), 9.3(15) and 9.3(16) — named in the specification."""
+    """4.2(12), 4.2(13), and AIBOM Intended Usage and Out of Scope Usage — named in the specification."""
     assert {element.clause for element in get_catalogue("sbom").consumer_determined} == {
         "4.2(12)",
         "4.2(13)",
     }
+    from app.services.catalogue import aibom
+
     assert {element.clause for element in get_catalogue("aibom").consumer_determined} == {
-        "9.3(15)",
-        "9.3(16)",
+        aibom.ANCHORED_CLAUSES["intended_usage"],
+        aibom.ANCHORED_CLAUSES["out_of_scope_usage"],
     }
 
 

@@ -496,13 +496,13 @@ def test_our_own_aibom_declares_every_model_we_use():
 
 
 def test_our_own_aibom_carries_the_two_governance_declarations():
-    """9.3(15)-(16) score not_determinable for every supplier because they are
+    """AIBOM Intended and Out of Scope Usage score not_determinable for every supplier because they are
     governance statements. We can supply ours; we are the deployer."""
     from app.services.self import aibom
 
     properties = {item["name"]: item["value"] for item in aibom.build()["metadata"]["properties"]}
-    assert "certin:9.3(15):intended_usage" in properties
-    assert "certin:9.3(16):out_of_scope_usage" in properties
+    assert "certin:aibom:intended_usage" in properties
+    assert "certin:aibom:out_of_scope_usage" in properties
 
 
 def test_the_out_of_scope_statement_disclaims_legal_opinions():

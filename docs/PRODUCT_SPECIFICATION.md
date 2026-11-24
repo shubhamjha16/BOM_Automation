@@ -94,9 +94,9 @@ stateDiagram-v2
 | `absent` | Some or no applicable entity populates it | Counts, with the coverage ratio reported |
 | `not_determinable` | **No supplier could have supplied this** | **Excluded**, reported separately with the consumer action |
 
-Seven of the eighty-two encoded elements are `not_determinable` by construction:
+Seven of the eighty-five encoded elements are `not_determinable` by construction:
 s.4.2(12) Criticality, s.4.2(13) Usage Restrictions, s.8.4.4.1 Deployment Context,
-s.8.5.10 Quantum Exposure, s.9.3(15) Intended Usage, s.9.3(16) Out-of-Scope Usage, and
+s.8.5.10 Quantum Exposure, s.9.3 Table 10 Intended Usage, s.9.3 Table 10 Out of Scope Usage, and
 s.10.2(14) Deployment Criticality and Siting.
 
 Scoring these as defects produces a report that is wrong in the *supplier's* disfavour, and
@@ -160,7 +160,7 @@ claim the second when it measured the first.
 | SBOM | s.4.2 | 21 | CycloneDX JSON/XML, SPDX JSON, SPDX tag-value |
 | CBOM | s.8.4 | 20 | CycloneDX 1.6 cryptographic assets |
 | QBOM | s.8.5 | 10 | CycloneDX 1.6 |
-| AIBOM | s.9.3 | 16 | CycloneDX 1.6 model cards |
+| AIBOM | s.9.3 | 19 | CycloneDX 1.6 model cards |
 | HBOM | s.10.2 | 15 | CSV / XLSX asset register, **or** CycloneDX `type: device` |
 
 Full element inventory: [COMPLIANCE_MATRIX.md](COMPLIANCE_MATRIX.md).
@@ -183,7 +183,7 @@ running five lanes over one submission rather than five separate tools.
 | Rule | Clause | Severity | Finding |
 |---|---|---|---|
 | `cryptoInSbom` | s.8.4.1.2 | high | OpenSSL, libsodium, wolfSSL or Bouncy Castle in the SBOM with no CBOM declaring assets |
-| `modelDepsInSbom` | s.9.3(6) | high | The AIBOM names `torch`; the SBOM does not — the SBOM is incomplete |
+| `modelDepsInSbom` | s.9.3 Table 10: Software Dependencies | high | The AIBOM names `torch`; the SBOM does not — the SBOM is incomplete |
 | `algorithmQuantumExposure` | s.8.5.1 | high | RSA, ECC, Diffie-Hellman or DSA declared with no PQC migration path |
 | `firmwareInHbom` | s.10.2.4 | medium | Declared firmware with no SBOM coverage |
 | `vexCoverage` | rec. 7.1.6 | critical | *Pending* — reported as pending, never silently missing |
@@ -594,7 +594,7 @@ numbers say.
 | `dist/bom-automation.cdx.json` | Our own SBOM | Regenerated per release, s.2.3 |
 | `dist/bom-automation.aibom.cdx.json` · `.cbom.cdx.json` | Our own AIBOM and CBOM | |
 | `dist/maturity-scorecard.json` | Our s.3.3 position | **below start** |
-| `dist/catalogue-audit.md` | 101 clause references with provenance | **39 confirmed (38.6%)** |
+| `dist/catalogue-audit.md` | 104 clause references with provenance | **55 confirmed (52.9%)** |
 | `dist/scale-report.md` | Measured performance | 50,000 components in ~5 s |
 | `dist/vex/` | CSAF advisories for our own dependencies | One published, `not_affected` with written justification |
 | `SECURITY.md` | Disclosure route, four VEX statuses, dependency-adoption policy per s.3.3.1.4 | |
@@ -640,7 +640,7 @@ auditor tests.
 
 | Limitation | Detail |
 |---|---|
-| **Catalogue provenance is 38.6% confirmed** | 62 of 101 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
+| **Catalogue provenance is 52.9% confirmed** | 49 of 104 clause references are provisional. The audit that resolves them is a person reading the published PDF; `services/catalogue/audit.py` produces the worksheet and states plainly that it cannot perform the audit itself. |
 | **Narrative drafting is off by default** | `NARRATIVE_ENABLED=false`. Sections fall back to `NullGenerator`, which restates the engine's findings and marks the section undrafted. Enabling it needs a real key — recognised by its `sk-ant-` prefix, so a placeholder cannot produce a live call from a test run. |
 | **Retrieval ranks in Python, not in the database** | The embedding column is a real `vector(384)` on Postgres, but nearest-neighbour work happens in the application over org-scoped candidates. Exact search is correct at every corpus size and only slow at large ones; an `ivfflat` index is the stated follow-up, and it wants a populated table to choose its list count sensibly. |
 | **Five sandbox containment tests skip without a container runtime** | Skipped with a stated reason rather than passed — a containment assertion that quietly no-ops turns an unproven property into a green suite. The argv guard runs everywhere and fails if any isolation flag is dropped. |

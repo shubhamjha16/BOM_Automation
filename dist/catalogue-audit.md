@@ -2,11 +2,11 @@
 
 Every clause reference this product can place in front of a client, with its provenance. **Anchored** means the ordinal has been confirmed against the published CERT-In guideline v2.0 (09.07.2025). **Provisional** means it was encoded from the table and has not been.
 
-**39 of 101 clause references confirmed (38.61%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
+**55 of 104 clause references confirmed (52.88%).** The remainder are provisional. That number is published rather than rounded up, because a provisional ordinal presented as confirmed is the one defect that would discredit every assessment issued.
 
 | Source | Confirmed | Total | % |
 | --- | ---: | ---: | ---: |
-| aibom | 3 | 16 | 18.75% |
+| aibom | 19 | 19 | 100.0% |
 | cbom | 1 | 20 | 5.0% |
 | correlation | 5 | 5 | 100.0% |
 | hbom | 1 | 15 | 6.67% |
@@ -46,19 +46,6 @@ Every clause reference this product can place in front of a client, with its pro
 | qbom | environmental_impact | Environmental Impact | s.8.5.8 |
 | qbom | attestations | Attestations and Certifications | s.8.5.9 |
 | qbom | deployment_exposure | Quantum Exposure of the Consuming Deployment | s.8.5.10 |
-| aibom | model_name | Model Name | 9.3(1) |
-| aibom | model_version | Model Version | 9.3(2) |
-| aibom | model_type | Model Type / Architecture | 9.3(3) |
-| aibom | developer | Model Developer | 9.3(4) |
-| aibom | license | Model Licence | 9.3(5) |
-| aibom | training_data_source | Training Data Source | 9.3(7) |
-| aibom | data_preprocessing | Data Pre-processing | 9.3(8) |
-| aibom | model_inputs | Model Inputs | 9.3(9) |
-| aibom | model_outputs | Model Outputs | 9.3(10) |
-| aibom | performance_metrics | Performance Metrics | 9.3(11) |
-| aibom | evaluation_results | Evaluation Results | 9.3(12) |
-| aibom | known_limitations | Known Limitations and Biases | 9.3(13) |
-| aibom | hardware_requirements | Hardware / Compute Requirements | 9.3(14) |
 | hbom | product_name | Product Name | 10.2(1) |
 | hbom | model_number | Model Number | 10.2(2) |
 | hbom | serial_number | Serial Number | 10.2(3) |

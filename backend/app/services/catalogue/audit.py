@@ -59,14 +59,23 @@ class Notation(StrEnum):
 
     SECTION = "section"
     TABLE_ORDINAL = "table_ordinal"
+    #: An element of an unnumbered table, cited by section, table and name
+    #: (``9.3 Table 10: Software Dependencies``). Unambiguous by construction, so it
+    #: is neither ordinal-checked nor collision-checked; its order is checked against
+    #: the guideline's own list by ``tests/test_guideline_fidelity.py``.
+    TABLE_ELEMENT = "table_element"
 
 
 def notation_of(clause: str) -> Notation:
+    if " Table " in clause:
+        return Notation.TABLE_ELEMENT
     return Notation.TABLE_ORDINAL if "(" in clause else Notation.SECTION
 
 
 def _sort_key(clause: str) -> tuple[int, ...]:
     """Dotted numbers compared numerically, so ``8.4.1.10`` follows ``8.4.1.9``."""
+    if " Table " in clause:
+        clause = clause.split(" Table ", 1)[0]
     digits = clause.replace("(", ".").replace(")", "")
     return tuple(int(part) for part in digits.split(".") if part.isdigit())
 
@@ -127,7 +136,7 @@ def _lane_rows(lane: Lane) -> list[AuditRow]:
 
 
 def _correlation_rows() -> list[AuditRow]:
-    """Correlation rules cite s.8.4.1.2, s.9.3(6) and s.8.5.1 — sections about
+    """Correlation rules cite s.8.4.1.2, s.9.3 Table 10 (Software Dependencies) and s.8.5.1 — sections about
     the *presence* of a declaration rather than a field inside one.
 
     All three are anchored: the specification names these section numbers in
@@ -201,7 +210,7 @@ def duplicated_clauses() -> dict[str, list[str]]:
     Two elements claiming one ordinal means at least one of them is wrong, and it
     is the single most likely transcription error when a table is keyed in by
     hand. Across sources is fine and expected — a correlation rule and a field
-    check may both cite s.9.3(6).
+    check may both cite s.9.3 Table 10 (Software Dependencies).
     """
     seen: dict[tuple[str, str], list[str]] = {}
     for row in worksheet():
@@ -258,7 +267,7 @@ def ordering_findings() -> dict[str, str]:
     findings: dict[str, str] = {}
     by_source: dict[tuple[str, Notation], list[AuditRow]] = {}
     for row in worksheet():
-        if row.source not in ALL_LANES:
+        if row.source not in ALL_LANES or notation_of(row.clause) is Notation.TABLE_ELEMENT:
             continue
         by_source.setdefault((row.source, notation_of(row.clause)), []).append(row)
 
@@ -293,6 +302,8 @@ def near_collisions() -> dict[str, list[str]]:
     """
     grouped: dict[tuple[str, tuple[int, ...]], set[str]] = {}
     for row in worksheet():
+        if notation_of(row.clause) is Notation.TABLE_ELEMENT:
+            continue
         grouped.setdefault((row.source, _sort_key(row.clause)), set()).add(row.clause)
     return {
         source: sorted(clauses)
@@ -313,7 +324,7 @@ def cite(clause: str) -> str:
     """
     if not clause or not any(character.isdigit() for character in clause):
         return clause
-    return f"s.{clause}" if notation_of(clause) is Notation.SECTION else clause
+    return f"s.{clause}" if notation_of(clause) is not Notation.TABLE_ORDINAL else clause
 
 
 def render_markdown() -> str:

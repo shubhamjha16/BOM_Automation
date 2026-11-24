@@ -4,7 +4,7 @@ A tool that assesses other organisations' conformance while publishing none of
 its own is the first thing a reviewer notices, and rightly. So this declares
 every model the product uses, in the form s.9.3 requires of anyone else.
 
-**9.3(15) Intended Usage and 9.3(16) Out-of-Scope Usage are authored here by
+**Table 10's Intended Usage and Out of Scope Usage (s.9.3) are authored here by
 hand, and that is the point.** They are governance declarations no tool can
 infer — the same reason they score `not_determinable` for every supplier we
 assess. We can supply ours because we are the deploying organisation; a supplier
@@ -58,7 +58,7 @@ MODELS: tuple[dict[str, Any], ...] = (
     },
 )
 
-#: 9.3(15). Authored by us, because only the deploying organisation can state it.
+#: Intended Usage (s.9.3, Table 10). Authored by us, because only the deploying organisation can state it.
 INTENDED_USAGE = (
     "BOM Automation assesses Bill of Materials submissions against the CERT-In "
     "Technical Guidelines v2.0 and produces a clause-referenced conformance "
@@ -69,7 +69,7 @@ INTENDED_USAGE = (
     "produced by deterministic code and is enforced as such by a blocking gate."
 )
 
-#: 9.3(16). The uses ruled out, and the control that prevents each.
+#: Out of Scope Usage (s.9.3, Table 10). The uses ruled out, and the control that prevents each.
 OUT_OF_SCOPE_USAGE = (
     "This product does not issue legal or regulatory opinions. A conformance "
     "assessment states whether a submission meets the minimum elements of a "
@@ -99,8 +99,8 @@ def build() -> dict[str, Any]:
             "authors": [{"name": "BOM Automation"}],
             "component": {"type": "application", "name": "bom-automation", "version": "0.1.0"},
             "properties": [
-                {"name": "certin:9.3(15):intended_usage", "value": INTENDED_USAGE},
-                {"name": "certin:9.3(16):out_of_scope_usage", "value": OUT_OF_SCOPE_USAGE},
+                {"name": "certin:aibom:intended_usage", "value": INTENDED_USAGE},
+                {"name": "certin:aibom:out_of_scope_usage", "value": OUT_OF_SCOPE_USAGE},
             ],
         },
         "components": [
