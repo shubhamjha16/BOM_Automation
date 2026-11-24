@@ -8,6 +8,7 @@ module is the in-process representation both sides share.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
@@ -50,6 +51,22 @@ def table_clause(section: str, table: int, name: str, group: str | None = None) 
     """
     label = f"{group} - {name}" if group else name
     return f"{section} Table {table}: {label}"
+
+
+def label_repeats_clause(clause: str, label: str) -> bool:
+    """True when a table citation already ends with the element's name.
+
+    ``8.3 Table 9: Keys - Creation Date`` already says "Keys - Creation Date", so a sentence that
+    prints the clause and then the label would say it twice. A trailing note on the label, such as
+    ``(product)``, is ignored.
+    """
+    base = re.sub(r"\s*\([^)]*\)\s*$", "", label or "").strip().lower()
+    return bool(base) and clause.strip().lower().endswith(base)
+
+
+def clause_with_label(clause: str, label: str) -> str:
+    """The clause and the element's label for a sentence, without repeating a name."""
+    return clause if label_repeats_clause(clause, label) else f"{clause} {label}"
 
 
 @dataclass(frozen=True, slots=True)

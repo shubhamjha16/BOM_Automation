@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from app.services.catalogue.types import label_repeats_clause
 from app.services.ci.policy import GateMode, GatePolicy
 
 MAX_LISTED_COMPONENTS = 10
@@ -83,8 +84,10 @@ def build(
         lines.append("")
         lines.append("### Unmet minimum elements")
         for row in failing[:MAX_LISTED_COMPONENTS]:
+            label = str(row.get("label") or row["element_key"])
+            shown = "" if label_repeats_clause(str(row["clause"]), label) else f" {label}"
             lines.append(
-                f"- `{row['clause']}` {row.get('label') or row['element_key']} "
+                f"- `{row['clause']}`{shown} "
                 f"({row['lane'].upper()}) — declared on {row.get('populated')} of "
                 f"{row.get('total')}"
             )

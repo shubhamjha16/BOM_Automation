@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from app.services.catalogue.audit import cite
+from app.services.catalogue.types import label_repeats_clause
 
 TIER_RANK = {"critical": 0, "standard": 1, "contextual": 2}
 
@@ -115,11 +116,15 @@ def executive_summary(assessment: AssessmentInput) -> Section:
         parts.append("The three gaps requiring attention first:")
         for index, (lane, row) in enumerate(top, start=1):
             populated, total = row.get("populated", 0), row.get("total", 0)
-            parts.append(
-                f"  {index}. {row.get('label') or row.get('element_key')} "
-                f"({lane.upper()}, clause {cite(str(row.get('clause')))}) — declared on "
-                f"{populated} of {total} entries."
+            label = str(row.get("label") or row.get("element_key"))
+            clause = str(row.get("clause"))
+            # A table citation already names the element, so it is not named twice.
+            named = (
+                f"{cite(clause)} ({lane.upper()})"
+                if label_repeats_clause(clause, label)
+                else f"{label} ({lane.upper()}, clause {cite(clause)})"
             )
+            parts.append(f"  {index}. {named} — declared on {populated} of {total} entries.")
     else:
         parts.append("No unmet minimum elements were found in the lanes assessed.")
 
@@ -218,10 +223,11 @@ def remediation_roadmap(assessment: AssessmentInput, ord: int) -> Section:
         populated, total = row.get("populated", 0), row.get("total", 0)
         tier = str(row.get("tier")).upper()
         label = row.get("label") or row.get("element_key")
-        lines.append(
-            f"{index}. [{tier}] {label} — {lane.upper()} clause "
-            f"{cite(str(row.get('clause')))}"
-        )
+        clause = str(row.get("clause"))
+        if label_repeats_clause(clause, str(label)):
+            lines.append(f"{index}. [{tier}] {cite(clause)} — {lane.upper()}")
+        else:
+            lines.append(f"{index}. [{tier}] {label} — {lane.upper()} clause {cite(clause)}")
         lines.append(
             f"    Currently declared on {populated} of {total}. {row.get('detail') or ''}".rstrip()
         )

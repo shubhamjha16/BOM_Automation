@@ -17,6 +17,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.configs.jobTypes import Determinability, FieldVerdict
+from app.services.catalogue.types import clause_with_label
 from app.services.score.fieldCheck import FieldResult
 
 
@@ -35,7 +36,7 @@ def assert_not_scored(results: Iterable[FieldResult]) -> None:
     if leaked:
         raise DeterminabilityViolation(
             "not_determinable field(s) reached the supplier score: "
-            + ", ".join(f"{result.clause} {result.label}" for result in leaked)
+            + ", ".join(clause_with_label(result.clause, result.label) for result in leaked)
         )
 
 
@@ -55,7 +56,8 @@ def assert_human_fields_undetermined(results: Iterable[FieldResult]) -> None:
         raise DeterminabilityViolation(
             "consumer-determined field(s) were given a supplier verdict: "
             + ", ".join(
-                f"{result.clause} {result.label} = {result.verdict}" for result in misjudged
+                f"{clause_with_label(result.clause, result.label)} = {result.verdict}"
+                for result in misjudged
             )
             + " — these cannot be established from a BOM artifact at all"
         )
@@ -102,16 +104,18 @@ def assert_rows_not_scored(rows: Iterable[dict]) -> None:
 
         # A not_determinable field carrying coverage means it was scored.
         if verdict == NOT_DETERMINABLE and int(row.get("total") or 0) > 0:
-            leaked.append(f"{clause} {label}")
+            leaked.append(clause_with_label(clause, label))
 
         # A consumer determination given a supplier verdict.
         if determinability == HUMAN_DETERMINABILITY and verdict != NOT_DETERMINABLE:
-            misjudged.append(f"{clause} {label} = {verdict}")
+            misjudged.append(f"{clause_with_label(clause, label)} = {verdict}")
 
         # A not_determinable field with no action reads as a shrug, and the
         # reader assumes it passed.
         if verdict == NOT_DETERMINABLE and not row.get("consumer_action"):
-            misjudged.append(f"{clause} {label} is not determinable but names no action")
+            misjudged.append(
+                f"{clause_with_label(clause, label)} is not determinable but names no action"
+            )
 
     problems: list[str] = []
     if leaked:

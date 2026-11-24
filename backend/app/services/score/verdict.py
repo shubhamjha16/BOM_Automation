@@ -16,6 +16,7 @@ from app.configs.scoringConfig import (
     CRITICAL_GAP_FAILS_SUBMISSION,
     PASS_THRESHOLD,
 )
+from app.services.catalogue.types import clause_with_label
 from app.services.score.fieldCheck import FieldResult
 
 
@@ -49,7 +50,7 @@ def lane_verdict(
     ]
     gaps = critical_gaps(results)
     if gaps and CRITICAL_GAP_FAILS_SUBMISSION:
-        clauses = ", ".join(f"{gap.clause} {gap.label}" for gap in gaps)
+        clauses = ", ".join(clause_with_label(gap.clause, gap.label) for gap in gaps)
         return (
             LaneVerdict.FAIL,
             f"scored {score}% but fails on critical gap(s): {clauses} — absent across "

@@ -234,6 +234,12 @@ async def field_report(
         return None
 
     verdicts = await lanes.verdicts_for(match.id)
+    # Guideline order, not the alphabetical order the clause string sorts to. A key the encoded
+    # catalogue no longer has (an old assessment) goes last rather than being dropped.
+    from app.services.catalogue.loader import get_catalogue
+
+    position = {el.key: index for index, el in enumerate(get_catalogue(lane).elements)}  # type: ignore[arg-type]
+    verdicts = sorted(verdicts, key=lambda row: position.get(row.element_key, len(position)))
     scored = [row for row in verdicts if str(row.verdict) != "not_determinable"]
     determined = [row for row in verdicts if str(row.verdict) == "not_determinable"]
 
